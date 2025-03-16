@@ -7,11 +7,10 @@ const HomePage = () => {
   return (
     <Container maxWidth="md" sx={{ textAlign: "center", mt: 4 }}>
       <Typography variant="h3" gutterBottom>
-        יונתן לא רוצה שנכתוב אותו פה
+        Hi!
       </Typography>
       <Typography variant="h6" color="textSecondary" paragraph>
-        כאן תמצאו אוסף עשיר של מתכונים טעימים, מגוונים וקלים להכנה – מהמנות הקלאסיות האהובות ועד למתכונים חדשניים ומפתיעים.
-        בין אם אתם בשלנים מנוסים או טבחים מתחילים, יש כאן משהו בשבילכם!
+עוד hi!
       </Typography>
       <Box sx={{ textAlign: "left", my: 3 }}>
         <Typography variant="h5">📌 מה מחכה לכם כאן?</Typography>
