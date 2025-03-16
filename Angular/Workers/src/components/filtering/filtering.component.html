@@ -1,0 +1,148 @@
+<!-- <form [formGroup]="filterForm" (ngSubmit)="onSubmit()">
+  <mat-form-field>
+    <input matInput placeholder="Title" formControlName="title">
+    <button mat-icon-button (click)="openInstructions('title')" matTooltip="Help">
+      <mat-icon>info</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Description" formControlName="description">
+    <button mat-icon-button (click)="openInstructions('description')" matTooltip="Help">
+      <mat-icon>info</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput type="number" placeholder="Experience" formControlName="experience">
+    <button mat-icon-button (click)="openInstructions('experience')" matTooltip="Help">
+      <mat-icon>info</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <mat-form-field>
+    <input matInput placeholder="Workplace" formControlName="workplace">
+    <button mat-icon-button (click)="openInstructions('workplace')" matTooltip="Help">
+      <mat-icon>info</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-select placeholder="Languages" formControlName="languages" multiple>
+      <mat-option value="C#">C#</mat-option>
+      <mat-option value="Java">Java</mat-option>
+      <mat-option value="Cobol">Cobol</mat-option>
+    </mat-select>
+    <button mat-icon-button (click)="openInstructions('languages')" matTooltip="Help">
+      <mat-icon>info</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-select placeholder="Remote work" formControlName="remoteWork">
+      <mat-option value="null">Any</mat-option>
+      <mat-option value="true">Yes</mat-option>
+      <mat-option value="false">No</mat-option>
+    </mat-select>
+    <button mat-icon-button (click)="openInstructions('remoteWork')" matTooltip="Help">
+      <mat-icon>info</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-select placeholder="English Level" formControlName="englishLevel">
+      <mat-option value="low">Low</mat-option>
+      <mat-option value="medium">Medium</mat-option>
+      <mat-option value="high">High</mat-option>
+    </mat-select>
+    <button mat-icon-button (click)="openInstructions('englishLevel')" matTooltip="Help">
+      <mat-icon>info</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <button mat-raised-button type="submit">Filter for me</button>
+</form> -->
+
+<!-- דיאלוג קופץ עם הוראות -->
+<!-- <ng-template #instructionsDialog let-dialog>
+  <h2 mat-dialog-title>Instructions</h2>
+  <mat-dialog-content>
+    <p>{{ instructions }}</p>
+    <form [formGroup]="dialogForm"> 
+      <mat-form-field>
+        <input matInput formControlName="dialogInput">
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <button mat-button (click)="dialog.close()">Close</button>
+  </mat-dialog-actions>
+</ng-template> -->
+
+
+
+<form [formGroup]="filterForm" (ngSubmit)="onSubmit()" class="filter-container">
+  <div class="filter-buttons">
+    <button mat-button class="custom-button" type="button" (click)="openInstructions('title')">
+      {{ selectedValues['title'] ? 'Title: ' + selectedValues['title'] : 'Title' }}
+    </button>
+
+    <button mat-button class="custom-button" type="button" (click)="openInstructions('description')">
+      {{ selectedValues['description'] ? 'Description: ' + selectedValues['description'] : 'Description' }}
+    </button>
+
+    <button mat-button class="custom-button" type="button" (click)="openInstructions('experience')">
+      {{ selectedValues['experience'] ? 'Experience: ' + selectedValues['experience'] : 'Experience' }}
+      <span *ngIf="selectedValues['experience']" class="filled">*</span>
+    </button>
+
+    <button mat-button class="custom-button" type="button" (click)="openInstructions('workplace')">
+      {{ selectedValues['workplace'] ? 'Workplace: ' + selectedValues['workplace'] : 'Workplace' }}
+    </button>
+
+    <button mat-button class="custom-button" type="button" (click)="openInstructions('languages')">
+      {{ selectedValues['languages'] ? selectedValues['languages'].join(', ') : 'Languages' }}
+      <span *ngIf="selectedValues['languages']?.length" class="filled">*</span>
+    </button>
+
+    <button mat-button class="custom-button" type="button" (click)="openInstructions('remoteWork')">
+      {{ selectedValues['remoteWork'] !== undefined ? (selectedValues['remoteWork'] ? 'Remote Work: Yes' : 'Remote Work: No') : 'Remote Work' }}
+    </button>
+
+    <button mat-button class="custom-button" type="button" (click)="openInstructions('englishLevel')">
+      {{ selectedValues['englishLevel'] ? 'English Level: ' + selectedValues['englishLevel'] : 'English Level' }}
+      <span *ngIf="selectedValues['englishLevel']" class="filled">*</span>
+    </button>
+  </div>
+
+  <button mat-raised-button class="submit-button" type="submit">Filter for me</button>
+</form>
+
+
+<ng-template #instructionsDialog let-dialog>
+  <h2 mat-dialog-title>Instructions <span class="close" (click)="closeDialog()">X</span></h2>
+  <mat-dialog-content>
+    <p>{{ instructions }}</p>
+
+    <form [formGroup]="dialogForm">
+      @if (dialogType === 'languages') {
+        <mat-form-field>
+          <mat-select placeholder="Select Languages" formControlName="dialogInput" multiple>
+            @for (language of languages; track language) {
+              <mat-option [value]="language">{{ language }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+      } @else {
+        <mat-form-field>
+          <input matInput placeholder="Enter value" formControlName="dialogInput">
+        </mat-form-field>
+      }
+    </form>
+  </mat-dialog-content>
+
+  <mat-dialog-actions>
+    <button mat-button (click)="saveSelection()">Save</button>
+    <button mat-button (click)="closeDialog()">Cancel</button>
+  </mat-dialog-actions>
+</ng-template>

@@ -1,0 +1,1 @@
+export type RecipesType = { title?: string, description?: string, ingredients?: string}
