@@ -108,16 +108,7 @@ var app = builder.Build();
 app.UseCors("AllowAll");
 
 
-// הפעלת Swagger רק בסביבת פיתוח
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-        c.RoutePrefix = string.Empty; // יגרום לכך ש-Swagger יופיע ישר בדף הראשי
-    });
-}
+app.MapGet("/", () => "Hello World!");
 
 app.UseAuthentication();
 
