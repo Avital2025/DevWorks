@@ -20,7 +20,7 @@ namespace DevWork.Endpoints
             {
                 var entity = await service.GetUserById(id);
                 return entity is not null ? Results.Ok(entity) : Results.NotFound();
-            });
+            }).RequireAuthorization();
 
 
     

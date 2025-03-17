@@ -9,9 +9,11 @@ import { interceptor } from '../interseptors/interceptor.interceptor';
 
 export const appConfig: ApplicationConfig = {
   
+    
+
   providers: [provideZoneChangeDetection({ eventCoalescing: true }),
      provideRouter(routes), 
      provideClientHydration(),
      provideHttpClient(withInterceptors([interceptor]))]
-      
+ 
 };

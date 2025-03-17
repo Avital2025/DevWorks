@@ -30,7 +30,7 @@ namespace DevWork.Endpoints
 
                 var filteredProjects = await service.GetFilteredProjects(filterParams);
                 return Results.Ok(filteredProjects);
-            });
+            }).RequireAuthorization();
 
 
 
@@ -39,7 +39,7 @@ namespace DevWork.Endpoints
                 {
                     var entity = await service.GetExtractedFileById(id);
                     return entity is not null ? Results.Ok(entity) : Results.NotFound();
-                });
+                }); 
 
             //extractedDataRoutes.MapPost("/", async (ExtractedDataPostModel model, IExtractedDataService service) =>
             //{

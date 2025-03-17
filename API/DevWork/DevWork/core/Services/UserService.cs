@@ -62,17 +62,10 @@ public class UserService : IUserService
         var user = await _context.usersList
             .FirstOrDefaultAsync(u => u.Email == email);
 
-        if (user == null)
+        if (user == null|| !BCrypt.Net.BCrypt.Verify(passwordHash, user.PasswordHash‏))
         {
             return null; // לא נמצא משתמש עם המייל הזה
         }
-
-        // בדוק אם הסיסמא שהוזנה תואמת את הסיסמא השמורה (באמצעות ה-hash)
-        if (user.PasswordHash != passwordHash)
-        {
-            return null; // סיסמא שגויה
-        }
-
         return user; // הלוגין הצליח
     }
 }

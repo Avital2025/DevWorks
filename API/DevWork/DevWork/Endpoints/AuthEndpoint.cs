@@ -15,12 +15,15 @@ namespace DevWork.Endpoints
             usersRoutes.MapPost("/register", async (UserPostModel model, IUserService service) =>
             {
                 var created = await service.AddUser(model);
+                model.PasswordHash=BCrypt.Net.BCrypt.HashPassword(model.PasswordHash);
                 return Results.Created($"/users/{model.Id}", created);
+
             });
 
             usersRoutes.MapPost("/login", async (LoginPostModel model, IUserService service) =>
             {
                 var user = await service.Authenticate(model.email, model.passwordHash);
+           
 
                 if (user == null)
                 {

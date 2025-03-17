@@ -1,57 +1,46 @@
-
-
- .button-container {
+.button-container {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background-color: white;
-  
-  text-align: center;
-  padding: 20px;
-}
-
-.welcome-title {
-  font-size: 3rem;
-  color: #000000;
-  margin-bottom: 10px;
-  font-family: 'Roboto', sans-serif;
-}
-
-.subtitle {
-  font-size: 1.2rem;
-  color:  #000000;
-  margin-bottom: 30px;
+  /* flex-direction: row; */
+  /* background-color: white; */
+  /* text-align: center; */
+  padding: 10px;
+  justify-content: center; 
 }
 
 .button-group {
   display: flex;
-  gap: 20px;
-  justify-content: center;
+  gap: 10px;
 }
 
+
+
+
 button {
-  font-size: 1rem;
+  /* font-size: 1rem;
   padding: 10px 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease;
-}
-
-button:hover {
-  transform: scale(1.05);
+  transition: transform 0.3s ease; */
+  button {
+    background: none; /* הסרת רקע הכפתורים */
+    border: 2px solid #007bff; /* הוספת גבול לכפתורים */
+    color: #007bff; /* צבע טקסט */
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    /* transition: transform 0.3s ease; */
+  }
 }
 
 .login-button {
-  background-color: #00796b !important;
-  color: white;
+  color: linear-gradient(135deg, #2b2d42, #1e1f33);
+
 }
 
 .signup-button {
-  background-color: #00796b !important;
-  color: white;
+  color: linear-gradient(135deg, #2b2d42, #1e1f33);
+
 }
 
 button mat-icon {

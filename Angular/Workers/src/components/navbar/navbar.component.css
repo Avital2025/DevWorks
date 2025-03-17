@@ -1,0 +1,45 @@
+.nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 101px;
+    background-color: #f8f9fa;
+    height: 50px; 
+  }
+  
+  .nav-left {
+    display: flex;
+    align-items: center;
+  }
+  .nav-right {
+    display: flex;
+    align-items: center;
+  }
+  button {
+    font-size: 18px;
+    padding: 10px 20px;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #2b2d42, #1e1f33);
+    color: #f8f1e4;
+    border: 2px solid #e1d5c9;
+    cursor: pointer;
+    transition: all 0.3s;
+    /* opacity: 1 important!; */
+  }
+  
+  button:hover {
+    background: linear-gradient(135deg, #3a3c5c, #292a44);
+    border-color: #f8f1e4;
+  }
+  .button-row {
+    display: flex;
+    justify-content: flex-end; /* מיקום הכפתורים בצד שמאל */
+    padding: 10px 20px; /* רווח פנימי */
+    background-color: #f0f0f0; /* צבע רקע */
+  }
+  
+  .button-row button {
+    margin-right: 10px; /* רווח בין הכפתורים */
+  }
+
+  
