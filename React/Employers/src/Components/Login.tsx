@@ -155,7 +155,7 @@ export default function Login() {
         console.log("password: ",password); 
         e.preventDefault();
 
-        const url = "http://localhost:5069"; // כאן מוגדר ה-URL של השרת
+        const url = "https://devworksweb.onrender.com"; 
         try {
             const data = click === 'Register' ? {
                 email: email.current?.value,

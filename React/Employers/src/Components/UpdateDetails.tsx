@@ -5,7 +5,7 @@ import { User } from "../App";
 import { UserType } from '../userType'
 import { style } from "../styleModel";
 const updateDetails = () => {
-    const url = "http://localhost:3000"
+    const url = "https://devworksweb.onrender.com";
     const userContext = useContext(User)
     const [user, setUser] = useState<UserType>(userContext.user)
     const [open, setOpen] = useState(false)
