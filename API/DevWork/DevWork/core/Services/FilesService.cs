@@ -6,6 +6,7 @@ using DevWork.Data;
 using DevWork.Service.Iservice;
 using DevWork.Service.IService;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 public class FilesService : IFilesService
 {
@@ -23,13 +24,18 @@ public class FilesService : IFilesService
         _dataExtractor = dataExtractor;
         _aiService= aIService;
     }
-    public async Task<ExtractedDataEntity> ProcessFile(string fileUrl)
+    public async Task<ExtractedDataEntity> ProcessFile(string fileUrl, int employerId )
     {
         var fileData = await _s3Service.DownloadFileAsync(fileUrl);
-        var extractedData = await _dataExtractor.ExtractData(fileData);
+        var extractedData = await _dataExtractor.ExtractData(fileData, employerId);
 
+       
+        var fileText = Encoding.UTF8.GetString(fileData);
+        
         // שימו לב, ה-AI מייצר תשובה על בסיס הנתונים שהפקעתם
-        var aiResponse = await _aiService.SaveProjectDescriptionToDB(extractedData);
+        var aiResponse = await _aiService.SaveProjectDescriptionToDB(fileText);
+
+       
 
         // שמירת תשובת ה-AI
         _context.AIResponses.Add(aiResponse);

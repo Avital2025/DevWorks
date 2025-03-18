@@ -1,7 +1,8 @@
 ﻿using DevWork.Core.Entities;
 using DevWork.Data;
 using DevWork.Service.Iservice;
-using Microsoft.EntityFrameworkCore;
+
+
 
 public class AIService : IAIService
 {
@@ -55,7 +56,7 @@ public class AIService : IAIService
     //    _context.extractedDataList.Add(extractedData);
     //    await _context.SaveChangesAsync();
     //}
-    public async Task<AIResponse> SaveProjectDescriptionToDB(string fileText, int employerId)
+    public async Task<AIResponse> SaveProjectDescriptionToDB(string fileText)
     {
         var response = await _httpClient.PostAsJsonAsync("https://api.ai-service.com/parse", new { text = fileText });
 

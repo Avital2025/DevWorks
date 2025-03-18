@@ -1,22 +1,27 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using DevWork.Core.Entities;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DevWork.Core.Dto
 {
     public class FilesDto
     {
+        public int EmployerId { get; set; }
+
         public string FileUrl { get; set; }
 
         public string FileName { get; set; }
 
-        public string FileType { get; set; }// סוג הקובץ (pdf, jpg וכו')
+        public string FileType { get; set; }
 
-        public long Size { get; set; } // גודל הקובץ בבתים
+        public long Size { get; set; }
 
-        public DateTime CreatedAt { get; set; } // תאריך העלאה
+        public DateTime CreatedAt { get; set; }
 
-        public DateTime UpdatedAt { get; set; } // תאריך עדכון אחרון
+        public DateTime UpdatedAt { get; set; }
 
-    //    public bool IsDeleted { get; set; } // דגל למחיקה רכה
+        [ForeignKey("EmployerId")]
+        public virtual UserEntity Employer { get; set; }  // קשר לטבלת Users
     }
+
 }

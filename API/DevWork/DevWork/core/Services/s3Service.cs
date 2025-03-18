@@ -6,14 +6,22 @@ public interface IS3Service
 {
     Task<byte[]> DownloadFileAsync(string fileUrl);
 }
-
 public class S3Service : IS3Service
 {
     private readonly IAmazonS3 _s3Client;
+    private readonly string _bucketName= "devworksbacket" ;
+    public S3Service()
+    {
+        var accessKey = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
+        var secretKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
+        var region = Amazon.RegionEndpoint.GetBySystemName(Environment.GetEnvironmentVariable("AWS_REGION"));
 
+        _s3Client = new AmazonS3Client(accessKey, secretKey, region);
+    }
     public S3Service(IAmazonS3 s3Client)
     {
         _s3Client = s3Client;
+      
     }
 
     public async Task<byte[]> DownloadFileAsync(string fileUrl)
@@ -33,4 +41,19 @@ public class S3Service : IS3Service
         await response.ResponseStream.CopyToAsync(memoryStream);
         return memoryStream.ToArray();
     }
+
+    public string GeneratePresignedUrl(string fileName, string contentType)
+    {
+        var request = new GetPreSignedUrlRequest
+        {
+            BucketName = _bucketName,
+            Key = fileName,
+            Expires = DateTime.UtcNow.AddMinutes(10),
+            Verb = HttpVerb.PUT,
+            ContentType = contentType // נשאר כמו שהוא
+        };
+
+        return _s3Client.GetPreSignedURL(request);
+    }
+
 }

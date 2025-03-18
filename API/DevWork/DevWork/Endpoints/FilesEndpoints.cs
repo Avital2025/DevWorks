@@ -27,9 +27,11 @@ namespace DevWork.Endpoints
                 return Results.Created($"/files/{model.Id}", created);
             });
 
+            // ✅ הוספת פונקציה לשליחת קובץ לניתוח
             filesRoutes.MapPost("/process-file", async (FilesDto model, IFilesService service) =>
             {
-                var extractedData = await service.ProcessFile(model.FileUrl);
+                
+                var extractedData = await service.ProcessFile(model.FileUrl,model.EmployerId );
                 return Results.Ok(extractedData);
             });
 
@@ -43,12 +45,9 @@ namespace DevWork.Endpoints
                 }
                 return Results.Ok(updated);
             });
-            // ✅ הוספת פונקציה לשליחת קובץ לניתוח
-            filesRoutes.MapPost("/process-file", async (FilesDto model, IFilesService service) =>
-            {
-                var extractedData = await service.ProcessFile(model.FileUrl);
-                return Results.Ok(new { status = "success", fileId = extractedData.Id });
-            });
+        
+
+     
         }
        
 

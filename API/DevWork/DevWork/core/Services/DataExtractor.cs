@@ -1,15 +1,16 @@
 ﻿using DevWork.Core.Entities;
+using DevWork.Data;
 using DevWork.Service.Iservice;
 using DevWork.Service.IService;
 using System.Text;
-
+using Microsoft.EntityFrameworkCore;
 
 public class DataExtractor : IDataExtractor
 {
     private readonly IAIService _aiService;
-    private readonly DataExtractor _context;
+    private readonly DataContext _context;
 
-    public DataExtractor(IAIService aiService, DataExtractor context)
+    public DataExtractor(IAIService aiService, DataContext context)
     {
         _aiService = aiService;
         _context = context;
@@ -19,12 +20,22 @@ public class DataExtractor : IDataExtractor
     {
         // שלח את הקובץ ל-AI ושמור את התשובה
         string fileText = Encoding.UTF8.GetString(fileData);
-        var aiResponse = await _aiService.SaveProjectDescriptionToDB(fileText, employerId);
+        var aiResponse = await _aiService.SaveProjectDescriptionToDB(fileText);
 
 
         if (aiResponse == null)
         {
             throw new Exception("לא הצלחנו לקבל תשובת AI.");
+        }
+        // 🟢 שליפת ה-S3Key מתוך הטבלה של הקבצים לפי ה-EmployerId
+        var fileEntity = await _context.filesList
+            .Where(f => f.EmployerID == employerId)
+            .OrderByDescending(f => f.CreatedAt) // לוקח את הקובץ האחרון שהועלה
+            .FirstOrDefaultAsync();
+
+        if (fileEntity == null)
+        {
+            throw new Exception("לא נמצא קובץ תואם ב-DB.");
         }
 
         // עכשיו ניצור את ה-ExtractedDataEntity
@@ -32,7 +43,7 @@ public class DataExtractor : IDataExtractor
         {
             EmployerID = employerId,
             AIResponseId = aiResponse.Id, // מקשר ל-AIResponse ששמרנו
-            S3Key = aiResponse.FileUrl, // שדה סביר במידה ו-AI מחזיר URL לקובץ
+            S3Key = fileEntity.S3Key,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now
         };

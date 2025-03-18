@@ -6,8 +6,8 @@ namespace DevWork.Service.Iservice
 
 
         //Task<ProjectAnalysisResult> ParseProjectDescription(string description);
-        Task SaveProjectDescriptionToDB(string description, int employerId);
-
+       // Task SaveProjectDescriptionToDB(string description, int projectId)
+         Task<AIResponse> SaveProjectDescriptionToDB(string fileText);
     }
 
 
