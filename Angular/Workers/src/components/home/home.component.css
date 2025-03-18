@@ -3,7 +3,7 @@
     justify-content: center;
     align-items: center;
     height: calc(100vh - 100px);    background-color: #f0f0f0; /* צבע רקע */
-    background-image: url('../../assets/background.PNG');
+    background-image: url('../../assets/background.png');
 
     background-size: cover; /* כיסוי מלא של הרקע */
     background-position: center; /* מיקום מרכזי של הרקע */
