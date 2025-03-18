@@ -6,6 +6,8 @@ using DevWork.core;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Amazon.S3;
+using DevWork.Service.IService;
 
 
 
@@ -19,7 +21,7 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddScoped<IExtractedDataService, ExtractedDataService>();
 builder.Services.AddScoped<IFilesService, FilesService>();
 builder.Services.AddScoped<IUserService, UserService>();
-
+builder.Services.AddScoped<IDataExtractor, DataExtractor>();
 
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
@@ -103,12 +105,17 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
+builder.Services.AddAWSService<IAmazonS3>();
+builder.Services.AddScoped<IS3Service, S3Service>();
+
+
 var app = builder.Build();
 
 app.UseCors("AllowAll");
 
 
 app.MapGet("/", () => "Hello World!");
+
 
 app.UseAuthentication();
 

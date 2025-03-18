@@ -13,6 +13,8 @@ namespace DevWork.Data
         public DbSet<UserEntity> usersList { get; set; }
         public DbSet<FilesEntity> filesList { get; set; }
 
+        public DbSet<AIResponse> AIResponses { get; set; }
+
 
 
 

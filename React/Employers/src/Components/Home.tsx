@@ -18,7 +18,7 @@ const HomePage = () => {
         <Typography variant="body1">✅ רעיונות למנות בריאות, קינוחים מפתיעים ועוד</Typography>
         <Typography variant="body1">✅ אפשרות לשמור את המתכונים האהובים עליכם</Typography>
       </Box>
-      <Button variant="contained" color="primary" size="large" onClick={() => navigate("/RecipeList")}>
+      <Button variant="contained" color="primary" size="large" onClick={() => navigate("/addfiles")}>
         התחילו לגלות מתכונים
       </Button>
     </Container>

@@ -31,42 +31,31 @@ public class ExtractedDataService : IExtractedDataService
 
     public async Task<List<ExtractedDataEntity>> GetFilteredProjects(AIResponse filterParams)
     {
-        var query = _context.extractedDataList.Where(p => p.IsActive); // רק קבצים פעילים
+        var query = _context.extractedDataList
+            .Include(e => e.AIResponse) // לוודא שמושכים גם את הנתונים מה-AI
+            .Where(p => p.IsActive); // רק קבצים פעילים
 
-        // ✅ אם אין פרמטרים בכלל - מחזירים את כל הקבצים הפעילים
-        if (string.IsNullOrWhiteSpace(filterParams.Title) &&
-            string.IsNullOrWhiteSpace(filterParams.Description) &&
-            !filterParams.Experience.HasValue &&
-            string.IsNullOrWhiteSpace(filterParams.Languages) &&
-            !filterParams.RemoteWork.HasValue &&
-            string.IsNullOrWhiteSpace(filterParams.EnglishLevel))
-        {
-            return await query.ToListAsync();
-        }
-
-        // סינון לפי הפרמטרים שנשלחו
         if (!string.IsNullOrWhiteSpace(filterParams.Title))
-            query = query.Where(p => p.ProjectTitle.Contains(filterParams.Title));
+            query = query.Where(p => p.AIResponse.Title.Contains(filterParams.Title));
 
         if (!string.IsNullOrWhiteSpace(filterParams.Description))
-            query = query.Where(p => p.ProjectDescription.Contains(filterParams.Description));
+            query = query.Where(p => p.AIResponse.Description.Contains(filterParams.Description));
 
         if (filterParams.Experience.HasValue)
-            query = query.Where(p => p.RequiredExperience >= filterParams.Experience.Value);
+            query = query.Where(p => p.AIResponse.Experience >= filterParams.Experience.Value);
 
         if (filterParams.RemoteWork.HasValue)
-            query = query.Where(p => p.RemoteWorkAvailable == filterParams.RemoteWork.Value);
+            query = query.Where(p => p.AIResponse.RemoteWork == filterParams.RemoteWork.Value);
 
         if (!string.IsNullOrWhiteSpace(filterParams.EnglishLevel))
         {
             var allowedLevels = new HashSet<string> { "high", "low", "standard" };
             if (allowedLevels.Contains(filterParams.EnglishLevel.ToLower()))
             {
-                query = query.Where(p => p.EnglishLevel == filterParams.EnglishLevel);
+                query = query.Where(p => p.AIResponse.EnglishLevel == filterParams.EnglishLevel);
             }
         }
 
-        // ✅ טיפול בשפות - בדיקה אם לפחות אחת מהשפות קיימת (ללא כפילויות)
         if (!string.IsNullOrWhiteSpace(filterParams.Languages))
         {
             var languagesArray = filterParams.Languages.Split(',')
@@ -74,11 +63,12 @@ public class ExtractedDataService : IExtractedDataService
                 .Distinct()
                 .ToList();
 
-            query = query.Where(p => languagesArray.Any(lang => p.ProgrammingLanguages.ToLower().Contains(lang)));
+            query = query.Where(p => languagesArray.Any(lang => p.AIResponse.Languages.ToLower().Contains(lang)));
         }
 
         return await query.ToListAsync();
     }
+
 
     public async Task<ExtractedDataDto> Add(ExtractedDataPostModel dto)
     {

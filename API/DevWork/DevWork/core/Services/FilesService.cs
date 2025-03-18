@@ -3,18 +3,48 @@ using DevWork.API.Models;
 using DevWork.Core.Dto;
 using DevWork.Core.Entities;
 using DevWork.Data;
+using DevWork.Service.Iservice;
+using DevWork.Service.IService;
 using Microsoft.EntityFrameworkCore;
 
 public class FilesService : IFilesService
 {
     private readonly DataContext _context;
     private readonly IMapper _mapper;
+    private readonly IS3Service _s3Service;
+    private readonly IDataExtractor _dataExtractor;
+    private readonly AIService _aiService;
 
-    public FilesService(DataContext context, IMapper mapper)
+    public FilesService(AIService aIService ,DataContext context, IMapper mapper, IS3Service s3Service, IDataExtractor dataExtractor)
     {
         _context = context;
         _mapper = mapper;
+        _s3Service = s3Service;
+        _dataExtractor = dataExtractor;
+        _aiService= aIService;
     }
+    public async Task<ExtractedDataEntity> ProcessFile(string fileUrl)
+    {
+        var fileData = await _s3Service.DownloadFileAsync(fileUrl);
+        var extractedData = await _dataExtractor.ExtractData(fileData);
+
+        // שימו לב, ה-AI מייצר תשובה על בסיס הנתונים שהפקעתם
+        var aiResponse = await _aiService.SaveProjectDescriptionToDB(extractedData);
+
+        // שמירת תשובת ה-AI
+        _context.AIResponses.Add(aiResponse);
+        await _context.SaveChangesAsync();
+
+        // שמירת ExtractedData עם AIResponseId
+        extractedData.AIResponseId = aiResponse.Id;
+        _context.extractedDataList.Add(extractedData);
+        await _context.SaveChangesAsync();
+
+        return extractedData;
+    }
+
+
+
 
     public async Task<IEnumerable<FilesDto>> GetAllFiles()
     {
