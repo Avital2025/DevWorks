@@ -10,13 +10,9 @@ public class S3Service : IS3Service
 {
     private readonly IAmazonS3 _s3Client;
     private readonly string _bucketName= "devworksbacket" ;
-    public S3Service()
+    public S3Service(string awsAccessKey, string awsSecretKey, Amazon.RegionEndpoint region)
     {
-        var accessKey = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
-        var secretKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
-        var region = Amazon.RegionEndpoint.GetBySystemName(Environment.GetEnvironmentVariable("AWS_REGION"));
-
-        _s3Client = new AmazonS3Client(accessKey, secretKey, region);
+        _s3Client = new AmazonS3Client(awsAccessKey, awsSecretKey, region);
     }
     public S3Service(IAmazonS3 s3Client)
     {

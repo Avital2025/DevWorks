@@ -1,0 +1,23 @@
+.nav-link {
+    text-decoration: none;
+    color: #1976D2;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .nav-link:hover {
+    background-color: #E3F2FD; /* צבע רקע בהעברה */
+  }
+  
+  .nav-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+  }
+  

@@ -14,9 +14,9 @@ public class FilesService : IFilesService
     private readonly IMapper _mapper;
     private readonly IS3Service _s3Service;
     private readonly IDataExtractor _dataExtractor;
-    private readonly AIService _aiService;
+    private readonly IAIService _aiService;
 
-    public FilesService(AIService aIService ,DataContext context, IMapper mapper, IS3Service s3Service, IDataExtractor dataExtractor)
+    public FilesService(IAIService aIService ,DataContext context, IMapper mapper, IS3Service s3Service, IDataExtractor dataExtractor)
     {
         _context = context;
         _mapper = mapper;

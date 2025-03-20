@@ -9,11 +9,18 @@ using System.Text;
 using Amazon.S3;
 using DevWork.Service.IService;
 using Microsoft.AspNetCore.Mvc;
+using DevWork.Service.Iservice;
+
 
 
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+builder.Services.AddDbContext<DataContext>(options =>
+    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
 
 // רישום AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile)); 
@@ -24,13 +31,13 @@ builder.Services.AddScoped<IFilesService, FilesService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IDataExtractor, DataExtractor>();
 builder.Services.AddScoped<IS3Service, S3Service>();
-
-builder.Services.AddDbContext<DataContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
+builder.Services.AddScoped<IAIService, AIService>();
 
 
 
+
+builder.Services.AddSwaggerGen();
+builder.Services.AddHttpClient();
 // הוספת Swagger
 builder.Services.AddEndpointsApiExplorer();
 
@@ -110,7 +117,6 @@ builder.Services.AddAuthorization();
 
 
 
-
 builder.Services.AddAWSService<IAmazonS3>();
 
 var app = builder.Build();
@@ -121,7 +127,24 @@ app.UseCors("AllowAll");
 app.MapGet("/", () => "Hello World!");
 
 
-var s3Service = new S3Service();
+
+// אל תיצור את ה-s3Client שוב כאן, כי יש לך אותו ב-S3Service כבר
+var awsAccessKey = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
+Console.WriteLine("-------1-------");
+var awsSecretKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
+Console.WriteLine("-------2-------");
+var region = Amazon.RegionEndpoint.GetBySystemName(Environment.GetEnvironmentVariable("AWS_REGION"));
+Console.WriteLine("-------3-------");
+
+
+if (string.IsNullOrEmpty(awsAccessKey) || string.IsNullOrEmpty(awsSecretKey) || region == null)
+{
+    // הוספת טיפול בשגיאה אם יש משהו חסר
+    Console.WriteLine("חסרים פרטי AWS.");
+    return;
+}
+
+var s3Service = new S3Service(awsAccessKey, awsSecretKey, region);
 
 // הוספת אפשרות להעביר contentType בקונטקסט של ה-URL
 app.MapGet("/generate-presigned-url", ([FromQuery] string fileName, [FromQuery] string contentType) =>
@@ -130,16 +153,14 @@ app.MapGet("/generate-presigned-url", ([FromQuery] string fileName, [FromQuery] 
     return Results.Ok(new { url = presignedUrl });
 });
 
-// אל תיצור את ה-s3Client שוב כאן, כי יש לך אותו ב-S3Service כבר
-var awsAccessKey = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
-var awsSecretKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
-var region = Amazon.RegionEndpoint.GetBySystemName(Environment.GetEnvironmentVariable("AWS_REGION"));
 
 
 app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.UseSwagger();
+app.UseSwaggerUI();
 
 
 // Minimal API endpoints- In Endpoints Routing.
