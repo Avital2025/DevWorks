@@ -35,6 +35,21 @@ public class UserService : IUserService
         await _context.SaveChangesAsync();
         return _mapper.Map<UserDto>(userEntity);
     }
+    /*
+     * public async Task<User> AddUser(UserPostModel model)
+    {
+        var user = new User
+        {
+            Email = model.Email,
+            PasswordHash = model.PasswordHash,
+            FullName = model.FullName
+        };
+
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+        return user;
+    }
+     * */
 
     public async Task<UserDto?> UpdateUser(UserPostModel userPostModel)
     {
@@ -56,16 +71,34 @@ public class UserService : IUserService
         await _context.SaveChangesAsync();
         return true;
     }
-    public async Task<UserEntity> Authenticate(string email, string passwordHash)
+ public async Task<UserEntity> Authenticate(string email, string password)
+{
+    var user = await _context.usersList.FirstOrDefaultAsync(u => u.Email == email);
+    
+    if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
     {
-        // חפש את המשתמש לפי המייל
-        var user = await _context.usersList
-            .FirstOrDefaultAsync(u => u.Email == email);
-
-        if (user == null|| !BCrypt.Net.BCrypt.Verify(passwordHash, user.PasswordHash‏))
-        {
-            return null; // לא נמצא משתמש עם המייל הזה
-        }
-        return user; // הלוגין הצליח
+        return null;
     }
+
+    return user;
+}
+    //public async Task<UserEntity> Authenticate(string email, string password)
+    //{
+    //    // חפש את המשתמש לפי המייל
+    //    var user = await _context.usersList
+    //        .FirstOrDefaultAsync(u => u.Email == email);
+
+    //    if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash)) // השווה את הסיסמה ל-Hash
+    //    {
+    //        return null; // לא נמצא משתמש עם המייל הזה או שהסיסמה לא נכונה
+    //    }
+    //    return user; // הלוגין הצליח
+    //}
+
+
+    public async Task<UserEntity?> GetUserByEmail(string email)
+    {
+        return await _context.usersList.FirstOrDefaultAsync(u => u.Email == email);
+    }
+
 }

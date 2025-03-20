@@ -240,7 +240,7 @@
 // }
 import { useState, useRef, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, TextField, Select, MenuItem, Typography, Container, Card, CardContent } from '@mui/material';
+import { Box, Button, TextField,  Typography, Container, Card, CardContent } from '@mui/material';
 import axios, { AxiosError } from "axios";
 import { IsLogin, User } from '../App';
 import Swal from 'sweetalert2';
@@ -248,7 +248,6 @@ import Swal from 'sweetalert2';
 export default function AuthPage() {
     const email = useRef<HTMLInputElement>(null);
     const password = useRef<HTMLInputElement>(null);
-    const [role, setRole] = useState<string>('');
     const fullName = useRef<HTMLInputElement>(null);
     const [click, setClick] = useState<'Login' | 'Register'>('Login');
     const userContext = useContext(User);
@@ -260,10 +259,11 @@ export default function AuthPage() {
         const url = "http://localhost:5069";
         try {
             const data = click === 'Register' ? {
+                FullName: fullName.current?.value,
                 email: email.current?.value,
                 passwordHash: password.current?.value,
-                role: role,
-                FullName: fullName.current?.value
+                role: "Employer" // תמיד שולח "Employer"
+               
             } : {
                 email: email.current?.value,
                 passwordHash: password.current?.value
@@ -276,6 +276,7 @@ export default function AuthPage() {
                 data: click === 'Login' ? {
                     id: res.data.userId,
                     email: email.current?.value,
+                    role: "Employer",
                     passwordHash: password.current?.value
                 } : { ...res.data.user }
             });
@@ -287,6 +288,8 @@ export default function AuthPage() {
                 Swal.fire("Oops...", "User not found! Please sign up first.", "error");
             } else if (click === 'Register' && e.response?.status === 400) {
                 Swal.fire("Oops...", "This user already exists. Please sign in.", "error");
+            } else if (click === 'Register' && e.response?.status === 409) {
+                Swal.fire("Oops...", "This email already exists!", "error");
             } else if (e.response?.status === 422) {
                 alert(e.response.data.message);
             } else {
@@ -294,43 +297,29 @@ export default function AuthPage() {
             }
         }
     };
-
     return (
-        <Container maxWidth="sm">
-            <Card sx={{ mt: 5, p: 3, boxShadow: 3 }}>
-                <CardContent>
-                    <Typography variant="h5" align="center" gutterBottom>
-                        {click === 'Login' ? 'Sign In' : 'Sign Up'}
-                    </Typography>
-                    <Box component="form" onSubmit={handleSubmit} display="flex" flexDirection="column" gap={2}>
-                        <TextField inputRef={email} label="Email" variant="outlined" type='email' required fullWidth />
-                        <TextField inputRef={password} label="Password" variant="outlined" type='password' required fullWidth />
-                        {click === 'Register' && (
-                            <>
-                                <Select
-                                    value={role}
-                                    onChange={(e) => setRole(e.target.value as string)}
-                                    displayEmpty
-                                    variant="outlined"
-                                    fullWidth
-                                    required
-                                >
-                                    <MenuItem value="" disabled>Select Role</MenuItem>
-                                    <MenuItem value="Employer">Employer</MenuItem>
-                                    <MenuItem value="Worker">Worker</MenuItem>
-                                </Select>
+            <Container maxWidth="sm">
+                <Card sx={{ mt: 5, p: 3, boxShadow: 3 }}>
+                    <CardContent>
+                        <Typography variant="h5" align="center" gutterBottom>
+                            {click === 'Login' ? 'Sign In' : 'Sign Up'}
+                        </Typography>
+                        <Box component="form" onSubmit={handleSubmit} display="flex" flexDirection="column" gap={2}>
+                            {click === 'Register' && (
                                 <TextField inputRef={fullName} label="Full Name" variant="outlined" required fullWidth />
-                            </>
-                        )}
-                        <Button type="submit" variant="contained" color="primary" fullWidth>
-                            {click === 'Login' ? 'Login' : 'Register'}
-                        </Button>
-                        <Button onClick={() => setClick(click === 'Login' ? 'Register' : 'Login')} color="secondary">
-                            {click === 'Login' ? "Don't have an account? Sign Up" : 'Already have an account? Login'}
-                        </Button>
-                    </Box>
-                </CardContent>
-            </Card>
-        </Container>
-    );
-}
+                            )}
+                            <TextField inputRef={email} label="Email" variant="outlined" type="email" required fullWidth />
+                            <TextField inputRef={password} label="Password" variant="outlined" type="password" required fullWidth />
+                            <Button type="submit" variant="contained" color="primary" fullWidth>
+                                {click === 'Login' ? 'Login' : 'Register'}
+                            </Button>
+                            <Button onClick={() => setClick(click === 'Login' ? 'Register' : 'Login')} color="secondary">
+                                {click === 'Login' ? "Don't have an account? Sign Up" : 'Already have an account? Login'}
+                            </Button>
+                        </Box>
+                    </CardContent>
+                </Card>
+            </Container>
+        );
+        
+}    

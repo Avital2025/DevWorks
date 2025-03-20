@@ -28,14 +28,22 @@ function App() {
 
    const [isLogin, setIsLogin] = useState(false)
    return (<>
-      <IsLogin value={[isLogin, setIsLogin]}>
-         <User value={{ user, userDispatch }} >
-            <Provider store={store}>
-            <RouterProvider router={MyRouter} />
-            </Provider>
-         </User>
-      </IsLogin>
-   </>)
+   {/* //    <IsLogin value={[isLogin, setIsLogin]}>
+   //       <User value={{ user, userDispatch }} >
+   //          <Provider store={store}>
+   //          <RouterProvider router={MyRouter} />
+   //          </Provider>
+   //       </User>
+   //    </IsLogin> */}
+   <IsLogin.Provider value={[isLogin, setIsLogin]}>
+   <User.Provider value={{ user, userDispatch }}>
+      <Provider store={store}>
+         <RouterProvider router={MyRouter} />
+      </Provider>
+   </User.Provider>
+</IsLogin.Provider>
+    </>)
+   
 }
 
 export default App

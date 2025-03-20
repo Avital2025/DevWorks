@@ -36,7 +36,6 @@ builder.Services.AddScoped<IAIService, AIService>();
 
 
 
-builder.Services.AddSwaggerGen();
 builder.Services.AddHttpClient();
 // הוספת Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -127,14 +126,13 @@ app.UseCors("AllowAll");
 app.MapGet("/", () => "Hello World!");
 
 
+DotNetEnv.Env.Load();
 
 // אל תיצור את ה-s3Client שוב כאן, כי יש לך אותו ב-S3Service כבר
 var awsAccessKey = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
-Console.WriteLine("-------1-------");
 var awsSecretKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
-Console.WriteLine("-------2-------");
 var region = Amazon.RegionEndpoint.GetBySystemName(Environment.GetEnvironmentVariable("AWS_REGION"));
-Console.WriteLine("-------3-------");
+
 
 
 if (string.IsNullOrEmpty(awsAccessKey) || string.IsNullOrEmpty(awsSecretKey) || region == null)

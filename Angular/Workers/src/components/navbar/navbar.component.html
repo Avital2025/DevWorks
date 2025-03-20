@@ -1,29 +1,14 @@
-
+<!-- 
 <nav class="nav-bar">
   <div class="nav-left">
     <app-auth></app-auth>
   </div>
-  <!-- <div class="nav-right">
-  
-    <button (click)="goToExternalSite()">מגייסים עובדים? זה המקום שלך!</button>
-  </div>
-   -->
   <div class="recruiters-container">
     
     <button mat-raised-button class="recruiters-button" (click)="goToExternalSite()">
       <mat-icon>business</mat-icon> מגייסים עובדים? זה המקום שלך
   </button>
-  <button mat-button routerLink="/home">
-      <mat-icon>home</mat-icon> דף הבית
-    </button>
-</div>
-</nav>
-
-
-
-<div class="button-row">
- 
-<button mat-button routerLink="/contact">
+  <button mat-button routerLink="/contact">
     <mat-icon>mail</mat-icon> צרו קשר
 </button>
 <button mat-button routerLink="/about">
@@ -32,4 +17,34 @@
 <button mat-button href="#blogs-section">
     <mat-icon>article</mat-icon> בלוגים
 </button>
+  <button mat-button routerLink="/home">
+      <mat-icon>home</mat-icon> דף הבית
+    </button>
 </div>
+</nav>
+ -->
+ <nav class="nav-bar">
+  <div class="nav-left">
+    <app-auth></app-auth>
+  </div>
+  <div class="recruiters-container">
+    <!-- כפתור מגייסים עובדים -->
+    <button mat-raised-button class="recruiters-button" (click)="goToExternalSite()">
+      <mat-icon>business</mat-icon> מגייסים עובדים? זה המקום שלך
+    </button>
+
+    <!-- כפתורים נוספים -->
+    <button mat-button routerLink="/contact">
+      <mat-icon>mail</mat-icon> צרו קשר
+    </button>
+    <button mat-button routerLink="/about">
+      <mat-icon>info</mat-icon> אודות
+    </button>
+    <button mat-button href="#blogs-section">
+      <mat-icon>article</mat-icon> בלוגים
+    </button>
+    <button mat-button routerLink="/home">
+      <mat-icon>home</mat-icon> דף הבית
+    </button>
+  </div>
+</nav>

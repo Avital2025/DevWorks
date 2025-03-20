@@ -11,35 +11,61 @@
     display: flex;
     align-items: center;
   }
+    
   .nav-right {
     display: flex;
     align-items: center;
   }
   button {
     font-size: 18px;
-    padding: 10px 20px;
+    padding: 3px 12px ;
     border-radius: 25px;
+    /* padding: 8px 16px; */
     background: linear-gradient(135deg, #2b2d42, #1e1f33);
     color: #f8f1e4;
     border: 2px solid #e1d5c9;
     cursor: pointer;
     transition: all 0.3s;
-    /* opacity: 1 important!; */
+     /* transition: background 0.3s, border-color 0.3s; */
+    margin-right: 10px;
+    
   }
-  
-  button:hover {
+
+   
+ button:hover {
     background: linear-gradient(135deg, #3a3c5c, #292a44);
     border-color: #f8f1e4;
   }
-  .button-row {
-    display: flex;
-    justify-content: flex-end; /* מיקום הכפתורים בצד שמאל */
-    padding: 10px 20px; /* רווח פנימי */
-    background-color: #f0f0f0; /* צבע רקע */
-  }
   
-  .button-row button {
-    margin-right: 10px; /* רווח בין הכפתורים */
+
+  button:last-child {
+    margin-right: 0; 
   }
 
+/* 
+
   
+  .recruiters-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px; /
+  }
+
+ 
+  
+  button.mat-raised-button {
+    background-color: #2b2d42;
+    color: #fff;
+  }
+  
+  button.mat-button {
+    background-color: transparent;
+    color: #2b2d42;
+  }
+  
+  button.mat-button:hover,
+  button.mat-raised-button:hover {
+    background-color: #3a3c5c;
+  }
+   */

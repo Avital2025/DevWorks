@@ -120,9 +120,7 @@ export default function AddFiles() {
             const uploadResponse = await fetch(data.url, {
                 method: "PUT",
                 body: selectedFile,
-                headers: {
-                    "Content-Type": selectedFile.type
-                }
+               
             });
     
             if (uploadResponse.ok) {

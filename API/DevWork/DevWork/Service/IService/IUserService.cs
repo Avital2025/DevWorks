@@ -10,7 +10,9 @@ public interface IUserService
     Task<UserDto?> UpdateUser(UserPostModel user);
 
         Task<UserEntity> Authenticate(string email, string passwordHash);
-   
+        Task<UserEntity?> GetUserByEmail(string email);
+        //Task<UserEntity> AddUser(UserPostModel model);
+    
 
 
 }
