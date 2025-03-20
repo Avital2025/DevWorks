@@ -251,7 +251,7 @@ export default function AuthPage() {
     const fullName = useRef<HTMLInputElement>(null);
     const [click, setClick] = useState<'Login' | 'Register'>('Login');
     const userContext = useContext(User);
-    const [ isLogin,setLogin] = useContext(IsLogin);
+    const [ _,setLogin] = useContext(IsLogin);
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
