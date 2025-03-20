@@ -256,7 +256,7 @@ export default function AuthPage() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const url = "http://localhost:5069";
+        const url = "https://devworksweb.onrender.com/";
         try {
             const data = click === 'Register' ? {
                 FullName: fullName.current?.value,
