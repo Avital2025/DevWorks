@@ -197,11 +197,7 @@ import React, { useState, useCallback } from 'react';
 import axios from 'axios';
 import { Box, Button, Typography, CircularProgress, Alert } from '@mui/material';
 
-interface FileUploadProps {
-  // ניתן להוסיף כאן props במידה ויש
-}
-
-const FileUploader = (props: FileUploadProps) => {
+const FileUploader = () => {
   const [file, setFile] = useState<File | null>(null);
   const [progress, setProgress] = useState(0);
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);

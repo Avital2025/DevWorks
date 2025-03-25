@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Card, CardContent, Table, TableHead, TableRow, TableCell, TableBody, Button } from "@mui/material";
+import { Card, Table, TableHead, TableRow, TableCell, TableBody, Button } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 import { FileType } from "../types/fileType";
 
