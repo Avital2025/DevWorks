@@ -21,18 +21,20 @@ namespace DevWork.Endpoints
 
             //});
             usersRoutes.MapPost("/register", async (UserPostModel model, IUserService service) =>
+             {
+                  var existingUser = await service.GetUserByEmail(model.Email);
+
+             if (existingUser != null && existingUser.Role == model.Type)
             {
-                var existingUser = await service.GetUserByEmail(model.Email);
-                if (existingUser != null)
-                {
-                    return Results.Conflict("Email already exists.");
-                }
+                return Results.Conflict("Email already exists with the same role.");
+            }
 
-                model.PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.PasswordHash);
-                var created = await service.AddUser(model);
+         model.PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.PasswordHash);
+         var created = await service.AddUser(model);
 
-                return Results.Created($"/users/{model.Id}", created);
-            });
+         return Results.Created($"/users/{model.Id}", created);
+     });
+
 
 
             //usersRoutes.MapPost("/login", async (LoginPostModel model, IUserService service) =>

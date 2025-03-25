@@ -1,46 +1,111 @@
-.nav-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 5px 101px;
-    background-color: #f8f9fa;
-    height: 50px; 
-  }
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 100px;
+  height: 50px;
+}
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+}
+
+button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 16px;
+  padding: 3px 8px;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-right: 10px;
+  border: none;
+  background: none;
+  font-family: 'Assistant', sans-serif;
+}
+
+button:hover {
+  color: #455a64;
+}
+
+button:last-child {
+  margin-right: 0;
+}
+
+.recruiters-btn {
+  background-color: #2b2d42;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 5px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.recruiters-btn:hover {
+  background-color: #3a3c5c;
+  color: #fff;
+}
+
+/* המבורגר תפריט */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  background: none;
+  border: none;
+  position: relative;
   
-  .nav-left {
-    display: flex;
-    align-items: center;
+}
+
+.menu-toggle div {
+  width: 25px;
+  height: 3px;
+  background-color: #333;
+  margin: 0.5px 0;
+  transition: 0.3s;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    padding: 10px 20px;
+    height: auto;
   }
-    
-  .nav-right {
+
+  .menu-toggle {
     display: flex;
-    align-items: center;
   }
+
+  .navbar-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .navbar-links.active {
+    display: flex;
+  }
+
   button {
-    font-size: 18px;
-    padding: 3px 12px ;
-    border-radius: 25px;
-    /* padding: 8px 16px; */
-    background: linear-gradient(135deg, #2b2d42, #1e1f33);
-    color: #f8f1e4;
-    border: 2px solid #e1d5c9;
-    cursor: pointer;
-    transition: all 0.3s;
-     /* transition: background 0.3s, border-color 0.3s; */
-    margin-right: 10px;
-    
+    width: 100%;
+    text-align: center;
   }
+}
 
-   
- button:hover {
-    background: linear-gradient(135deg, #3a3c5c, #292a44);
-    border-color: #f8f1e4;
-  }
-  
-
-  button:last-child {
-    margin-right: 0; 
-  }
 
 /* 
 

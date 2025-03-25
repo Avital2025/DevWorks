@@ -12,13 +12,21 @@ import { Router, RouterModule } from '@angular/router';
   styleUrl: './home.component.css'
 })
 
+
+
 export class HomeComponent {
+  isLogin: boolean = false; // במידה וצריך לנהל את מצב ההתחברות של המשתמש
+  constructor(private router: Router) {}
 
-  constructor(private router:Router) { }
-
-  // goToExtgotofilteringernalSite() {
-  //   this.router.navigate(["/filtering"]);
+  // goToLogin() {
+  //   this.router.navigate(['/login']);
   // }
-  
 
+  // goToAbout() {
+  //   this.router.navigate(['/about']);
+  // }
+
+  // goToBrowseJobs() {
+  //   this.router.navigate(['/jobs']);
+  // }
 }

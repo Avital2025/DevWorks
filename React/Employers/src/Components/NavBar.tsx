@@ -203,6 +203,12 @@ export default () => {
           <NavLinkStyled to="/about">
             <Info /> About
           </NavLinkStyled>
+          <NavLinkStyled to="/userFiles">
+            <Home /> My files
+          </NavLinkStyled>
+          <NavLinkStyled to="/addFiles">
+            <Home />Add files
+          </NavLinkStyled>
         </NavLeft>
 
         <NavRight>

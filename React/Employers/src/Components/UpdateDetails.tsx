@@ -2,10 +2,10 @@ import { FormEvent, useContext, useState } from "react"
 import { Box, Button, Modal, TextField, Typography } from "@mui/material"
 import axios, { AxiosError } from "axios"
 import { User } from "../App";
-import { UserType } from '../userType'
+import { UserType } from '../types/userType'
 import { style } from "../styleModel";
 const updateDetails = () => {
-    const url = "https://devworksweb.onrender.com";
+    const url = "http://localhost:5069";
     const userContext = useContext(User)
     const [user, setUser] = useState<UserType>(userContext.user)
     const [open, setOpen] = useState(false)

@@ -16,21 +16,54 @@ public class DataExtractor : IDataExtractor
         _context = context;
     }
 
-    public async Task<ExtractedDataEntity> ExtractData(byte[] fileData, int employerId)
+    //public async Task<ExtractedDataEntity> ExtractData(byte[] fileData, int employerId)
+    //{
+    //    // שלח את הקובץ ל-AI ושמור את התשובה
+    //    string fileText = Encoding.UTF8.GetString(fileData);
+    //    var aiResponse = await _aiService.SaveProjectDescriptionToDB(fileText);
+
+
+    //    if (aiResponse == null)
+    //    {
+    //        throw new Exception("לא הצלחנו לקבל תשובת AI.");
+    //    }
+    //    // 🟢 שליפת ה-S3Key מתוך הטבלה של הקבצים לפי ה-EmployerId
+    //    var fileEntity = await _context.filesList
+    //        .Where(f => f.EmployerID == employerId)
+    //        .OrderByDescending(f => f.CreatedAt) // לוקח את הקובץ האחרון שהועלה
+    //        .FirstOrDefaultAsync();
+
+    //    if (fileEntity == null)
+    //    {
+    //        throw new Exception("לא נמצא קובץ תואם ב-DB.");
+    //    }
+
+    //    // עכשיו ניצור את ה-ExtractedDataEntity
+    //    var extractedData = new ExtractedDataEntity
+    //    {
+    //        EmployerID = employerId,
+    //        AIResponseId = aiResponse.Id, // מקשר ל-AIResponse ששמרנו
+    //        S3Key = fileEntity.S3Key,
+    //        CreatedAt = DateTime.Now,
+    //        UpdatedAt = DateTime.Now
+    //    };
+
+    //    // שמור את הנתונים ב-DB
+    //    _context.extractedDataList.Add(extractedData);
+    //    await _context.SaveChangesAsync();
+
+    //    return extractedData;
+    //}
+    public async Task<ExtractedDataEntity> ExtractData(byte[] fileData, int employerId, AIResponse aiResponse)
     {
-        // שלח את הקובץ ל-AI ושמור את התשובה
-        string fileText = Encoding.UTF8.GetString(fileData);
-        var aiResponse = await _aiService.SaveProjectDescriptionToDB(fileText);
-
-
         if (aiResponse == null)
         {
-            throw new Exception("לא הצלחנו לקבל תשובת AI.");
+            throw new Exception("AIResponse חסר, לא ניתן להמשיך.");
         }
-        // 🟢 שליפת ה-S3Key מתוך הטבלה של הקבצים לפי ה-EmployerId
+
         var fileEntity = await _context.filesList
             .Where(f => f.EmployerID == employerId)
-            .OrderByDescending(f => f.CreatedAt) // לוקח את הקובץ האחרון שהועלה
+            .OrderByDescending(f => f.CreatedAt)
             .FirstOrDefaultAsync();
 
         if (fileEntity == null)
@@ -38,19 +71,14 @@ public class DataExtractor : IDataExtractor
             throw new Exception("לא נמצא קובץ תואם ב-DB.");
         }
 
-        // עכשיו ניצור את ה-ExtractedDataEntity
         var extractedData = new ExtractedDataEntity
         {
             EmployerID = employerId,
-            AIResponseId = aiResponse.Id, // מקשר ל-AIResponse ששמרנו
+            AIResponseId = aiResponse.Id,
             S3Key = fileEntity.S3Key,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now
         };
-
-        // שמור את הנתונים ב-DB
-        _context.extractedDataList.Add(extractedData);
-        await _context.SaveChangesAsync();
 
         return extractedData;
     }

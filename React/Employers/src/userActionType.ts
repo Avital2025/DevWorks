@@ -1,4 +1,4 @@
-import { UserType } from "./userType"
+import { UserType } from "./types/userType"
 
 
 export type action = {

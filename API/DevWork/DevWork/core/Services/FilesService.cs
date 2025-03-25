@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using Amazon.S3.Model;
+using Amazon.S3;
+using AutoMapper;
 using DevWork.API.Models;
 using DevWork.Core.Dto;
 using DevWork.Core.Entities;
@@ -24,31 +26,69 @@ public class FilesService : IFilesService
         _dataExtractor = dataExtractor;
         _aiService= aIService;
     }
-    public async Task<ExtractedDataEntity> ProcessFile(string fileUrl, int employerId )
+    //public async Task<ExtractedDataEntity> ProcessFile(string fileUrl, int employerId )
+    //{
+    //    var fileData = await _s3Service.DownloadFileAsync(fileUrl);
+    //    var extractedData = await _dataExtractor.ExtractData(fileData, employerId);
+
+
+    //    var fileText = Encoding.UTF8.GetString(fileData);
+
+    //    // שימו לב, ה-AI מייצר תשובה על בסיס הנתונים שהפקעתם
+    //    var aiResponse = await _aiService.SaveProjectDescriptionToDB(fileText);
+
+
+
+    //    // שמירת תשובת ה-AI
+    //    _context.AIResponses.Add(aiResponse);
+    //    await _context.SaveChangesAsync();
+
+    //    // שמירת ExtractedData עם AIResponseId
+    //    extractedData.AIResponseId = aiResponse.Id;
+    //    _context.extractedDataList.Add(extractedData);
+    //    await _context.SaveChangesAsync();
+
+    //    return extractedData;
+    //}
+
+    public async Task<ExtractedDataEntity> ProcessFile(string fileUrl, int employerId)
     {
         var fileData = await _s3Service.DownloadFileAsync(fileUrl);
-        var extractedData = await _dataExtractor.ExtractData(fileData, employerId);
-
-       
         var fileText = Encoding.UTF8.GetString(fileData);
-        
-        // שימו לב, ה-AI מייצר תשובה על בסיס הנתונים שהפקעתם
+
+        // קריאת ה-AI פעם אחת בלבד
         var aiResponse = await _aiService.SaveProjectDescriptionToDB(fileText);
-
-       
-
-        // שמירת תשובת ה-AI
         _context.AIResponses.Add(aiResponse);
         await _context.SaveChangesAsync();
 
-        // שמירת ExtractedData עם AIResponseId
-        extractedData.AIResponseId = aiResponse.Id;
+        // שולח את התשובה לפונקציה ExtractData בלי לקרוא שוב ל-AI
+        var extractedData = await _dataExtractor.ExtractData(fileData, employerId, aiResponse);
+
         _context.extractedDataList.Add(extractedData);
         await _context.SaveChangesAsync();
 
         return extractedData;
     }
 
+
+
+    // פונקציה להורדת הקובץ!!
+
+    //public async Task<string?> GetDownloadUrl(int fileId)
+    //{
+    //    var file = await _context.filesList.FindAsync(fileId);
+    //    if (file is null) return null;
+
+    //    var request = new GetPreSignedUrlRequest
+    //    {
+    //        BucketName = "devwork", // שם הבקט שלך
+    //        Key = file.StoredFileName, // שם הקובץ כפי שהוא נשמר ב-S3
+    //        Verb = HttpVerb.GET,
+    //        Expires = DateTime.UtcNow.AddMinutes(15) // תוקף הלינק
+    //    };
+
+    //    return await _s3Service.GeneratePreSignedUrlAsync(fileName, HttpVerb.PUT);
+    //}
 
 
 

@@ -3,7 +3,7 @@ import './App.css'
 import MyRouter from './myRouter'
 import { Provider } from 'react-redux'
 import { createContext, Dispatch, useReducer, useState } from 'react'
-import { UserType } from './userType'
+import { UserType } from './types/userType'
 import { action, actionUser } from './userActionType'
 import store from './ReduxStore'
 

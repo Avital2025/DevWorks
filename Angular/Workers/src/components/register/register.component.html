@@ -9,18 +9,6 @@
         }
       </mat-form-field>
       
-      <mat-form-field appearance="fill" class="full-width">
-        <mat-label>Role</mat-label>
-        <select matNativeControl formControlName="role">
-          <option value="" disabled selected>Select a role</option>
-          @for(rol of roles; track rol) {
-            <option [value]="rol">{{ rol }}</option>
-          }
-        </select>
-        @if(addUserForm.get('userGroup.role')?.hasError('required')) {
-          <mat-error>Role is required</mat-error>
-        }
-      </mat-form-field>
   
       <mat-form-field appearance="fill" class="full-width">
         <mat-label>Email</mat-label>

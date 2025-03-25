@@ -206,17 +206,22 @@
 //     this.closeDialog();
 //   }
 // }
-import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, ViewChild, TemplateRef } from '@angular/core';
+
+
+// /*====================*/
+
+
+import { Component, ViewChild, TemplateRef, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
-import { CommonModule } from '@angular/common';
+import { MatDialog,MatDialogModule,MatDialogContent, MatDialogActions  } from '@angular/material/dialog';
 import { ExtractedFilesService } from '../../services/extracted-files-service.service';
+import { NavbarComponent } from '../navbar/navbar.component';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { MatOptionModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatOptionModule } from '@angular/material/core';
-import { HttpClientModule } from '@angular/common/http';
-import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
   selector: 'app-filtering',
@@ -229,12 +234,13 @@ import { NavbarComponent } from '../navbar/navbar.component';
     MatInputModule,
     MatSelectModule,
     HttpClientModule,
-    NavbarComponent
-
+    NavbarComponent,
+    MatDialogModule,
+    MatDialogContent,
+     MatDialogActions 
   ],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './filtering.component.html',
-  styleUrls: ['./filtering.component.css']
+  styleUrls: ['./filtering.component.css'],
 })
 export class FilteringComponent implements OnInit {
   filterForm!: FormGroup;
@@ -243,12 +249,14 @@ export class FilteringComponent implements OnInit {
   @ViewChild('instructionsDialog') instructionsDialog!: TemplateRef<any>;
   instructions: string = '';
   dialogForm!: FormGroup;
-  dialogType: string = ''; // לאיזה סוג שדה אנו מציגים את הדיאלוג
-  selectedValues: { [key: string]: any } = {}; // שדה לאחסון הערכים שנבחרו
+  dialogType: string = '';
+  selectedValues: { [key: string]: any } = {};
 
-  constructor(private fb: FormBuilder, 
-              private dataService: ExtractedFilesService,
-              public dialog: MatDialog) { }
+  constructor(
+    private fb: FormBuilder,
+    private dataService: ExtractedFilesService,
+    public dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.filterForm = this.fb.group({
@@ -258,29 +266,31 @@ export class FilteringComponent implements OnInit {
       workplace: [''],
       languages: [[]],
       remoteWork: [null],
-      englishLevel: ['']
+      englishLevel: [''],
     });
 
-    // יצירת טופס לדיאלוג
     this.dialogForm = this.fb.group({
-      dialogInput: ['']
+      dialogInput: [''],
     });
   }
 
   async onSubmit() {
     if (this.filterForm.valid) {
       const formValues = this.filterForm.value;
-      this.dataService.getFilteredProjects(
-        formValues.title,
-        formValues.description,
-        formValues.experience,
-        formValues.workplace,
-        formValues.languages,
-        formValues.remoteWork,
-        formValues.englishLevel
-      ).subscribe(response => {
-        console.log(response);
-      });
+      this.dataService
+        .getFilteredProjects(
+          formValues.title,
+          formValues.description,
+          formValues.experience,
+          formValues.workplace,
+          formValues.languages,
+          formValues.remoteWork,
+          formValues.englishLevel
+        )
+        .subscribe((response) => {
+          console.log(response);
+          // כאן תוכל להוסיף את לוגיקת הטיפול בתגובה
+        });
     }
   }
 
@@ -303,17 +313,16 @@ export class FilteringComponent implements OnInit {
   }
 
   closeDialog(): void {
-    this.dialogForm.reset(); // איפוס השדה
-    this.dialog.closeAll();  // סגירת כל הדיאלוגים
+    this.dialogForm.reset();
+    this.dialog.closeAll();
   }
 
   saveSelection(): void {
     const value = this.dialogForm.get('dialogInput')?.value;
     if (value) {
-      this.selectedValues[this.dialogType] = value; // שמירת הבחירה
-      this.filterForm.patchValue({ [this.dialogType]: value }); // עדכון הערך בטופס
+      this.selectedValues[this.dialogType] = value;
+      this.filterForm.patchValue({ [this.dialogType]: value });
     }
     this.closeDialog();
   }
 }
-

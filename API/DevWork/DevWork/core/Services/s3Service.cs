@@ -5,11 +5,13 @@ using System.Net;
 public interface IS3Service
 {
     Task<byte[]> DownloadFileAsync(string fileUrl);
+     Task<string> GeneratePreSignedUrlAsync(string fileName, HttpVerb verb);
+
 }
 public class S3Service : IS3Service
 {
     private readonly IAmazonS3 _s3Client;
-    private readonly string _bucketName= "devworksbacket" ;
+
     public S3Service(string awsAccessKey, string awsSecretKey, Amazon.RegionEndpoint region)
     {
         _s3Client = new AmazonS3Client(awsAccessKey, awsSecretKey, region);
@@ -38,17 +40,23 @@ public class S3Service : IS3Service
         return memoryStream.ToArray();
     }
 
-    public string GeneratePresignedUrl(string fileName, string contentType)
+    public async Task<string> GeneratePreSignedUrlAsync(string fileName, HttpVerb verb)
     {
+
+        Console.WriteLine("2222222222222222222");
+        string cleanFileName = fileName.Trim().Replace(" ", "_"); // מחליף רווחים בקו תחתון
+        cleanFileName = Uri.EscapeDataString(cleanFileName); // ממיר תווים מיוחדים
+        var extension = Path.GetExtension(fileName).ToLower();
+
         var request = new GetPreSignedUrlRequest
         {
-            BucketName = _bucketName,
-            Key = fileName,
-            Expires = DateTime.UtcNow.AddMinutes(10),
-            Verb = HttpVerb.PUT,
-            ContentType = contentType // נשאר כמו שהוא
+            BucketName ="devwork",
+            Key = cleanFileName,
+            Verb = verb,
+            Expires = DateTime.UtcNow.AddMinutes(15),
+            ContentType = "application/octet-stream"
         };
-
+      
         return _s3Client.GetPreSignedURL(request);
     }
 

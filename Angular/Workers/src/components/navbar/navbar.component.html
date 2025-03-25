@@ -23,13 +23,20 @@
 </div>
 </nav>
  -->
- <nav class="nav-bar">
-  <div class="nav-left">
+ <nav class="navbar">
+  <div class="navbar-left">
     <app-auth></app-auth>
+    <!-- כפתור המבורגר -->
+    <button class="menu-toggle" (click)="toggleMenu()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </button>
   </div>
-  <div class="recruiters-container">
+  
+  <div class="navbar-links" [class.active]="menuOpen">
     <!-- כפתור מגייסים עובדים -->
-    <button mat-raised-button class="recruiters-button" (click)="goToExternalSite()">
+    <button mat-raised-button class="recruiters-btn" (click)="goToExternalSite()">
       <mat-icon>business</mat-icon> מגייסים עובדים? זה המקום שלך
     </button>
 
@@ -48,3 +55,4 @@
     </button>
   </div>
 </nav>
+

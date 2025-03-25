@@ -10,7 +10,11 @@ using Amazon.S3;
 using DevWork.Service.IService;
 using Microsoft.AspNetCore.Mvc;
 using DevWork.Service.Iservice;
+using Amazon.Extensions.NETCore.Setup;
+using Microsoft.Extensions.Options;
 
+
+Console.WriteLine("Server started");
 
 
 
@@ -86,10 +90,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
-        policy => policy.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader());
+        policy => policy.AllowAnyOrigin() // אפשר לכל מקור לגשת
+                        .AllowAnyMethod()  // אפשר כל שיטה (GET, POST וכו')
+                        .AllowAnyHeader()); // אפשר כל כותרת
 });
+
 
 
 builder.Services.AddAuthentication(options =>
@@ -145,11 +150,11 @@ if (string.IsNullOrEmpty(awsAccessKey) || string.IsNullOrEmpty(awsSecretKey) || 
 var s3Service = new S3Service(awsAccessKey, awsSecretKey, region);
 
 // הוספת אפשרות להעביר contentType בקונטקסט של ה-URL
-app.MapGet("/generate-presigned-url", ([FromQuery] string fileName, [FromQuery] string contentType) =>
-{
-    var presignedUrl = s3Service.GeneratePresignedUrl(fileName, contentType);
-    return Results.Ok(new { url = presignedUrl });
-});
+//app.MapGet("/generate-presigned-url", ([FromQuery] string fileName, [FromQuery] string contentType) =>
+//{
+//    var presignedUrl = s3Service.GeneratePresignedUrl(fileName, contentType);
+//    return Results.Ok(new { url = presignedUrl });
+//});
 
 
 

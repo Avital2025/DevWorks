@@ -1,5 +1,5 @@
-export enum Roles {
-    Employer = 'Employer',
-    Worker = 'Worker'
-  }
+// export enum Roles {
+//     Employer = 'Employer',
+//     Worker = 'Worker'
+//   }
   
