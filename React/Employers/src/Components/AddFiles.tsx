@@ -209,25 +209,24 @@ const FileUploader = () => {
       setUploadStatus(null);
     }
   }, []);
-
   const handleUpload = useCallback(async () => {
     if (!file) {
       setUploadStatus('Please select a file first!');
       return;
     }
-
+  
     setUploadStatus(null);
     setLoading(true);
     setProgress(0);
-
     try {
-      // שלב 1: קבלת Presigned URL מהשרת
+      // שלב 1: קבלת Presigned URL מהשרת עבור העלאה (PUT)
       const response = await axios.get('http://localhost:5069/files/generate-presigned-url', {
         params: { fileName: file.name }
       });
-
+      console.log(response.data.url);
+    
       const presignedUrl = response.data.url;
-
+    
       // שלב 2: העלאת הקובץ ישירות ל-S3
       await axios.put(presignedUrl, file, {
         headers: {
@@ -240,16 +239,116 @@ const FileUploader = () => {
           setProgress(percent);
         },
       });
-
-      setUploadStatus('File uploaded successfully!');
+    
+      // שלב 3: קבלת URL להורדה (GET) מ-S3
+      const downloadUrlResponse = await axios.get('http://localhost:5069/files/generate-presigned-download-url', {
+        params: { fileName: file.name }
+      });
+      const downloadUrl = downloadUrlResponse.data.url;
+    
+      // שלב 4: שליחת ה-URL ל-endpoint שמעדכן את ה-DB
+      const model = {
+        FileUrl: downloadUrl, // שולח את ה-URL להורדה במקום ה-URL להעלאה
+        EmployerId: localStorage.getItem('EmployerId'),
+      };
+    
+      await axios.post('http://localhost:5069/files/process-file', model);
+    
+      setUploadStatus('File uploaded and processed successfully!');
       setFile(null);
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error uploading file:', error);
-      setUploadStatus(`Error uploading file: ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
-  }, [file]);
+      setUploadStatus('Error uploading file.');
+    }finally {
+          setLoading(false);
+        }
+      }, [file]);
+    
+
+
+  //   try {
+  //     // שלב 1: קבלת Presigned URL מהשרת
+  //     const response = await axios.get('http://localhost:5069/files/generate-presigned-url', {
+  //       params: { fileName: file.name }
+  //     });
+  //     console.log(response.data.url);
+      
+  
+  //     const presignedUrl = response.data.url;
+      
+
+  //     // שלב 2: העלאת הקובץ ישירות ל-S3
+  //     await axios.put(presignedUrl, file, {
+  //       headers: {
+  //         'Content-Type': 'application/octet-stream',
+  //       },
+  //       onUploadProgress: (progressEvent) => {
+  //         const percent = Math.round(
+  //           (progressEvent.loaded * 100) / (progressEvent.total || 1)
+  //         );
+  //         setProgress(percent);
+  //       },
+  //     }); 
+
+
+  //     // שלב 3: שליחת ה-URL ל-endpoint שמעדכן את ה-DB
+  //     const model = {
+  //       FileUrl: `https://devwork.s3.eu-north-1.amazonaws.com/${fileName}`,
+  //       EmployerId: localStorage.getItem('EmployerId'),
+  //     };
+
+  //     await axios.post('http://localhost:5069/files/process-file', model);
+  
+  //     setUploadStatus('File uploaded and processed successfully!');
+  //     setFile(null);
+  //   } catch (error: any) {
+  //     console.error('Error uploading file:', error);
+  //     setUploadStatus(`Error uploading file: ${error.message}`);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }, [file]);
+  
+  // const handleUpload = useCallback(async () => {
+  //   if (!file) {
+  //     setUploadStatus('Please select a file first!');
+  //     return;
+  //   }
+
+  //   setUploadStatus(null);
+  //   setLoading(true);
+  //   setProgress(0);
+
+  //   try {
+  //     // שלב 1: קבלת Presigned URL מהשרת
+  //     const response = await axios.get('http://localhost:5069/files/generate-presigned-url', {
+  //       params: { fileName: file.name }
+  //     });
+
+  //     const presignedUrl = response.data.url;
+
+  //     // שלב 2: העלאת הקובץ ישירות ל-S3
+  //     await axios.put(presignedUrl, file, {
+  //       headers: {
+  //         'Content-Type': 'application/octet-stream',
+  //       },
+  //       onUploadProgress: (progressEvent) => {
+  //         const percent = Math.round(
+  //           (progressEvent.loaded * 100) / (progressEvent.total || 1)
+  //         );
+  //         setProgress(percent);
+  //       },
+  //     });
+
+  //     setUploadStatus('File uploaded successfully!');
+  //     setFile(null);
+  //   } catch (error: any) {
+  //     console.error('Error uploading file:', error);
+  //     setUploadStatus(`Error uploading file: ${error.message}`);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // }, [file]);
 
   return (
     <Box

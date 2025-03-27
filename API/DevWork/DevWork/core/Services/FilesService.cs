@@ -9,6 +9,7 @@ using DevWork.Service.Iservice;
 using DevWork.Service.IService;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
+using static DevWork.Core.Dto.FilesDto;
 
 public class FilesService : IFilesService
 {
@@ -55,7 +56,7 @@ public class FilesService : IFilesService
     {
         var fileData = await _s3Service.DownloadFileAsync(fileUrl);
         var fileText = Encoding.UTF8.GetString(fileData);
-
+        Console.WriteLine("????????????????????????????");
         // קריאת ה-AI פעם אחת בלבד
         var aiResponse = await _aiService.SaveProjectDescriptionToDB(fileText);
         _context.AIResponses.Add(aiResponse);
@@ -68,6 +69,29 @@ public class FilesService : IFilesService
         await _context.SaveChangesAsync();
 
         return extractedData;
+    }
+
+
+    public async Task<IEnumerable<FilesDto>> GetUserFilesAsync(string userId)
+    {
+        if (!int.TryParse(userId, out int employerId))
+        {
+            return new List<FilesDto>(); // במקרה שה-ID לא תקין
+        }
+
+        return await _context.filesListDto
+            .Where(f => f.EmployerId == employerId)
+            .Select(f => new FilesDto
+            {
+                Id = f.Id,
+                FileName = f.FileName,
+                FileUrl = f.FileUrl,
+                FileType = f.FileType,
+                Size = f.Size,
+                CreatedAt = f.CreatedAt,
+                EmployerId = f.EmployerId  // כאן אנחנו מחזירים את ה-EmployerId
+            })
+            .ToListAsync();
     }
 
 
@@ -104,13 +128,13 @@ public class FilesService : IFilesService
         return file is not null ? _mapper.Map<FilesDto>(file) : null;
     }
 
-    public async Task<FilesDto> AddFile(FilesPostModel filePostModel)
-    {
-        var fileEntity = _mapper.Map<FilesEntity>(filePostModel);
-        _context.filesList.Add(fileEntity);
-        await _context.SaveChangesAsync();
-        return _mapper.Map<FilesDto>(fileEntity);
-    }
+    //public async Task<FilesDto> AddFile(FilesPostModel filePostModel)
+    //{
+    //    var fileEntity = _mapper.Map<FilesEntity>(filePostModel);
+    //    _context.filesList.Add(fileEntity);
+    //    await _context.SaveChangesAsync();
+    //    return _mapper.Map<FilesDto>(fileEntity);
+    //}
 
     public async Task<FilesDto?> UpdateFile(FilesPostModel filePostModel)
     {

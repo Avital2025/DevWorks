@@ -6,22 +6,30 @@ namespace DevWork.Core.Dto
 {
     public class FilesDto
     {
-        public int EmployerId { get; set; }
+        //public int EmployerId { get; set; }
 
-        public string FileUrl { get; set; }
+        //public string FileUrl { get; set; }
 
+        //public string FileName { get; set; }
+
+        //public string FileType { get; set; }
+
+        //public long Size { get; set; }
+
+        //public DateTime CreatedAt { get; set; }
+
+        //public DateTime UpdatedAt { get; set; }
+
+        //[ForeignKey("EmployerId")]
+        //public virtual UserEntity Employer { get; set; }  // קשר לטבלת Users
+        public int Id { get; set; }
         public string FileName { get; set; }
-
+        public string FileUrl { get; set; }
         public string FileType { get; set; }
-
         public long Size { get; set; }
-
         public DateTime CreatedAt { get; set; }
+        public int EmployerId { get; set; }  // הוספתי את ה-EmployerId
 
-        public DateTime UpdatedAt { get; set; }
-
-        [ForeignKey("EmployerId")]
-        public virtual UserEntity Employer { get; set; }  // קשר לטבלת Users
     }
 
 }

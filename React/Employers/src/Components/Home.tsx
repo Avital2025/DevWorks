@@ -69,10 +69,10 @@ const HomePage = () => {
       {/* Header section */}
       <Box sx={{ textAlign: "center", mb: 8 }}>
         <Typography variant="h3" sx={{ fontWeight: "bold", color: "#37474f", mb: 6 }}>
-          Welcome to DevWork
+        DevWork 
         </Typography>
         <Typography variant="h6" sx={{ color: "#607d8b", mb: 6 }}>
-          A platform for employers to manage job listings and files easily.
+          Your platform to manage job listings and files easily
         </Typography>
       </Box>
 
@@ -135,9 +135,23 @@ const HomePage = () => {
 
       {/* Features section */}
       <Box sx={{ textAlign: "center", mt: 16 }}>
-        <Typography variant="h4" sx={{ color: "#37474f", mb: 5 }}>
-          Key Features
-        </Typography>
+      <Typography
+  variant="h4"
+  sx={{
+    color: "#37474f",
+    mb: 5,
+    position: "relative",
+    display: "inline-block",
+    padding: "10px 30px",
+    borderRadius: "50px",
+    backgroundColor: "rgba(55, 71, 79, 0.1)", // רקע עדין
+    boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // צל עדין
+    fontWeight: "bold",
+    letterSpacing: "1px",
+  }}
+>
+  Key Features
+</Typography>
         <Grid container spacing={4}>
           <Grid item xs={12} md={4}>
             <Box sx={{ p: 2, borderRadius: 2, transition: "0.3s", "&:hover": { backgroundColor: "rgba(0, 0, 0, 0.05)", boxShadow: 3 } }}>

@@ -2,7 +2,6 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 enum UserRole {
     Employer = "Employer",
-    Worker = "Worker",
     Guest = "Guest"
 }
 

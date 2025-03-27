@@ -65,8 +65,7 @@ namespace DevWork.Endpoints
 
             usersRoutes.MapPost("/login", async (LoginPostModel model, IUserService service) =>
             {
-                var user = await service.Authenticate(model.email, model.passwordHash);  // כאן נשלחת הסיסמה כפי שהיא נכתבה
-
+                var user = await service.Authenticate(model.email, model.passwordHash);  // כאן נשלחת הסיסמה כפי שהיא נכתב
                 if (user == null)
                 {
                     // אם המשתמש לא נמצא, החזר שגיאה
@@ -80,11 +79,20 @@ namespace DevWork.Endpoints
                     expires: DateTime.Now.AddMinutes(6),
                     signingCredentials: signinCredentials
                 );
-
                 var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
                 // החזרת הטוקן
-                return Results.Ok(new { Token = tokenString });
+                return Results.Ok(new
+                {
+                    Token = tokenString,
+                    User = new
+                    {
+                        user.Id,
+                        user.FullName,
+                        user.Email
+                    }
+                });
+
             });
 
         }

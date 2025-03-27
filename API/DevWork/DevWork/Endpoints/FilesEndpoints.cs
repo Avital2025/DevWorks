@@ -14,8 +14,19 @@ namespace DevWork.Endpoints
          
             var filesRoutes = app.MapGroup("/files");
 
-            filesRoutes.MapGet("/", async (IFilesService service) =>
-                Results.Ok(await service.GetAllFiles()));
+            filesRoutes.MapGet("/", async (IFilesService fileService, HttpContext httpContext) =>
+            {
+                var userId = httpContext.User.FindFirst("sub")?.Value;
+                if (string.IsNullOrEmpty(userId))
+                {
+                    return Results.Unauthorized();
+                }
+
+                var files = await fileService.GetUserFilesAsync(userId);
+                return Results.Ok(files);
+            });
+
+
 
             filesRoutes.MapGet("/{id:int}", async (int id, IFilesService service) =>
             {
@@ -23,11 +34,11 @@ namespace DevWork.Endpoints
                 return entity is not null ? Results.Ok(entity) : Results.NotFound();
             });
 
-            filesRoutes.MapPost("/", async (FilesPostModel model, IFilesService service) =>
-            {
-                var created = await service.AddFile(model);
-                return Results.Created($"/files/{model.Id}", created);
-            });
+            //filesRoutes.MapPost("/", async (FilesPostModel model, IFilesService service) =>
+            //{
+            //    var created = await service.AddFile(model);
+            //    return Results.Created($"/files/{model.Id}", created);
+            //});
 
 
             // פונקציה להורדת הקובץ
@@ -41,7 +52,9 @@ namespace DevWork.Endpoints
             // ✅ הוספת פונקציה לשליחת קובץ לניתוח
             filesRoutes.MapPost("/process-file", async (FilesDto model, IFilesService service) =>
             {
-                
+                Console.WriteLine("here???");
+                Console.WriteLine(model.FileUrl);
+                Console.WriteLine("here???");
                 var extractedData = await service.ProcessFile(model.FileUrl,model.EmployerId );
                 return Results.Ok(extractedData);
             });
@@ -61,13 +74,50 @@ namespace DevWork.Endpoints
             filesRoutes.MapGet("/generate-presigned-url", async (string fileName, IS3Service s3Service) =>
             {
                 Console.WriteLine("hereeeeeeeeeeeeeeeeeeeeeeeeeeee");
-                var presignedUrl = await s3Service.GeneratePreSignedUrlAsync(fileName, HttpVerb.PUT);
+                var presignedUrl = await s3Service.GeneratePreSignedUrlAsync(fileName, HttpVerb.PUT);;
+
+                return Results.Ok(new { url = presignedUrl });
+            });
+
+            // הוספת פונקציה להפקת presigned URL להורדה (GET)
+            filesRoutes.MapGet("/generate-presigned-download-url", async (string fileName, IS3Service s3Service) =>
+            {
+                Console.WriteLine("//////////////////////////Generating PreSigned URL for GET...");
+             
+
+                // הפקת ה-URL עם פעולה של GET
+                var presignedUrl = await s3Service.GeneratePreSignedUrlForDownloadAsync(fileName);
+                Console.WriteLine($"----------------------------------URL being used: {presignedUrl}");
+                // לוג עבור ה-URL שנוצר
+                Console.WriteLine($"Generated PreSigned URL: \"{presignedUrl}\"");
+
+                // החזרת ה-URL ב-Response
                 return Results.Ok(new { url = presignedUrl });
             });
 
 
-        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         }
+
+
+    }
 }
