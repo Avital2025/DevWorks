@@ -6,7 +6,8 @@ public interface IExtractedDataService
 {
     Task<IEnumerable<ExtractedDataDto>> GetAllExtractedFiles();
     Task<ExtractedDataDto?> GetExtractedFileById(int projectId);
-    Task<List<ExtractedDataEntity>> GetFilteredProjects(AIResponse filterParams);
+    Task<List<ExtractedDataEntity>> GetFilteredProjects( int? experience, string workPlace, string languages, bool? remoteWork, string englishLevel);
+
 
     Task<ExtractedDataDto> Add(ExtractedDataPostModel dto);
 

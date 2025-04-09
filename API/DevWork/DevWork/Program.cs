@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using DevWork.Service.Iservice;
 using Amazon.Extensions.NETCore.Setup;
 using Microsoft.Extensions.Options;
+using DevWork.core.Services;
 
 
 Console.WriteLine("Server started");
@@ -36,7 +37,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IDataExtractor, DataExtractor>();
 builder.Services.AddScoped<IS3Service, S3Service>();
 builder.Services.AddScoped<IAIService, AIService>();
-
+builder.Services.AddScoped<ITokenService, TokenService>();
 
 
 
@@ -108,11 +109,15 @@ builder.Services.AddAuthentication(options =>
         {
             ValidateIssuer = true,
             ValidateAudience = true,
+            //ValidateIssuer = false,
+            //ValidateAudience = false,
+
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ValidIssuer = builder.Configuration["JWT:Issuer"],
             ValidAudience = builder.Configuration["JWT:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"]))
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
+        NameClaimType = "sub" // זה השורה הקריטית שחסרה לך
         };
     });
 
@@ -130,6 +135,9 @@ app.UseCors("AllowAll");
 
 app.MapGet("/", () => "Hello World!");
 
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 DotNetEnv.Env.Load();
 
@@ -158,9 +166,9 @@ var s3Service = new S3Service(awsAccessKey, awsSecretKey, region);
 
 
 
-app.UseAuthentication();
 
-app.UseAuthorization();
+
+
 
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -174,6 +182,9 @@ FilesEndpoints.Files(app);
 ExtractedDataEndpoints.ExtractedData(app);
 UsersEndpoints.Users(app);
 AuthEndpoint.Auth(app);
+
+// =========== endpoints injection ===========
+Console.WriteLine("Key: " + builder.Configuration["JWT:Key"]);
 
 
 

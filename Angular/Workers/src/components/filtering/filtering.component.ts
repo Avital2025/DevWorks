@@ -1,243 +1,32 @@
-// import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, ViewChild, TemplateRef } from '@angular/core';
-// import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-// import { MatDialog } from '@angular/material/dialog';
-// import { CommonModule } from '@angular/common';
-// import { ExtractedFilesService } from '../../services/extracted-files-service.service';
-// import { MatFormFieldModule } from '@angular/material/form-field';
-// import { MatInputModule } from '@angular/material/input';
-// import { MatSelectModule } from '@angular/material/select';
-// import { MatOptionModule } from '@angular/material/core';
-// import { HttpClientModule } from '@angular/common/http';
-
-// @Component({
-//   selector: 'app-filtering',
-//   standalone: true,
-//   imports: [
-//     ReactiveFormsModule,
-//     CommonModule,
-//     MatOptionModule,
-//     MatFormFieldModule,
-//     MatInputModule,
-//     MatSelectModule,
-//     HttpClientModule
-//   ],
-//   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-//   templateUrl: './filtering.component.html',
-//   styleUrls: ['./filtering.component.css']
-// })
-// export class FilteringComponent implements OnInit {
-
-//   filterForm!: FormGroup;
-//   languages: string[] = ['C#', 'Java', 'Cobol'];
-
-//   @ViewChild('instructionsDialog') instructionsDialog!: TemplateRef<any>;
-//   instructions: string = '';
-//   inputValue: string = '';
-
-//   dialogForm!: FormGroup; // הוספת טופס לדיאלוג
-
-//   constructor(private fb: FormBuilder, 
-//               private dataService: ExtractedFilesService,
-//               public dialog: MatDialog) { }
-
-//   ngOnInit(): void {
-//     this.filterForm = this.fb.group({
-//       title: [''],
-//       description: [''],
-//       experience: [null, [Validators.required, Validators.pattern('^[0-9]*$')]], // חובה להיות מספר
-//       workplace: [''],
-//       languages: [[]], // מערך של שפות
-//       remoteWork: [null],
-//       englishLevel: ['']
-//     });
-
-//     // יצירת טופס לדיאלוג
-//     this.dialogForm = this.fb.group({
-//       dialogInput: ['']
-//     });
-//   }
-
-//   // עדכון לשליחת הנתונים
-//   async onSubmit() {
-//     if (this.filterForm.valid) {
-//       const formValues = this.filterForm.value;
-//       this.dataService.getFilteredProjects(
-//         formValues.title,
-//         formValues.description,
-//         formValues.experience,
-//         formValues.workplace,
-//         formValues.languages,
-//         formValues.remoteWork,
-//         formValues.englishLevel
-//       ).subscribe(response => {
-//         console.log(response);
-//       });
-//     }
-//   }
-
-//   // פתיחת דיאלוג הוראות
-//   openInstructions(field: string): void {
-//     switch (field) {
-//       case 'experience':
-//         this.instructions = 'Please enter a number representing years of experience.';
-//         break;
-//       case 'languages':
-//         this.instructions = 'Select one or more programming languages from the list.';
-//         break;
-//       case 'englishLevel':
-//         this.instructions = 'Choose a level: Low, Medium, or High.';
-//         break;
-//       default:
-//         this.instructions = 'Fill in this field as required.';
-//     }
-
-//     // פותחים את הדיאלוג
-//     this.dialog.open(this.instructionsDialog);
-//   }
-// }
-
-
-
-
-// import { Component, CUSTOM_ELEMENTS_SCHEMA, OnInit, ViewChild, TemplateRef } from '@angular/core';
-// import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-// import { MatDialog } from '@angular/material/dialog';
-// import { CommonModule } from '@angular/common';
-// import { ExtractedFilesService } from '../../services/extracted-files-service.service';
-// import { MatFormFieldModule } from '@angular/material/form-field';
-// import { MatInputModule } from '@angular/material/input';
-// import { MatSelectModule } from '@angular/material/select';
-// import { MatOptionModule } from '@angular/material/core';
-// import { HttpClientModule } from '@angular/common/http';
-
-// @Component({
-//   selector: 'app-filtering',
-//   standalone: true,
-//   imports: [
-//     ReactiveFormsModule,
-//     CommonModule,
-//     MatOptionModule,
-//     MatFormFieldModule,
-//     MatInputModule,
-//     MatSelectModule,
-//     HttpClientModule
-//   ],
-//   schemas: [CUSTOM_ELEMENTS_SCHEMA],
-//   templateUrl: './filtering.component.html',
-//   styleUrls: ['./filtering.component.css']
-// })
-// export class FilteringComponent implements OnInit {
-//   filterForm!: FormGroup;
-//   languages: string[] = ['C#', 'Java', 'Cobol'];
-
-//   @ViewChild('instructionsDialog') instructionsDialog!: TemplateRef<any>;
-//   instructions: string = '';
-//   dialogForm!: FormGroup;
-//   dialogType: string = ''; // לאיזה סוג שדה אנו מציגים את הדיאלוג
-//   selectedValues: { [key: string]: any } = {}; // שדה לאחסון הערכים שנבחרו
-
-//   constructor(private fb: FormBuilder, 
-//               private dataService: ExtractedFilesService,
-//               public dialog: MatDialog) { }
-
-//   ngOnInit(): void {
-//     this.filterForm = this.fb.group({
-//       title: [''],
-//       description: [''],
-//       experience: [null, [Validators.required, Validators.pattern('^[0-9]*$')]],
-//       workplace: [''],
-//       languages: [[]],
-//       remoteWork: [null],
-//       englishLevel: ['']
-//     });
-
-//     // יצירת טופס לדיאלוג
-//     this.dialogForm = this.fb.group({
-//       dialogInput: ['']
-//     });
-//   }
-
-//   async onSubmit() {
-//     if (this.filterForm.valid) {
-//       const formValues = this.filterForm.value;
-//       this.dataService.getFilteredProjects(
-//         formValues.title,
-//         formValues.description,
-//         formValues.experience,
-//         formValues.workplace,
-//         formValues.languages,
-//         formValues.remoteWork,
-//         formValues.englishLevel
-//       ).subscribe(response => {
-//         console.log(response);
-//       });
-//     }
-//   }
-
-//   openInstructions(field: string): void {
-//     this.dialogType = field;
-//     switch (field) {
-//       case 'experience':
-//         this.instructions = 'Please enter a number representing years of experience.';
-//         break;
-//       case 'languages':
-//         this.instructions = 'Select one or more programming languages from the list.';
-//         break;
-//       case 'englishLevel':
-//         this.instructions = 'Choose a level: Low, Medium, or High.';
-//         break;
-//       default:
-//         this.instructions = 'Fill in this field as required.';
-//     }
-//     this.dialog.open(this.instructionsDialog);
-//   }
-
-//   closeDialog(): void {
-//     this.dialogForm.reset(); // איפוס השדה
-//     this.dialog.closeAll();  // סגירת כל הדיאלוגים
-//   }
-
-//   saveSelection(): void {
-//     const value = this.dialogForm.get('dialogInput')?.value;
-//     if (value) {
-//       this.selectedValues[this.dialogType] = value; // שמירת הבחירה
-//       this.filterForm.patchValue({ [this.dialogType]: value }); // עדכון הערך בטופס
-//     }
-//     this.closeDialog();
-//   }
-// }
-
-
-// /*====================*/
-
-
-import { Component, ViewChild, TemplateRef, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatDialog,MatDialogModule,MatDialogContent, MatDialogActions  } from '@angular/material/dialog';
-import { ExtractedFilesService } from '../../services/extracted-files-service.service';
-import { NavbarComponent } from '../navbar/navbar.component';
-import { CommonModule } from '@angular/common';
+import { Component, ViewChild, TemplateRef, OnInit, inject } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
-import { MatOptionModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { ExtractedFilesService } from '../../services/extracted-files-service.service';
+import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
+import { MatOptionModule } from '@angular/material/core';
+import { NavbarComponent } from '../navbar/navbar.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon'; // ודא שייבאת את MatIconModule
 
 @Component({
   selector: 'app-filtering',
   standalone: true,
   imports: [
+    MatMenuModule,
     ReactiveFormsModule,
-    CommonModule,
-    MatOptionModule,
+    HttpClientModule,
+    MatDialogModule, // ייתכן שאתה לא צריך את MatDialogModule אם אתה לא משתמש ב-MatDialog בצורה אחרת
     MatFormFieldModule,
     MatInputModule,
+    MatButtonModule,
     MatSelectModule,
-    HttpClientModule,
+    MatOptionModule,
     NavbarComponent,
-    MatDialogModule,
-    MatDialogContent,
-     MatDialogActions 
+    MatIconModule, // ודא שייבאת את MatIconModule
   ],
   templateUrl: './filtering.component.html',
   styleUrls: ['./filtering.component.css'],
@@ -252,17 +41,13 @@ export class FilteringComponent implements OnInit {
   dialogType: string = '';
   selectedValues: { [key: string]: any } = {};
 
-  constructor(
-    private fb: FormBuilder,
-    private dataService: ExtractedFilesService,
-    public dialog: MatDialog
-  ) {}
+  private fb = inject(FormBuilder);
+  private dataService = inject(ExtractedFilesService);
+  // public dialog = inject(MatDialog); // הסר את inject של MatDialog אם אתה לא משתמש בו בצורה אחרת
 
   ngOnInit(): void {
     this.filterForm = this.fb.group({
-      title: [''],
-      description: [''],
-      experience: [null, [Validators.required, Validators.pattern('^[0-9]*$')]],
+      experience: [null],
       workplace: [''],
       languages: [[]],
       remoteWork: [null],
@@ -275,54 +60,60 @@ export class FilteringComponent implements OnInit {
   }
 
   async onSubmit() {
+    console.log("im here");
+
     if (this.filterForm.valid) {
+      console.log("form is valid");
+
       const formValues = this.filterForm.value;
       this.dataService
         .getFilteredProjects(
-          formValues.title,
-          formValues.description,
           formValues.experience,
           formValues.workplace,
-          formValues.languages,
+          formValues.languages.join(','),
           formValues.remoteWork,
           formValues.englishLevel
         )
         .subscribe((response) => {
           console.log(response);
-          // כאן תוכל להוסיף את לוגיקת הטיפול בתגובה
+          // here you can add the response handling logic
         });
     }
   }
 
-  openInstructions(field: string): void {
-    this.dialogType = field;
-    switch (field) {
+  openInstructions(type: string) {
+    this.dialogType = type;
+    this.instructions = this.getInstructionsText(type);
+  }
+
+  getInstructionsText(type: string): string {
+    switch (type) {
       case 'experience':
-        this.instructions = 'Please enter a number representing years of experience.';
-        break;
+        return 'Please enter a number representing years of experience.';
       case 'languages':
-        this.instructions = 'Select one or more programming languages from the list.';
-        break;
+        return 'Select one or more programming languages from the list.';
       case 'englishLevel':
-        this.instructions = 'Choose a level: Low, Medium, or High.';
-        break;
+        return 'Choose a level: Low, Medium, or High.';
+      case 'remoteWork':
+        return 'Choose if the job is remote.';
+      case 'workplace':
+        return 'Enter the workplace name or description.';
       default:
-        this.instructions = 'Fill in this field as required.';
+        return 'Fill in this field as required.';
     }
-    this.dialog.open(this.instructionsDialog);
   }
 
   closeDialog(): void {
     this.dialogForm.reset();
-    this.dialog.closeAll();
+    // this.dialog.closeAll(); // הסר שורה זו
   }
 
-  saveSelection(): void {
+  saveSelection(field: string): void {
     const value = this.dialogForm.get('dialogInput')?.value;
     if (value) {
-      this.selectedValues[this.dialogType] = value;
-      this.filterForm.patchValue({ [this.dialogType]: value });
+      this.selectedValues[field] = value;
+      this.filterForm.patchValue({ [field]: value });
     }
-    this.closeDialog();
+    // this.closeDialog(); // הסר שורה זו
   }
 }

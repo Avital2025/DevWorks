@@ -200,7 +200,7 @@ public class AIService : IAIService
         {
             var prompt = new
             {
-                model = "gpt-3.5-turbo",
+                model = "gpt-4o-mini",
                 messages = new[] {
                 new {
                     role = "system",
@@ -232,6 +232,10 @@ public class AIService : IAIService
 
             // שליחת הבקשה ל-API
             var response = await _httpClient.SendAsync(request);
+            Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAשש");
+
+            var responseContent1 = await response.Content.ReadAsStringAsync();
+            Console.WriteLine($"Response Content: {responseContent1}" + "קמד");
 
             // טיפול בתשובה שלא הצליחה
             if (!response.IsSuccessStatusCode)
@@ -239,20 +243,24 @@ public class AIService : IAIService
                 var responseContent = await response.Content.ReadAsStringAsync();
                 throw new Exception($"לא הצלחנו לנתח את המידע. סטטוס: {response.StatusCode}. תשובה: {responseContent}");
             }
-
+            Console.WriteLine("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
             // קריאת התשובה מ-API
+
             var aiResponse = await response.Content.ReadFromJsonAsync<AIResponse>();
+            Console.WriteLine("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
             if (aiResponse == null)
             {
                 throw new Exception("AI החזיר תשובה ריקה.");
             }
-
+            Console.WriteLine("--------------------------***********************************");
             // עיבוד התשובה
+          
             ProcessAiResponse(aiResponse);
+            Console.WriteLine("-3333333333333333333333333333-***********************************");
 
-            // שמירה למסד הנתונים
-            _context.AIResponses.Add(aiResponse);
-            await _context.SaveChangesAsync();
+
+            //_context.AIResponses.Add(aiResponse);
+            //await _context.SaveChangesAsync();
 
             return aiResponse;
         }
@@ -278,6 +286,7 @@ public class AIService : IAIService
 
     private void ProcessAiResponse(AIResponse aiResponse)
     {
+        Console.WriteLine("2222222222222222222222222***********************************");
         // עיבוד שפות
 
         // רשימת השפות התקניות

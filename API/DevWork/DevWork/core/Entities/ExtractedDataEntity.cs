@@ -18,24 +18,16 @@ namespace DevWork.Core.Entities
         [ForeignKey("EmployerID")]
         public UserEntity Employer { get; set; }
 
-        [ForeignKey("AIResponseId")]
-        public AIResponse AIResponse { get; set; }
-
-        //[MaxLength(200)]
-        //public string ProjectTitle { get; set; }
-        //public string ProjectDescription { get; set; }
-        //public int? RequiredExperience { get; set; }
-
-
-
-        //public string ProgrammingLanguages { get; set; }
-        //public bool RemoteWorkAvailable { get; set; }
-        //public string EnglishLevel { get; set; }
-        //[Required]
+        public string? Title { get; set; }
+        public string? Description { get; set; }
+        public int? Experience { get; set; }
+        public string? WorkPlace { get; set; }
+        public string? Languages { get; set; }
+        public bool? RemoteWork { get; set; }
+        public string? EnglishLevel { get; set; }
 
 
-        //  מפתח זר- מעסיק, תאריך העלאה עדכון, מפתח לקובץ, קישור ל response
-        // מפתח זר וערך ל response
+
 
     }
 }

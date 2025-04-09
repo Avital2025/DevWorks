@@ -1,16 +1,16 @@
 import { createRequire } from 'module';const require = createRequire(import.meta.url);
 import {
+  ROUTES,
+  Router,
+  loadChildren
+} from "./chunk-F2PDROT7.js";
+import {
   INITIAL_CONFIG,
   SERVER_CONTEXT,
   platformServer,
   renderApplication,
   renderModule
 } from "./chunk-NOPLYJEQ.js";
-import {
-  ROUTES,
-  Router,
-  loadChildren
-} from "./chunk-F2PDROT7.js";
 import {
   APP_BASE_HREF,
   PlatformLocation
@@ -11582,4 +11582,4 @@ export {
   AngularAppEngine,
   createRequestHandler
 };
-//# sourceMappingURL=chunk-IDP4FEX7.js.map
+//# sourceMappingURL=chunk-DFJULMVP.js.map

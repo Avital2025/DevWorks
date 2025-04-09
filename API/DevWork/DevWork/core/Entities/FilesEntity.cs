@@ -27,6 +27,6 @@ namespace DevWork.Core.Entities
 
         public DateTime UpdatedAt { get; set; } // תאריך עדכון אחרון
 
-        //    public bool IsDeleted { get; set; } // דגל למחיקה רכה
+           public bool IsDeleted { get; set; } // דגל למחיקה רכה
     }
 }

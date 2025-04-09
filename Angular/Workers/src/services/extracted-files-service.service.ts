@@ -12,8 +12,6 @@ export class ExtractedFilesService {
 
   // פונקציה לשליפת המידע המחולץ
   getFilteredProjects(
-    Title: string, 
-    Description: string, 
     Experience: number | null, 
     WorkPlace: string, 
     Languages: string, 
@@ -21,13 +19,12 @@ export class ExtractedFilesService {
     EnglishLevel: string
   ): Observable<any> {
     const params = new HttpParams()
-      .set('Title', Title)
-      .set('Description', Description)
       .set('Experience', Experience !== null ? Experience.toString() : '')
       .set('WorkPlace', WorkPlace)
       .set('Languages', Languages)
       .set('RemoteWork', RemoteWork !== null ? RemoteWork.toString() : '')
       .set('EnglishLevel', EnglishLevel);
+      console.log('שולח בקשה לשרת עם הפרמטרים הבאים:', params.toString());
     return this.http.get<any>(`${this.apiUrl}/extractedData`, { params });
   }
 

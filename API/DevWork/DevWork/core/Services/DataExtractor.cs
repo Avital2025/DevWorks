@@ -54,6 +54,35 @@ public class DataExtractor : IDataExtractor
 
     //    return extractedData;
     //}
+    //public async Task<ExtractedDataEntity> ExtractData(byte[] fileData, int employerId, AIResponse aiResponse)
+    //{
+    //    if (aiResponse == null)
+    //    {
+    //        throw new Exception("AIResponse חסר, לא ניתן להמשיך.");
+    //    }
+
+    //    var fileEntity = await _context.filesList
+    //        .Where(f => f.EmployerID == employerId)
+    //        .OrderByDescending(f => f.CreatedAt)
+    //        .FirstOrDefaultAsync();
+
+    //    if (fileEntity == null)
+    //    {
+    //        throw new Exception("לא נמצא קובץ תואם ב-DB.");
+    //    }
+
+    //    var extractedData = new ExtractedDataEntity
+    //    {
+    //        EmployerID = employerId,
+    //       // AIResponseId = aiResponse.Id,
+    //        S3Key = fileEntity.S3Key,
+    //        CreatedAt = DateTime.Now,
+    //        UpdatedAt = DateTime.Now
+    //    };
+
+    //    return extractedData;
+    //}
+
     public async Task<ExtractedDataEntity> ExtractData(byte[] fileData, int employerId, AIResponse aiResponse)
     {
         if (aiResponse == null)
@@ -62,9 +91,9 @@ public class DataExtractor : IDataExtractor
         }
 
         var fileEntity = await _context.filesList
-            .Where(f => f.EmployerID == employerId)
-            .OrderByDescending(f => f.CreatedAt)
-            .FirstOrDefaultAsync();
+      .Where(f => f.EmployerID == employerId)
+      .OrderByDescending(f => f.CreatedAt) // עדיין נשאר, כדי לקבל את הקובץ האחרון
+      .FirstOrDefaultAsync();
 
         if (fileEntity == null)
         {
@@ -74,14 +103,21 @@ public class DataExtractor : IDataExtractor
         var extractedData = new ExtractedDataEntity
         {
             EmployerID = employerId,
-            AIResponseId = aiResponse.Id,
             S3Key = fileEntity.S3Key,
             CreatedAt = DateTime.Now,
-            UpdatedAt = DateTime.Now
+            UpdatedAt = DateTime.Now,
+            IsActive = true,
+            // העתקת ערכים של AIResponse ישירות
+            Title = aiResponse.Title,
+            Description = aiResponse.Description,
+            Experience = aiResponse.Experience,
+            WorkPlace = aiResponse.WorkPlace,
+            Languages = aiResponse.Languages,
+            RemoteWork = aiResponse.RemoteWork,
+            EnglishLevel = aiResponse.EnglishLevel
         };
 
         return extractedData;
     }
-
 
 }

@@ -6,9 +6,7 @@ export class user{
        public email:string,
        public passwordHash:string,
        public role:"Worker"
-
-      
-      
+ 
     ){}
     
 }

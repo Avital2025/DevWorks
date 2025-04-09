@@ -33,8 +33,11 @@ public class UserService : IUserService
         var userEntity = _mapper.Map<UserEntity>(userPostModel);
         _context.usersList.Add(userEntity);
         await _context.SaveChangesAsync();
+
+        // מחזיר את ה-DTO, שכולל את ה-id, fullName ו-email
         return _mapper.Map<UserDto>(userEntity);
     }
+
     /*
      * public async Task<User> AddUser(UserPostModel model)
     {
@@ -71,17 +74,29 @@ public class UserService : IUserService
         await _context.SaveChangesAsync();
         return true;
     }
- public async Task<UserEntity> Authenticate(string email, string password)
-{
-    var user = await _context.usersList.FirstOrDefaultAsync(u => u.Email == email);
-    
-    if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash))
+    public async Task<UserDto> Authenticate(string email, string password)
     {
-        return null;
+        var userEntity = await _context.usersList.FirstOrDefaultAsync(u => u.Email == email);
+
+        if (userEntity == null || !BCrypt.Net.BCrypt.Verify(password, userEntity.PasswordHash))
+        {
+            return null;
+        }
+
+        // המרה מ-UserEntity ל-UserDto
+        var userDto = new UserDto
+        {
+            Id = userEntity.Id,
+            FullName = userEntity.FullName,
+            Email = userEntity.Email,
+            Type = userEntity.Role,
+            CreatedAt = userEntity.CreatedAt,
+            UpdatedAt = userEntity.UpdatedAt
+        };
+
+        return userDto;
     }
 
-    return user;
-}
     //public async Task<UserEntity> Authenticate(string email, string password)
     //{
     //    // חפש את המשתמש לפי המייל

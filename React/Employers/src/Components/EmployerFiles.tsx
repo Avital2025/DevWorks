@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { Card, Table, TableHead, TableRow, TableCell, TableBody, Button, IconButton } from "@mui/material";
 import DownloadIcon from "@mui/icons-material/Download";
 import EditIcon from "@mui/icons-material/Edit";
@@ -7,26 +8,27 @@ import { FileType } from "../types/fileType";
 
 export default function EmployerFiles() {
   const [files, setFiles] = useState<FileType[]>([]);
+  const token = localStorage.getItem("token");
 
-  // useEffect(() => {
-  //   fetch("http://localhost:5069/files")
-  //     .then((res) => res.json())
-  //     .then((data) => setFiles(data))
-  //     .catch((error) => console.error("Error fetching files:", error));
-  // }, []);
-useEffect(() => {
-  fetch("http://localhost:5069/files")
-    .then((res) => res.json())
-    .then((data) => {
-      console.log("API Response:", data); // הדפסת המידע שהתקבל מה-API
-      if (Array.isArray(data)) {
-        setFiles(data);
-      } else {
-        console.error("Invalid data format:", data);
-      }
-    })
-    .catch((error) => console.error("Error fetching files:", error));
-}, []);
+  useEffect(() => {
+    axios.get("http://localhost:5069/files", {
+        headers: {
+          Authorization: `Bearer ${token}`, // הוספת טוקן לאימות
+          "Content-Type": "application/json",
+        },
+      })
+      .then((response) => {
+        console.log("API Response:", response.data); // הדפסת המידע שהתקבל מה-API
+        if (Array.isArray(response.data)) {
+          setFiles(response.data);
+        } else {
+          console.error("Invalid data format:", response.data);
+        }
+      })
+      .catch((error) => 
+        console.error("Error fetching files:", error));
+  }, []);
+
   const handleEdit = (fileId: string) => {
     console.log("Edit file", fileId);
     // הוסף כאן לוגיקה לעריכת קובץ
@@ -50,39 +52,7 @@ useEffect(() => {
             <TableCell>מחיקה</TableCell>
           </TableRow>
         </TableHead>
-        {/* <TableBody>
-          {files.length > 0 ? (
-            files.map((file) => (
-              <TableRow key={file.id}>
-                <TableCell>{file.name}</TableCell>
-                <TableCell>{new Date(file.uploadDate).toLocaleDateString()}</TableCell>
-                <TableCell>
-                  <a href={file.url} download>
-                    <IconButton color="primary">
-                      <DownloadIcon />
-                    </IconButton>
-                  </a>
-                </TableCell>
-                <TableCell>
-                  <IconButton color="secondary" onClick={() => handleEdit(file.id)}>
-                    <EditIcon />
-                  </IconButton>
-                </TableCell>
-                <TableCell>
-                  <IconButton color="error" onClick={() => handleDelete(file.id)}>
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={5} style={{ textAlign: "center", color: "gray" }}>
-                אין קבצים להציג
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody> */}
+
         <TableBody>
           {files.length > 0 ? (
             files.map((file) => (
@@ -116,7 +86,6 @@ useEffect(() => {
             </TableRow>
           )}
         </TableBody>
-
       </Table>
       <Button
         variant="contained"

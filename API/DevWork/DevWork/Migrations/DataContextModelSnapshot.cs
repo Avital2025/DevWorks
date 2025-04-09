@@ -22,6 +22,40 @@ namespace DevWork.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
+            modelBuilder.Entity("DevWork.Core.Dto.FilesDto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<int>("EmployerId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("FileType")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("FileUrl")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<long>("Size")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("filesListDto");
+                });
+
             modelBuilder.Entity("DevWork.Core.Entities.ExtractedDataEntity", b =>
                 {
                     b.Property<int>("ProjectID")
@@ -30,44 +64,44 @@ namespace DevWork.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("ProjectID"));
 
+                    b.Property<int>("AIResponseId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("longtext");
 
                     b.Property<int>("EmployerID")
                         .HasColumnType("int");
 
                     b.Property<string>("EnglishLevel")
-                        .IsRequired()
                         .HasColumnType("longtext");
+
+                    b.Property<int?>("Experience")
+                        .HasColumnType("int");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("ProgrammingLanguages")
+                    b.Property<string>("Languages")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool?>("RemoteWork")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("S3Key")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("ProjectDescription")
-                        .IsRequired()
+                    b.Property<string>("Title")
                         .HasColumnType("longtext");
-
-                    b.Property<string>("ProjectTitle")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
-
-                    b.Property<string>("RemoteWorkAvailable")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<int?>("RequiredExperience")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("WorkPlace")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("ProjectID");
@@ -101,6 +135,9 @@ namespace DevWork.Migrations
 
                     b.Property<int?>("FolderId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("tinyint(1)");
 
                     b.Property<string>("S3Key")
                         .IsRequired()
@@ -157,13 +194,13 @@ namespace DevWork.Migrations
 
             modelBuilder.Entity("DevWork.Core.Entities.ExtractedDataEntity", b =>
                 {
-                    b.HasOne("DevWork.Core.Entities.UserEntity", "employer")
+                    b.HasOne("DevWork.Core.Entities.UserEntity", "Employer")
                         .WithMany()
                         .HasForeignKey("EmployerID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("employer");
+                    b.Navigation("Employer");
                 });
 
             modelBuilder.Entity("DevWork.Core.Entities.FilesEntity", b =>

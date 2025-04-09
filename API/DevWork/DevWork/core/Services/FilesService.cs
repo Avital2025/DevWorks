@@ -19,13 +19,13 @@ public class FilesService : IFilesService
     private readonly IDataExtractor _dataExtractor;
     private readonly IAIService _aiService;
 
-    public FilesService(IAIService aIService ,DataContext context, IMapper mapper, IS3Service s3Service, IDataExtractor dataExtractor)
+    public FilesService(IAIService aIService, DataContext context, IMapper mapper, IS3Service s3Service, IDataExtractor dataExtractor)
     {
         _context = context;
         _mapper = mapper;
         _s3Service = s3Service;
         _dataExtractor = dataExtractor;
-        _aiService= aIService;
+        _aiService = aIService;
     }
     //public async Task<ExtractedDataEntity> ProcessFile(string fileUrl, int employerId )
     //{
@@ -57,10 +57,33 @@ public class FilesService : IFilesService
         var fileData = await _s3Service.DownloadFileAsync(fileUrl);
         var fileText = Encoding.UTF8.GetString(fileData);
         Console.WriteLine("????????????????????????????");
+
+
         // קריאת ה-AI פעם אחת בלבד
         var aiResponse = await _aiService.SaveProjectDescriptionToDB(fileText);
-        _context.AIResponses.Add(aiResponse);
-        await _context.SaveChangesAsync();
+        Console.WriteLine("aaaaafter  SaveProjectDescriptionToDB");
+        //_context.AIResponses.Add(aiResponse);
+        //Console.WriteLine("aaaaafter  add");
+        //await _context.SaveChangesAsync();
+        //Console.WriteLine("aaaaafter SaveChangesAsync ");
+
+
+
+        var fileEntity = new FilesEntity
+        {
+            // ממלאים את הערכים המתאימים לפי הצורך
+            FileName = Path.GetFileName(fileUrl), // אתה יכול להפיק את שם הקובץ מתוך ה-URL
+            FileType = Path.GetExtension(fileUrl), // סוג הקובץ (למשל .pdf או .jpg)
+            Size = fileData.Length,  // גודל הקובץ בבתים
+            S3Key = fileUrl,  // אם אתה שומר את ה-URL או המזהה של הקובץ ב-S3
+            EmployerID = employerId,  // המעסיק שהעלה את הקובץ
+            CreatedAt = DateTime.Now,  // זמן יצירת הקובץ
+            UpdatedAt = DateTime.Now,  // זמן עדכון הקובץ
+            IsDeleted = false,  // אם הקובץ לא נמחק, זה לא פעיל בינתיים
+        };
+
+        _context.filesList.Add(fileEntity);  // הוספה לטבלה של הקבצים
+        await _context.SaveChangesAsync();   // שמירה ב-DB
 
         // שולח את התשובה לפונקציה ExtractData בלי לקרוא שוב ל-AI
         var extractedData = await _dataExtractor.ExtractData(fileData, employerId, aiResponse);

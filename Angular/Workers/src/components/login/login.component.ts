@@ -10,7 +10,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { log } from 'console';
+import { user } from '../../models/user';
 
 @Component({
     selector: 'app-login',
@@ -50,6 +50,7 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     if (this.addUserForm.valid) {
       const { email, passwordHash } = this.addUserForm.value.userGroup;
+      
   
       // לוגין עם השירות הראשון
       this.userservice.login(email, passwordHash).subscribe({
@@ -57,8 +58,13 @@ export class LoginComponent implements OnInit {
          
           // שמירה של token בתקשורת עם השרת
           sessionStorage.setItem('token', response.token);
-          sessionStorage.setItem('role', response.role);
-          sessionStorage.setItem('userId', response.userId);
+          sessionStorage.setItem('role', 'Worker'); // אם קיים
+         // sessionStorage.setItem('userId', response.userId);
+        //  sessionStorage.setItem('token', response.token);
+        sessionStorage.setItem('userId', response.user.id);
+       // sessionStorage.setItem('role', response.role); // אם קיים
+        sessionStorage.setItem('fullName', response.user.fullName);
+        sessionStorage.setItem('email', response.user.email);
           console.log("user logged in successfully");
   
           // ניווט לעמוד הבית

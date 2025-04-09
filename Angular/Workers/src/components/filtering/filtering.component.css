@@ -1,40 +1,105 @@
-.filter-buttons {
+/* Styles for the filter form container */
+.filter-container {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  background: #f0f0f0;
-  border-radius: 25px;
-  padding: 20px;
-  gap: 15px;
-  width: 90%;
-  max-width: 800px;
-  margin: auto;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 2rem;
+  /* background-color: #f5f5f5; */
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 4rem; /* This will move the form down from the navbar */
 }
 
+/* Styling for the filter buttons */
+.filter-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
 .custom-button {
-  background: linear-gradient(135deg, #2b2d42, #1e1f33);
-  color: #f8f1e4;
-  border: 2px solid #e1d5c9;
-  border-radius: 20px;
-  padding: 10px 20px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s;
-  min-width: 120px;
+  background-color: #fff; /* רקע לבן */
+  border: 1px solid #ddd; /* גבול בהיר */
+  padding: 0.5rem 1rem;
+  font-size: 14px;
+  color: #333; /* צבע טקסט כהה */
   text-align: center;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s, border 0.3s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* נותן הצללה קלה */
 }
 
 .custom-button:hover {
-  background: linear-gradient(135deg, #3a3c5c, #292a44);
-  border-color: #f8f1e4;
+  background-color: #e0e0e0; /* צבע רקע כשהכפתור מונח עליו */
+  border-color: #aaa; /* צבע גבול משתנה בעת ריחוף */
+  color: #000; /* צבע טקסט כהה יותר כאשר יש Hover */
 }
 
-/* הוספה של סגנון לדיאלוג (אם יש צורך) */
-.mat-dialog-content {
-  padding: 20px;
+
+.custom-button .filled {
+  color: #ff5722;
+  margin-left: 0.3rem;
+  font-size: 1.2rem;
 }
 
-.mat-dialog-actions {
-  justify-content: flex-end;
+/* Submit button styling */
+.submit-button {
+  background-color: #333;
+  color: #fff;
+  padding: 0.3rem 1rem;  /* Made the button smaller */
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 14px;  /* Reduced font size */
+  cursor: pointer;
+  transition: background-color 0.3s;
+  width: auto;  /* Ensures button width adjusts to content */
+  max-width: 200px;  /* Optional: you can limit the button width */
+  margin-left: 0;  /* מצמיד את הכפתור לימין */
+  margin-right: auto;    /* מוודא שאין רווח מצד ימין */
+}
+
+.submit-button:hover {
+  background-color: #555;
+}
+/* עיצוב המתפריט */
+.mat-menu-panel {
+  background-color: #f5f5f5;  /* רקע בהיר (יכול להתאים לרקע הרגיל שלך) */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);  /* צללה עדינה */
+  border-radius: 8px;  /* פינות מעוגלות */
+  padding: 1rem;
+  width: auto;  /* מותאם לפי תוכן */
+  margin-top: 0.5rem;  /* ריווח קטן מתחת לכפתור */
+}
+
+/* עיצוב עבור כל פריט בתפריט */
+.mat-menu-item {
+  font-size: 14px;
+  padding: 0.5rem 1rem;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-radius: 4px;
+}
+
+.mat-menu-item:hover {
+  background-color: #e0e0e0;  /* צבע רקע כאשר יש hover על פריט בתפריט */
+}
+
+/* עיצוב הכפתור הראשי */
+.custom-button {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  padding: 0.5rem 1rem;
+  font-size: 14px;
+  color: #333;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s, border 0.3s;
+}
+
+.custom-button:hover {
+  background-color: #e0e0e0;
+  border-color: #aaa;
 }

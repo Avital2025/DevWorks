@@ -16,9 +16,18 @@ namespace DevWork.Endpoints
 
             filesRoutes.MapGet("/", async (IFilesService fileService, HttpContext httpContext) =>
             {
-                var userId = httpContext.User.FindFirst("sub")?.Value;
-                if (string.IsNullOrEmpty(userId))
+              var userId = httpContext.User.FindFirst("sub")?.Value;
+                var token = httpContext.Request.Headers["Authorization"].ToString();
+                foreach (var claim in httpContext.User.Claims)
                 {
+                    Console.WriteLine($"{claim.Type}: {claim.Value}"); }
+                Console.WriteLine(httpContext.User.Identity.IsAuthenticated);
+                Console.WriteLine("Token received: " + token);
+                Console.WriteLine("userid");
+                Console.WriteLine(userId);
+                Console.WriteLine("userid");
+                if (string.IsNullOrEmpty(userId))
+                {   
                     return Results.Unauthorized();
                 }
 
