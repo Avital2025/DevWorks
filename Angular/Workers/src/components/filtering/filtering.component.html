@@ -148,4 +148,11 @@
   </div>
 
   <button mat-raised-button class="submit-button" type="submit">Filter for me</button>
+
+  
 </form>
+@if (filteredJobs.length > 0) {
+  <app-job-list [jobs]="filteredJobs" [isLoggedIn]="isLoggedIn"></app-job-list>
+} @else {
+  <p>אין משרות מסוננות להצגה.</p>
+}

@@ -1,0 +1,23 @@
+<app-navbar></app-navbar>
+<p>job-list works!</p>
+<app-filtering></app-filtering>
+@for (job of jobs; track job.projectID) {
+    <div class="job-card">
+      <h2>{{ job.title || 'משרה ללא שם' }}</h2>
+      <p><strong>תיאור:</strong> {{ job.description || 'אין תיאור' }}</p>
+      <p><strong>ID מעסיק:</strong> {{ job.employerID }}</p>
+      <p><strong>רמת אנגלית:</strong> {{ job.englishLevel || 'לא צוינה' }}</p>
+      <p><strong>ניסיון:</strong> {{ job.experience || 'לא צוינה' }}</p>
+      <p><strong>שפות:</strong> {{ job.languages || 'לא צוינו' }}</p>
+      <p><strong>עבודה מרחוק:</strong> {{ job.remoteWork ? 'כן' : 'לא' }}</p>
+      <p><strong>מקום עבודה:</strong> {{ job.workPlace || 'לא צוין' }}</p>
+  
+      <button (click)="downloadJob(job.s3Key)">הורד משרה</button>
+  
+      @if (isLoggedIn) {
+        <button (click)="saveJob(job.projectID)">שמור משרה</button>
+      }
+    </div>
+  } @empty {
+    <p>אין משרות זמינות כרגע.</p>
+  }

@@ -11,7 +11,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon'; // ודא שייבאת את MatIconModule
-
+import { JobListComponent } from '../job-list/job-list.component';
 @Component({
   selector: 'app-filtering',
   standalone: true,
@@ -27,6 +27,7 @@ import { MatIconModule } from '@angular/material/icon'; // ודא שייבאת �
     MatOptionModule,
     NavbarComponent,
     MatIconModule, // ודא שייבאת את MatIconModule
+    JobListComponent,
   ],
   templateUrl: './filtering.component.html',
   styleUrls: ['./filtering.component.css'],
@@ -34,6 +35,8 @@ import { MatIconModule } from '@angular/material/icon'; // ודא שייבאת �
 export class FilteringComponent implements OnInit {
   filterForm!: FormGroup;
   languages: string[] = ['C#', 'Java', 'Cobol'];
+  filteredJobs: any[] = []; // המערך שבו נשמור את המשרות המסוננות
+  isLoggedIn = false;
 
   @ViewChild('instructionsDialog') instructionsDialog!: TemplateRef<any>;
   instructions: string = '';
@@ -76,6 +79,7 @@ export class FilteringComponent implements OnInit {
         )
         .subscribe((response) => {
           console.log(response);
+          this.filteredJobs = response; 
           // here you can add the response handling logic
         });
     }
