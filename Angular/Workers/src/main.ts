@@ -9,9 +9,9 @@ import { interceptor } from './interseptors/interceptor.interceptor';
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideHttpClient(), 
+    provideRouter(routes),
     provideAnimations(),
-    provideRouter(routes), provideAnimationsAsync(), provideAnimationsAsync(), provideAnimationsAsync() , provideHttpClient(withInterceptors([interceptor]))
+     provideAnimationsAsync() , provideHttpClient(withInterceptors([interceptor]))
   ]
 })
   .catch((err) => console.error(err));

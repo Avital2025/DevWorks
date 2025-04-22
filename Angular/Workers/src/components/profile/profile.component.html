@@ -1,1 +1,17 @@
-<p>profile works!</p>
+<h2>עדכון פרטים</h2>
+<form [formGroup]="profileForm" (ngSubmit)="onUpdate()">
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>שם מלא</mat-label>
+    <input matInput formControlName="fullName">
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>אימייל</mat-label>
+    <input matInput formControlName="email">
+  </mat-form-field>
+
+  <div class="actions">
+    <button mat-flat-button color="primary" type="submit" [disabled]="!profileForm.valid">עדכן</button>
+    <button mat-flat-button color="warn" (click)="logout()">התנתק</button>
+  </div>
+</form>

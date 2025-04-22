@@ -11,12 +11,9 @@
   </div> -->
 
 <!-- =========== -->
-  <router-outlet></router-outlet>
-
-  <app-navbar></app-navbar>
 
 
-  <!-- <div class="home-container">
+<!-- <div class="home-container">
     <div class="hero-section">
         <div class="hero-content">
             <h1>מצאו את המשרה הבאה שלכם ב-DevWork</h1>
@@ -37,37 +34,86 @@
       
     </div>
 </section> -->
+
+
 <section class="hero">
   <div class="hero-content">
     <h1>ברוכים הבאים ל־DevWork</h1>
     <p>המערכת שמחברת בין מעסיקים למחפשי עבודה בעולם הפיתוח.</p>
     <p>מצאו את הפרויקט הבא שלכם לפי שפות תכנות, דרישות ניסיון ועוד.</p>
-    <button routerLink="/joblist">סינון משרות</button>
+    <button routerLink="/joblist">לרשימת המשרות שלנו </button>
   </div>
 </section>
 
 <section class="features">
-  <h2>למה DevWork?</h2>
-  <ul>
-    <li>סינון חכם לפי קבצים והעדפות</li>
-    <li>משרות בפרויקטים אמיתיים של חברות</li>
-    <li>גישה נפרדת למעסיקים ועובדים</li>
-  </ul>
-</section>
+  <div class="features-container">
+    <div class="features-text">
+      <h2 id="why-devwork">למה DevWork?</h2>
+      <ul>
+        <li>
+          <mat-icon>account_circle</mat-icon>
+          גישה נפרדת למעסיקים ועובדים
+        </li>
 
-<section class="blogs">
-  <h2>בלוגים אחרונים</h2>
-  <div class="blog-list">
-    <div class="blog-item">
-      <h3>איך לבחור את הפרויקט המתאים?</h3>
-      <p>טיפים למחפשי עבודה בתחום הפיתוח על איך לבחור נכון את הפרויקט שיקדם אתכם.</p>
+        <li>
+          <mat-icon>filter_alt</mat-icon>
+          סינון חכם לפי שפות תכנות, ניסיון ותנאי עבודה
+        </li>
+
+        <li>
+          <mat-icon>dashboard_customize</mat-icon>
+          ממשק פשוט ונגיש גם למתחילים וגם לחברות גדולות
+        </li>
+
+        <li>
+          <mat-icon>smart_toy</mat-icon>
+          חיבור מדויק בין מועמדים לפרויקטים באמצעות בינה מלאכותית
+        </li>
+
+        <li>
+          <mat-icon>bookmark</mat-icon>
+          התחבר ושמור את המשרות המתאימות ביותר עבורך
+        </li>
+        
+      </ul>
     </div>
-    <div class="blog-item">
-      <h3>מה מחפשים מעסיקים?</h3>
-      <p>ניתוח דרישות נפוצות במשרות בתחום הפיתוח – ממה כדאי להיזהר, ומה חובה שיהיה בקורות החיים.</p>
+    <div class="features-image">
+      <img src="/we-want-you.JPG" alt="Illustration">
     </div>
   </div>
 </section>
+
+
+
+<section class="blogs" id="blogs-section">
+  <h2>בלוגים אחרונים</h2>
+  <div class="blog-list">
+    @for (blog of blogs; track blog) {
+      <div class="blog-card">
+        <h3>{{ blog.title }}</h3>
+        <p>{{ blog.summary }}</p>
+        
+        <div class="blog-content {{ blog.expanded ? 'open' : '' }}">
+          <p>{{ blog.content }}</p>
+        </div>
+        
+        <button class="toggle-btn"  (click)="toggleBlog(blog)">
+          {{ blog.expanded ? 'הסתר' : 'קרא עוד' }}
+        </button>
+      </div>
+    }
+  </div>
+</section>
+<button class="scroll-to-top" (click)="scrollToTop()" title="לראש העמוד">
+  ↑
+</button>
+
+
+
+
+
+
+
 
 <!-- <router-outlet></router-outlet>
 
@@ -131,10 +177,8 @@
       </div>
     </div>
    -->
-    <!-- Footer -->
-    <!-- <div style="text-align: center; margin-top: 80px; color: #607d8b;">
+<!-- Footer -->
+<!-- <div style="text-align: center; margin-top: 80px; color: #607d8b;">
       <p>&copy; 2025 DevWork. All rights reserved.</p>
     </div>
   </div> -->
-  
-

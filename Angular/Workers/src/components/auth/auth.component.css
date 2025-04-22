@@ -1,8 +1,7 @@
-.button-container {
+/*
+ .button-container {
   display: flex;
-  /* flex-direction: row; */
-  /* background-color: white; */
-  /* text-align: center; */
+ 
   padding: 10px;
   justify-content: center; 
 }
@@ -13,23 +12,16 @@
 }
 
 
-
-
 button {
-  /* font-size: 1rem;
-  padding: 10px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.3s ease; */
+
   button {
-    background: none; /* הסרת רקע הכפתורים */
-    border: 2px solid #007bff; /* הוספת גבול לכפתורים */
-    color: #007bff; /* צבע טקסט */
+    background: none;
+    border: 2px solid #007bff;
+    color: #007bff; 
     padding: 10px 20px;
     font-size: 16px;
     cursor: pointer;
-    /* transition: transform 0.3s ease; */
+    
   }
 }
 
@@ -50,3 +42,82 @@ button mat-icon {
 button:focus {
   outline: none;
 }
+
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+}
+
+.profile-form {
+  padding: 12px;
+  width: 280px;
+}
+
+.menu-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 12px;
+}
+
+.form-title {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+  font-weight: bold;
+} */
+
+
+.button-container {
+  display: flex;
+  justify-content: center;
+}
+
+.button-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.profile-content {
+  padding: 16px;
+  min-width: 350px;
+  max-width: 500px;
+}
+.custom-button {
+  background-color: #333 !important;
+  color: white !important;
+}
+
+.custom-button:hover {
+  background-color: #555 !important;
+}
+
+
+
+
+.full-width {
+  width: 100%;
+}
+
+.menu-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-title {
+  margin: 0 0 8px 0;
+  font-size: 18px;
+  text-align: center;
+}
+

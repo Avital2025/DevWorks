@@ -1,4 +1,4 @@
-<app-navbar></app-navbar>
+<!-- <app-navbar></app-navbar>
 
 <form [formGroup]="filterForm" (ngSubmit)="onSubmit()" class="filter-container">
   <div class="filter-buttons">
@@ -155,4 +155,159 @@
   <app-job-list [jobs]="filteredJobs" [isLoggedIn]="isLoggedIn"></app-job-list>
 } @else {
   <p>אין משרות מסוננות להצגה.</p>
-}
+} -->
+
+
+
+<form [formGroup]="filterForm" (ngSubmit)="onSubmit()" class="filter-container">
+
+  <p>סנן/י לפי שפה, ניסיון, עבודה מהבית ועוד</p>
+  <div class="filter-buttons">
+    <button mat-button class="custom-button" type="button" [matMenuTriggerFor]="experienceMenu" (menuOpened)="openInstructions('experience')">
+      {{ selectedValues['experience'] ? 'Experience: ' + selectedValues['experience'] : 'Experience' }}
+      @if (filterForm.get('experience')?.value) {
+        <span class="filled">*</span>
+      }
+    </button>
+
+    <mat-menu #experienceMenu="matMenu" class="custom-menu">
+      <div style="padding: 10px; width: 250px; position: relative;" (click)="$event.stopPropagation()">
+        <button mat-icon-button style="position: absolute; top: 2px; right: 2px;" (click)="experienceMenu.closed.emit()">X</button>
+
+        <h3>{{ instructions }}</h3>
+
+        <form [formGroup]="dialogForm">
+          <mat-form-field style="width: 100%;">
+            <input matInput placeholder="Enter experience" formControlName="dialogInput" (click)="$event.stopPropagation()">
+          </mat-form-field>
+        </form>
+
+        <div class="menu-actions" style="display: flex; justify-content: space-between; margin-top: 10px;">
+          <button mat-button (click)="experienceMenu.closed.emit()">Cancel</button>
+          <button mat-raised-button color="primary" (click)="saveSelection('experience'); experienceMenu.closed.emit()">Save</button>
+        </div>
+      </div>
+    </mat-menu>
+
+
+    <button mat-button class="custom-button" type="button" [matMenuTriggerFor]="workplaceMenu" (menuOpened)="openInstructions('workplace')">
+      {{ selectedValues['workplace'] ? 'Workplace: ' + selectedValues['workplace'] : 'Workplace' }}
+    </button>
+
+    <mat-menu #workplaceMenu="matMenu" class="custom-menu">
+      <div style="padding: 10px; width: 250px; position: relative;" (click)="$event.stopPropagation()">
+        <button mat-icon-button style="position: absolute; top: 2px; right: 2px;" (click)="workplaceMenu.closed.emit()">X</button>
+
+        <h3>{{ instructions }}</h3>
+
+        <form [formGroup]="dialogForm">
+          @if (dialogType === 'workplace') {
+            <mat-form-field style="width: 100%;">
+              <input matInput placeholder="Enter workplace" formControlName="dialogInput" (click)="$event.stopPropagation()">
+            </mat-form-field>
+          }
+        </form>
+
+        <div class="menu-actions" style="display: flex; justify-content: space-between; margin-top: 10px;">
+          <button mat-button (click)="workplaceMenu.closed.emit()">Cancel</button>
+          <button mat-raised-button color="primary" (click)="saveSelection('workplace'); workplaceMenu.closed.emit()">Save</button>
+        </div>
+      </div>
+    </mat-menu>
+
+    <button mat-button class="custom-button" type="button" [matMenuTriggerFor]="languagesMenu" (menuOpened)="openInstructions('languages')">
+      {{ selectedValues['languages'] ? selectedValues['languages'].join(', ') : 'Languages' }}
+      @if (filterForm.get('languages')?.value?.length) {
+        <span class="filled">*</span>
+      }
+    </button>
+
+    <mat-menu #languagesMenu="matMenu" class="custom-menu">
+      <div style="padding: 10px; width: 250px; position: relative;" (click)="$event.stopPropagation()">
+        <button mat-icon-button style="position: absolute; top: 2px; right: 2px;" (click)="languagesMenu.closed.emit()">X</button>
+
+        <h3>{{ instructions }}</h3>
+
+        <form [formGroup]="dialogForm">
+          @if (dialogType === 'languages') {
+            <mat-form-field style="width: 100%;">
+              <mat-select placeholder="Select Languages" formControlName="dialogInput" multiple (click)="$event.stopPropagation()">
+                @for (language of languages; track language) {
+                  <mat-option [value]="language">{{ language }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          }
+        </form>
+
+        <div class="menu-actions" style="display: flex; justify-content: space-between; margin-top: 10px;">
+          <button mat-button (click)="languagesMenu.closed.emit()">Cancel</button>
+          <button mat-raised-button color="primary" (click)="saveSelection('languages'); languagesMenu.closed.emit()">Save</button>
+        </div>
+      </div>
+    </mat-menu>
+
+    <button mat-button class="custom-button" type="button" [matMenuTriggerFor]="remoteWorkMenu" (menuOpened)="openInstructions('remoteWork')">
+      {{ filterForm.get('remoteWork')?.value !== null ? (filterForm.get('remoteWork')?.value ? 'Remote Work: Yes' : 'Remote Work: No') : 'Remote Work' }}
+    </button>
+
+    <mat-menu #remoteWorkMenu="matMenu" class="custom-menu">
+      <div style="padding: 10px; width: 250px; position: relative;" (click)="$event.stopPropagation()">
+        <button mat-icon-button style="position: absolute; top: 2px; right: 2px;" (click)="remoteWorkMenu.closed.emit()">X</button>
+
+        <h3>{{ instructions }}</h3>
+
+        <form [formGroup]="dialogForm">
+          @if (dialogType === 'remoteWork') {
+            <mat-form-field style="width: 100%;">
+              <mat-select placeholder="Select Remote Work" formControlName="dialogInput" (click)="$event.stopPropagation()">
+                <mat-option [value]="true">Yes</mat-option>
+                <mat-option [value]="false">No</mat-option>
+              </mat-select>
+            </mat-form-field>
+          }
+        </form>
+
+        <div class="menu-actions" style="display: flex; justify-content: space-between; margin-top: 10px;">
+          <button mat-button (click)="remoteWorkMenu.closed.emit()">Cancel</button>
+          <button mat-raised-button color="primary" (click)="saveSelection('remoteWork'); remoteWorkMenu.closed.emit()">Save</button>
+        </div>
+      </div>
+    </mat-menu>
+
+    <button mat-button class="custom-button" type="button" [matMenuTriggerFor]="englishLevelMenu" (menuOpened)="openInstructions('englishLevel')">
+      {{ selectedValues['englishLevel'] ? 'English Level: ' + selectedValues['englishLevel'] : 'English Level' }}
+      @if (filterForm.get('englishLevel')?.value) {
+        <span class="filled">*</span>
+      }
+    </button>
+
+    <mat-menu #englishLevelMenu="matMenu" class="custom-menu">
+      <div style="padding: 10px; width: 250px; position: relative;" (click)="$event.stopPropagation()">
+        <button mat-icon-button style="position: absolute; top: 2px; right: 2px;" (click)="englishLevelMenu.closed.emit()">X</button>
+
+        <h3>{{ instructions }}</h3>
+
+        <form [formGroup]="dialogForm">
+          @if (dialogType === 'englishLevel') {
+            <mat-form-field style="width: 100%;">
+              <mat-select placeholder="Select English Level" formControlName="dialogInput" (click)="$event.stopPropagation()">
+                <mat-option value="low">Low</mat-option>
+                <mat-option value="medium">Medium</mat-option>
+                <mat-option value="high">High</mat-option>
+              </mat-select>
+            </mat-form-field>
+          }
+        </form>
+
+        <div class="menu-actions" style="display: flex; justify-content: space-between; margin-top: 10px;">
+          <button mat-button (click)="englishLevelMenu.closed.emit()">Cancel</button>
+          <button mat-raised-button color="primary" (click)="saveSelection('englishLevel'); englishLevelMenu.closed.emit()">Save</button>
+        </div>
+      </div>
+    </mat-menu>
+  </div>
+
+  <button mat-raised-button class="submit-button" type="submit">Filter for me</button>
+</form>
+

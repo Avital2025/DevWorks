@@ -1,4 +1,4 @@
-
+<!-- 
   <div class="button-container">
     <div class="button-group">
       <button mat-raised-button (click)="openLoginDialog()" class="login-button">
@@ -10,4 +10,76 @@
       </button>
     </div>
   </div>
-  
+   -->
+
+<div class="button-container">
+  <div class="button-group">
+    @if (!isLoggedIn) {
+    <button mat-raised-button (click)="openLoginDialog()" class="login-button">
+      <mat-icon>login</mat-icon> התחברות
+    </button>
+    <button mat-raised-button (click)="openRegisterDialog()" class="signup-button">
+      <mat-icon>person_add</mat-icon> הרשמה
+    </button>
+    } @else {
+    <button mat-icon-button [matMenuTriggerFor]="profileMenu" class="profile-button" #menuTrigger="matMenuTrigger">
+
+      <mat-icon>account_circle</mat-icon>
+    </button>
+
+    <mat-menu #profileMenu="matMenu" yPosition="below" [overlapTrigger]="false">
+      <div matMenuContent (click)="$event.stopPropagation()" class="profile-content">
+        <form [formGroup]="profileForm" (ngSubmit)="onUpdate()" class="menu-form">
+          <h3 class="form-title">עדכון פרטים</h3>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>שם מלא</mat-label>
+            <input matInput formControlName="fullName" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>אימייל</mat-label>
+            <input matInput formControlName="email" [disabled]="true" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>סיסמה חדשה</mat-label>
+            <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" />
+            <button type="button" mat-icon-button matSuffix (click)="togglePasswordVisibility()"
+              [attr.aria-label]="'הצג/הסתר סיסמה'" [attr.aria-pressed]="!hidePassword">
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
+          </mat-form-field>
+
+          <button mat-flat-button class="custom-button" type="submit" [disabled]="!profileForm.valid">עדכן</button>
+          <button mat-flat-button class="custom-button" (click)="logout()" type="button">התנתק</button>
+
+        </form>
+      </div>
+    </mat-menu>
+    }
+  </div>
+</div>
+
+
+
+<!--   
+
+
+
+   <div class="button-container">
+  <div class="button-group">
+    @if (!isLoggedIn) {
+      <button mat-raised-button (click)="openLoginDialog()" class="login-button">
+        <mat-icon>login</mat-icon> Login
+      </button>
+      <button mat-raised-button (click)="openRegisterDialog()" class="signup-button">
+        <mat-icon>person_add</mat-icon> Sign Up
+      </button>
+    } @else {
+      <button mat-raised-button routerLink="/profile" class="profile-button">
+        <mat-icon>account_circle</mat-icon> Profile
+      </button>
+    }
+  </div>
+</div> -->

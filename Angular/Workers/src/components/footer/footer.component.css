@@ -1,0 +1,138 @@
+/* .footer {
+    background-color: #111;
+    color: #eee;
+    padding: 2rem;
+    direction: rtl;
+  }
+  
+  .footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: space-between;
+  }
+  
+  .contact-form,
+  .contact-info {
+    flex: 1 1 300px;
+  }
+  
+  .contact-form h3 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+  }
+  
+  .contact-form input,
+  .contact-form textarea {
+    width: 100%;
+    padding: 0.5rem;
+    margin-bottom: 0.8rem;
+    border: none;
+    border-radius: 6px;
+  }
+  
+  .contact-form button {
+    background-color: #3e8e7e;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .contact-form button:hover {
+    background-color: #327368;
+  }
+  
+  .contact-info p {
+    margin: 0.5rem 0;
+  }
+  
+  .fake-recaptcha {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    gap: 0.5rem;
+  }
+  
+  .fake-recaptcha .box {
+    width: 28px;
+    height: 28px;
+    border: 2px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    transition: all 0.2s ease;
+    border-radius: 5px;
+  }
+  
+  .fake-recaptcha.checked .box {
+    background-color: #34b7f1;
+    border-color: #34b7f1;
+  }
+  
+  .fake-recaptcha .checkmark {
+    transform: scale(1);
+    color: white;
+  }
+  
+  .fake-recaptcha span {
+    font-size: 14px;
+    color: #ccc;
+  }
+  
+  
+  .fake-recaptcha.checked span {
+    color: #3e8e7e;
+  }
+   */
+
+   
+   .footer {
+    
+margin-top: 40px;
+    background-color:  #333;
+   
+    color: #f1f1f1;
+    padding: 2rem 1rem;
+    text-align: center;
+    font-size: 0.9rem;
+    direction: rtl;
+  
+  }
+  
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .footer-section h3 {
+    margin-bottom: 0.5rem;
+    color: #ffcc00;
+  }
+  
+  .footer-section a {
+    color: #f1f1f1;
+    text-decoration: none;
+    margin: 0 0.3rem;
+  }
+  
+  .footer-section a:hover {
+    text-decoration: underline;
+  }
+  
+  .footer-bottom {
+    margin-top: 2rem;
+    border-top: 1px solid #444;
+    padding-top: 1rem;
+  }
+  

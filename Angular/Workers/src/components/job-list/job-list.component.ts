@@ -1,24 +1,62 @@
-import { Component, Input } from '@angular/core';
+import { Component, signal, computed } from '@angular/core';
 import { FilteringComponent } from '../filtering/filtering.component';
-import { NavbarComponent } from '../navbar/navbar.component';
+import { CommonModule } from '@angular/common';
+
 @Component({
   selector: 'app-job-list',
-  imports: [FilteringComponent, NavbarComponent],
   standalone: true,
+  imports: [FilteringComponent, CommonModule,],
   templateUrl: './job-list.component.html',
-  styleUrls: ['./job-list.component.css']
+  styleUrl: './job-list.component.css'
 })
-
 export class JobListComponent {
-  @Input() jobs: any[] = [];
-  @Input() isLoggedIn = false;
+  jobs = signal<any[]>([]);
+  isLoggedIn = true;
+  loading = true;
+
+  pageSize = 5;
+  currentPage = signal(1);
+  showFilters = signal(false);
+
+  toggleFilters() {
+    this.showFilters.update(value => !value);
+  }
+  totalPages = computed(() => Math.ceil(this.jobs().length / this.pageSize));
+
+  pagedJobs = computed(() => {
+    const start = (this.currentPage() - 1) * this.pageSize;
+    return this.jobs().slice(start, start + this.pageSize);
+  });
+
+  updateJobList(filteredJobs: any[]) {
+    this.jobs.set(filteredJobs);
+    this.loading = false;
+    this.currentPage.set(1); // חזרה לעמוד הראשון
+  }
 
   downloadJob(url: string) {
     window.open(url, '_blank');
   }
 
   saveJob(jobId: number) {
-    // כאן תוסיפי את הלוגיקה לשמירה ל-DB
     console.log('שמירה של משרה עם ID:', jobId);
+  }
+  scrollToFilter() {
+    const element = document.getElementById('filter-section');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+  
+  nextPage() {
+    if (this.currentPage() < this.totalPages()) {
+      this.currentPage.set(this.currentPage() + 1);
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage() > 1) {
+      this.currentPage.set(this.currentPage() - 1);
+    }
   }
 }

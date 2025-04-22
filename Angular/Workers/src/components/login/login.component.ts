@@ -68,7 +68,7 @@ export class LoginComponent implements OnInit {
           console.log("user logged in successfully");
   
           // ניווט לעמוד הבית
-          this.router.navigate(['/filtering']);
+          
           this.dialogRef.close();
           
         },
@@ -78,6 +78,8 @@ export class LoginComponent implements OnInit {
             this.errormessage = 'Invalid credentials';
           } else if (err.status === 404) {
             this.errormessage = 'User not found. Please Sign up';
+           } else if (err.status === 409) {
+            this.errormessage = 'This email is already exixts';
           } else {
             this.errormessage = 'An unexpected error occurred';
           }

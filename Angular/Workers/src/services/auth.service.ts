@@ -54,32 +54,52 @@
 // }
 // auth.service.ts
 // auth.service.ts// auth.service.ts
+
+
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { UserService } from './user.service';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { MatDialogRef } from '@angular/material/dialog';
+import { AuthComponent } from '../components/auth/auth.component';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private isLoggedInSubject = new BehaviorSubject<boolean>(false);
-  private token: string | null = null;
-
+  private token: string | null = null; 
+  // constructor(
+  //   private userService: UserService,
+  //   private http: HttpClient,
+  //   private router: Router
+  // ) {
+  // //   // אם יש נתונים ב-sessionStorage, אנחנו לוקחים אותם
+  // //   const authData = sessionStorage.getItem('auth_data');
+  // //   if (authData) {
+  // //     const parsed = JSON.parse(authData);
+  // //     this.token = parsed.token;
+  // //     this.isLoggedInSubject.next(true);
+  
+  // //   }
+  // }
   constructor(
     private userService: UserService,
     private http: HttpClient,
     private router: Router
   ) {
-    // אם יש נתונים ב-sessionStorage, אנחנו לוקחים אותם
-    const authData = sessionStorage.getItem('auth_data');
-    if (authData) {
-      const parsed = JSON.parse(authData);
-      this.token = parsed.token;
-      this.isLoggedInSubject.next(true);
+    // ניגשים ל-sessionStorage רק אם אנחנו בבראוזר
+    if (typeof window !== 'undefined') {
+      const authData = sessionStorage.getItem('auth_data');
+      if (authData) {
+        const parsed = JSON.parse(authData);
+        this.token = parsed.token;
+        this.isLoggedInSubject.next(true);
+      }
     }
   }
+  
 
   // התחברות
   login(email: string, password: string) {
@@ -118,10 +138,11 @@ export class AuthService {
 
   // התנתקות
   logout() {
+    console.log("logout");
+  
     this.token = null;
-    sessionStorage.clear(); // מוחק את כל המידע מה-session
+    sessionStorage.clear();
     this.isLoggedInSubject.next(false);
-    this.router.navigate(['/login']);
   }
 
   // האם מחובר

@@ -34,6 +34,19 @@ export class NavbarComponent {
     window.open('https://devworksemployers.onrender.com/', '_blank');
 }
 
+scrollToBlogs() {
+  const element = document.getElementById('blogs-section');
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+scrollToContact() {
+  const element = document.getElementById('footerSection');
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' });
+  }
+}
 
   toggleMenu() {
     this.menuOpen = !this.menuOpen;

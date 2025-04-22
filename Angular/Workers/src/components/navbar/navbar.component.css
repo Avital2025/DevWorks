@@ -11,6 +11,8 @@
   align-items: center;
 }
 
+
+
 .navbar-links {
   display: flex;
   align-items: center;
@@ -39,20 +41,7 @@ button:last-child {
   margin-right: 0;
 }
 
-.recruiters-btn {
-  background-color: #2b2d42;
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  padding: 5px 15px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
 
-.recruiters-btn:hover {
-  background-color: #3a3c5c;
-  color: #fff;
-}
 
 /* המבורגר תפריט */
 .menu-toggle {
@@ -77,6 +66,63 @@ button:last-child {
   display: flex;
   align-items: center;
 }
+
+
+.recruiters-btn {
+  background-color: white;
+  color: #2b2d42;
+  border: none;
+  padding: 5px 15px;
+  cursor: pointer;
+  position: relative;
+  border-radius: 8px;
+  z-index: 1;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.recruiters-btn:hover {
+  box-shadow: 0 0 10px rgba(63, 81, 181, 0.6); /* זוהר כחול */
+  background-color: white;
+  color: #2b2d42;
+}
+
+.recruiters-btn::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: conic-gradient(rgb(24, 135, 98), transparent, rgb(24, 135, 98));
+  animation: spin 5s linear infinite;
+  z-index: -1;
+  border-radius: 12px;
+}
+
+.recruiters-btn::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+background: white;
+  z-index: -1;
+  border-radius: 6px;
+ color:  #2b2d42;;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0turn);
+  }
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+
 
 @media (max-width: 768px) {
   .navbar {

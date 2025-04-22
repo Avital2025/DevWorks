@@ -1,38 +1,38 @@
-/* Styles for the filter form container */
+/* Styles for the filter form container
 .filter-container {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   padding: 2rem;
-  /* background-color: #f5f5f5; */
+
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  margin-top: 4rem; /* This will move the form down from the navbar */
+  margin-top: 4rem; 
 }
 
-/* Styling for the filter buttons */
+
 .filter-buttons {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
 }
 .custom-button {
-  background-color: #fff; /* רקע לבן */
-  border: 1px solid #ddd; /* גבול בהיר */
+  background-color: #fff; 
+  border: 1px solid #ddd;
   padding: 0.5rem 1rem;
   font-size: 14px;
-  color: #333; /* צבע טקסט כהה */
+  color: #333; 
   text-align: center;
   cursor: pointer;
   border-radius: 4px;
   transition: background-color 0.3s, border 0.3s;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* נותן הצללה קלה */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); 
 }
 
 .custom-button:hover {
-  background-color: #e0e0e0; /* צבע רקע כשהכפתור מונח עליו */
-  border-color: #aaa; /* צבע גבול משתנה בעת ריחוף */
-  color: #000; /* צבע טקסט כהה יותר כאשר יש Hover */
+  background-color: #e0e0e0; 
+  border-color: #aaa; 
+  color: #000; 
 }
 
 
@@ -42,37 +42,35 @@
   font-size: 1.2rem;
 }
 
-/* Submit button styling */
 .submit-button {
   background-color: #333;
   color: #fff;
-  padding: 0.3rem 1rem;  /* Made the button smaller */
+  padding: 0.3rem 1rem;  
   border-radius: 4px;
   text-transform: uppercase;
   font-weight: bold;
-  font-size: 14px;  /* Reduced font size */
+  font-size: 14px;  
   cursor: pointer;
   transition: background-color 0.3s;
-  width: auto;  /* Ensures button width adjusts to content */
-  max-width: 200px;  /* Optional: you can limit the button width */
-  margin-left: 0;  /* מצמיד את הכפתור לימין */
-  margin-right: auto;    /* מוודא שאין רווח מצד ימין */
+  width: auto;  
+  max-width: 200px; 
+  margin-left: 0;  
+  margin-right: auto;  
 }
 
 .submit-button:hover {
   background-color: #555;
 }
-/* עיצוב המתפריט */
 .mat-menu-panel {
-  background-color: #f5f5f5;  /* רקע בהיר (יכול להתאים לרקע הרגיל שלך) */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);  /* צללה עדינה */
-  border-radius: 8px;  /* פינות מעוגלות */
+  background-color: #f5f5f5;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);  
+  border-radius: 8px; 
   padding: 1rem;
-  width: auto;  /* מותאם לפי תוכן */
-  margin-top: 0.5rem;  /* ריווח קטן מתחת לכפתור */
+  width: auto; 
+  margin-top: 0.5rem;  
 }
 
-/* עיצוב עבור כל פריט בתפריט */
+
 .mat-menu-item {
   font-size: 14px;
   padding: 0.5rem 1rem;
@@ -83,10 +81,10 @@
 }
 
 .mat-menu-item:hover {
-  background-color: #e0e0e0;  /* צבע רקע כאשר יש hover על פריט בתפריט */
+  background-color: #e0e0e0; 
 }
 
-/* עיצוב הכפתור הראשי */
+
 .custom-button {
   background-color: #fff;
   border: 1px solid #ddd;
@@ -102,4 +100,95 @@
 .custom-button:hover {
   background-color: #e0e0e0;
   border-color: #aaa;
+} *//* קונטיינר הפילטרים */
+.filter-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+  background: linear-gradient(to right, #e8ebf5, #ffffff);
+  border-radius: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  margin-top: 4rem;
+  border: 1px solid #c5c9e0;
 }
+
+/* כפתורי פילטרים */
+.filter-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.custom-button {
+  background-color: #ffffff;
+  border: 2px solid #cfd8dc;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.95rem;
+  color: #2b2d42;
+  border-radius: 2rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.custom-button:hover {
+  background-color: #f0f4ff;
+  border-color: #90a4ae;
+  color: #1a237e;
+}
+
+/* כפתור הגשה */
+.submit-button {
+  background-color: #2b2d42;
+  color: white;
+  padding: 0.6rem 2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 2rem;
+  text-transform: uppercase;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  margin-top: 1rem;
+  align-self: center;
+}
+
+.submit-button:hover {
+  background-color: #3a3c5c;
+}
+
+/* הצגת הפילטרים שנבחרו */
+.selected-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  background-color: #e0e0e0;
+  color: #333;
+  border-radius: 1rem;
+  padding: 0.3rem 2rem 0.3rem 0.8rem;
+  position: relative;
+  font-size: 0.9rem;
+}
+
+/* כפתור X */
+.selected-filter .remove-btn {
+  position: absolute;
+  right: 0.4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* כותרות קטנות */
+.filter-label, .language-label {
+  font-weight: bold;
+  margin-bottom: 0.2rem;
+}
+
