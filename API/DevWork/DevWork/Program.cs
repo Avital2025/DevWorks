@@ -13,6 +13,7 @@ using DevWork.Service.Iservice;
 using Amazon.Extensions.NETCore.Setup;
 using Microsoft.Extensions.Options;
 using DevWork.core.Services;
+using Microsoft.IdentityModel.Logging;
 
 
 Console.WriteLine("Server started");
@@ -98,31 +99,91 @@ builder.Services.AddCors(options =>
 
 
 
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+//})
+//    .AddJwtBearer(options =>
+//    {
+//        options.TokenValidationParameters = new TokenValidationParameters
+//        {
+//            ValidateIssuer = true,
+//            ValidateAudience = true,
+
+
+//            ValidateLifetime = true,
+//            ValidateIssuerSigningKey = true,
+//            ValidIssuer = builder.Configuration["JWT:Issuer"],
+//            ValidAudience = builder.Configuration["JWT:Audience"],
+//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
+//        NameClaimType = "sub" // זה השורה הקריטית שחסרה לך
+//        };
+//    });
+
+
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-    .AddJwtBearer(options =>
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            //ValidateIssuer = false,
-            //ValidateAudience = false,
-
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["JWT:Issuer"],
-            ValidAudience = builder.Configuration["JWT:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["JWT:Issuer"],
+        
+        ValidAudience = builder.Configuration["JWT:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
         NameClaimType = "sub" // זה השורה הקריטית שחסרה לך
-        };
-    });
+    };
+    Console.WriteLine("Issuer: " + builder.Configuration["JWT:Issuer"]);
+    Console.WriteLine("Audience: " + builder.Configuration["JWT:Audience"]);
+    Console.WriteLine("Key:" + builder.Configuration["JWT:Key"]);
+    // הוספת לוג לשגיאות אימות
+    //options.Events = new JwtBearerEvents
+    //{
+    //    OnAuthenticationFailed = context =>
+    //    {
+    //        Console.WriteLine("Authentication failed: " + context.Exception.Message);
+    //        return Task.CompletedTask;
+    //    }
+    //};
+    options.Events = new JwtBearerEvents
+    {
+        OnTokenValidated = context =>
+        {
+            Console.WriteLine("Token validated successfully");
+            return Task.CompletedTask;
+        },
+        OnAuthenticationFailed = context =>
+        {
+            Console.WriteLine("Authentication failed: " + context.Exception.Message);
+            Console.WriteLine("Exception type: " + context.Exception.GetType().Name);
+            if (context.Exception.InnerException != null)
+            {
+                Console.WriteLine("Inner exception: " + context.Exception.InnerException.Message);
+            }
+            return Task.CompletedTask;
+        },
+        OnChallenge = context =>
+        {
+            Console.WriteLine("Challenge issued");
+            return Task.CompletedTask;
+        }
+    };
+});
+
 
 builder.Services.AddAuthorization();
 
+//------------------------------------------
+IdentityModelEventSource.ShowPII = true;
 
 
 

@@ -1,11 +1,12 @@
 import { Component, signal, computed } from '@angular/core';
 import { FilteringComponent } from '../filtering/filtering.component';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-job-list',
   standalone: true,
-  imports: [FilteringComponent, CommonModule,],
+  imports: [FilteringComponent, CommonModule],
   templateUrl: './job-list.component.html',
   styleUrl: './job-list.component.css'
 })
@@ -17,7 +18,7 @@ export class JobListComponent {
   pageSize = 5;
   currentPage = signal(1);
   showFilters = signal(false);
-
+  constructor(private authService: AuthService) {}
   toggleFilters() {
     this.showFilters.update(value => !value);
   }

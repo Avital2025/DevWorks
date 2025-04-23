@@ -91,7 +91,7 @@ export class AuthComponent implements OnInit {
       email: [{ value: sessionStorage.getItem('email') || '', disabled: true }, [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
-   // console.log(this.profileForm);
+    console.log(this.profileForm);
     
   }
 
@@ -113,6 +113,17 @@ export class AuthComponent implements OnInit {
     dialogRef.afterClosed().subscribe(() => this.checkLoginStatus());
   }
 
+
+  onMenuOpened() {
+    const fullName = sessionStorage.getItem('fullName') || '';
+    const email = sessionStorage.getItem('email') || '';
+  
+    this.profileForm.patchValue({ fullName });
+    this.profileForm.get('email')?.setValue(email);
+  }
+
+  
+  
   onUpdate() {
     if (this.profileForm.valid) {
       const { fullName, password } = this.profileForm.getRawValue();

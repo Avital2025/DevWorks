@@ -11,8 +11,12 @@ public interface IUserService
 
         Task<UserDto> Authenticate(string email, string passwordHash);
         Task<UserEntity?> GetUserByEmail(string email);
-        //Task<UserEntity> AddUser(UserPostModel model);
-    
+
+    Task<bool> UpdateCredentialsAsync(int userId, UserUpdateCredentialsModel model);
+
+
+    //Task<UserEntity> AddUser(UserPostModel model);
+
 
 
 }

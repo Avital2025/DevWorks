@@ -21,9 +21,13 @@ export class UserService {
     return this.http.post(`${this.apiUrl}/Auth/login` , credentials);
   }
 
-  updateUserDetails(fullName: string, password: string): Observable<any> {
-    const body = { fullName, password };
+  updateUserDetails(FullName: string, PasswordHash: string): Observable<any> {
+    const body = { FullName, PasswordHash };
+    console.log("before");
+    
     return this.http.put(`${this.apiUrl}/users/update-credentials`, body); // שיניתי כאן ל-URL הנכון
+    console.log("after");
+    
   }
 }
 

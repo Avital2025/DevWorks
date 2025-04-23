@@ -116,4 +116,19 @@ public class UserService : IUserService
         return await _context.usersList.FirstOrDefaultAsync(u => u.Email == email);
     }
 
+
+    public async Task<bool> UpdateCredentialsAsync(int userId, UserUpdateCredentialsModel model)
+    {
+        var user = await _context.usersList.FindAsync(userId);
+        if (user == null) return false;
+
+        user.FullName = model.FullName;
+        user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.PasswordHash);
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+
+
 }

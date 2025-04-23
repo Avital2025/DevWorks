@@ -95,28 +95,55 @@ public class FilesService : IFilesService
     }
 
 
+    //public async Task<IEnumerable<FilesDto>> GetUserFilesAsync(string userId)
+    //{
+    //    if (!int.TryParse(userId, out int employerId))
+    //    {
+    //        return new List<FilesDto>(); // במקרה שה-ID לא תקין
+    //    }
+
+    //    return await _context.filesListDto
+    //        .Where(f => f.EmployerId == employerId)
+    //        .Select(f => new FilesDto
+    //        {
+    //            Id = f.Id,
+    //            FileName = f.FileName,
+    //            FileUrl = f.FileUrl,
+    //            FileType = f.FileType,
+    //            Size = f.Size,
+    //            CreatedAt = f.CreatedAt,
+    //            EmployerId = f.EmployerId  // כאן אנחנו מחזירים את ה-EmployerId
+    //        })
+    //        .ToListAsync();
+    //}
+
     public async Task<IEnumerable<FilesDto>> GetUserFilesAsync(string userId)
     {
+        userId = userId?.Trim(); // חשוב שוב
         if (!int.TryParse(userId, out int employerId))
         {
-            return new List<FilesDto>(); // במקרה שה-ID לא תקין
+            Console.WriteLine("Failed to parse userId to int");
+            return new List<FilesDto>();
         }
 
-        return await _context.filesListDto
-            .Where(f => f.EmployerId == employerId)
+        var results = await _context.filesList
+            .Where(f => f.EmployerID == employerId)
             .Select(f => new FilesDto
             {
                 Id = f.Id,
                 FileName = f.FileName,
-                FileUrl = f.FileUrl,
+                FileUrl = f.S3Key,
                 FileType = f.FileType,
                 Size = f.Size,
                 CreatedAt = f.CreatedAt,
-                EmployerId = f.EmployerId  // כאן אנחנו מחזירים את ה-EmployerId
+                EmployerId = f.EmployerID
             })
             .ToListAsync();
-    }
 
+        Console.WriteLine($"Found {results.Count} files for employerId {employerId}");
+
+        return results;
+    }
 
 
     // פונקציה להורדת הקובץ!!

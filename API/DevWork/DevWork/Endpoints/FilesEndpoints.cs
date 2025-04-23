@@ -14,24 +14,50 @@ namespace DevWork.Endpoints
          
             var filesRoutes = app.MapGroup("/files");
 
+            //filesRoutes.MapGet("/", async (IFilesService fileService, HttpContext httpContext) =>
+            //{
+            //    var userId = httpContext.User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+            //    var token = httpContext.Request.Headers["Authorization"].ToString();
+            //    foreach (var claim in httpContext.User.Claims)
+            //    {
+            //        Console.WriteLine($"{claim.Type}: {claim.Value}"); }
+            //    Console.WriteLine(httpContext.User.Identity.IsAuthenticated);
+            //    Console.WriteLine("Token received: " + token);
+            //    if (string.IsNullOrEmpty(userId))
+            //    {   
+            //        return Results.Unauthorized();
+            //    }
+
+            //    var files = await fileService.GetUserFilesAsync(userId);
+            //    return Results.Ok(files);
+            //});
             filesRoutes.MapGet("/", async (IFilesService fileService, HttpContext httpContext) =>
             {
-              var userId = httpContext.User.FindFirst("sub")?.Value;
+                var userId = httpContext.User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
+                userId = userId?.Trim(); // חשוב!
+
                 var token = httpContext.Request.Headers["Authorization"].ToString();
                 foreach (var claim in httpContext.User.Claims)
                 {
-                    Console.WriteLine($"{claim.Type}: {claim.Value}"); }
+                    Console.WriteLine($"{claim.Type}: {claim.Value}");
+                }
+
                 Console.WriteLine(httpContext.User.Identity.IsAuthenticated);
                 Console.WriteLine("Token received: " + token);
-                Console.WriteLine("userid");
-                Console.WriteLine(userId);
-                Console.WriteLine("userid");
+                Console.WriteLine($"UserId from claims: '{userId}'");
+
                 if (string.IsNullOrEmpty(userId))
-                {   
+                {
                     return Results.Unauthorized();
                 }
 
                 var files = await fileService.GetUserFilesAsync(userId);
+                Console.WriteLine($"Files count: {files.Count()}");
+                foreach (var file in files)
+                {
+                    Console.WriteLine($"File: {file.FileName} | EmployerId: {file.EmployerId}");
+                }
+
                 return Results.Ok(files);
             });
 

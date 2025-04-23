@@ -55,7 +55,7 @@ export class LoginComponent implements OnInit {
       // לוגין עם השירות הראשון
       this.userservice.login(email, passwordHash).subscribe({
         next: (response) => {
-         
+          console.log("Token received:", response.token);
           // שמירה של token בתקשורת עם השרת
           sessionStorage.setItem('token', response.token);
           sessionStorage.setItem('role', 'Worker'); // אם קיים

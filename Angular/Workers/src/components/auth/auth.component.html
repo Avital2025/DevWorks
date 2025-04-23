@@ -22,8 +22,13 @@
       <mat-icon>person_add</mat-icon> הרשמה
     </button>
     } @else {
-    <button mat-icon-button [matMenuTriggerFor]="profileMenu" class="profile-button" #menuTrigger="matMenuTrigger">
-
+      <button
+      mat-icon-button
+      [matMenuTriggerFor]="profileMenu"
+      class="profile-button"
+      #menuTrigger="matMenuTrigger"
+      (menuOpened)="onMenuOpened()"
+    >
       <mat-icon>account_circle</mat-icon>
     </button>
 

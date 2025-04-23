@@ -61,8 +61,6 @@ import { BehaviorSubject } from 'rxjs';
 import { UserService } from './user.service';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { MatDialogRef } from '@angular/material/dialog';
-import { AuthComponent } from '../components/auth/auth.component';
 
 @Injectable({
   providedIn: 'root'
