@@ -1,10 +1,7 @@
 export type UserType = {
     id?: number,
-    firstName?: string,
-    lastName?: string,
+    fullName?: string,
     email?: string,
-    password?: string,
-    address?: string,
-    phon?: string
+    passwordHash?: string,
 }
 

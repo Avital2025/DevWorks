@@ -1,5 +1,6 @@
 ﻿using DevWork.API.Models;
 using DevWork.Service.IService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
@@ -133,6 +134,14 @@ namespace DevWork.Endpoints
                     }
                 });
             });
+
+            app.MapPost("/validateToken", (HttpContext context) =>
+            {
+                Console.WriteLine("here!!!");
+                // כל לוגיקה של אימות טוקן
+                return Results.Ok(new { valid = true });
+            }).RequireAuthorization();
+
 
 
             //usersRoutes.MapPost("/login", async (LoginPostModel model, IUserService service) =>

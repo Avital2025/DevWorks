@@ -110,7 +110,7 @@ export class RegisterComponent implements OnInit {
           sessionStorage.setItem('role', 'worker'); // שמירת role אם קיים בטופס
   
           console.log('User registered successfully', response);
-  
+          window.location.reload();
           this.dialogRef.close(); // סוגר את הדיאלוג
         
         },

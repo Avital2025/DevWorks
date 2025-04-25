@@ -83,7 +83,7 @@ public class DataExtractor : IDataExtractor
     //    return extractedData;
     //}
 
-    public async Task<ExtractedDataEntity> ExtractData(byte[] fileData, int employerId, AIResponse aiResponse)
+    public async Task<ExtractedDataEntity> ExtractData(byte[] fileData, int employerId, AIResponse aiResponse, string projectName)
     {
         if (aiResponse == null)
         {
@@ -100,15 +100,19 @@ public class DataExtractor : IDataExtractor
             throw new Exception("לא נמצא קובץ תואם ב-DB.");
         }
 
+        string employerIdString = employerId.ToString();
+        string projectNameWithoutEmployerId = projectName.Substring(employerIdString.Length);
+
         var extractedData = new ExtractedDataEntity
         {
             EmployerID = employerId,
+            EmployerEmail = fileEntity.EmployerEmail,
             S3Key = fileEntity.S3Key,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now,
             IsActive = true,
             // העתקת ערכים של AIResponse ישירות
-            Title = aiResponse.Title,
+            Title = projectNameWithoutEmployerId,
             Description = aiResponse.Description,
             Experience = aiResponse.Experience,
             WorkPlace = aiResponse.WorkPlace,

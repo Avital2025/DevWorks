@@ -28,5 +28,11 @@ export class ExtractedFilesService {
     return this.http.get<any>(`${this.apiUrl}/extractedData`, { params });
   }
 
+  getDownloadUrl(s3Key: string): Observable<{ url: string }> {
+    return this.http.get<{ url: string }>( `${this.apiUrl}/files/generate-presigned-download-url`
+      ,{ params: { fileName: s3Key } }
+    );
+  }
+
   
 }

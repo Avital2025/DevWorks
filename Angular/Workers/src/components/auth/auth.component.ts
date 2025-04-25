@@ -52,6 +52,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-auth',
@@ -124,26 +125,65 @@ export class AuthComponent implements OnInit {
 
   
   
+  // onUpdate() {
+  //   if (this.profileForm.valid) {
+  //     const { fullName, password } = this.profileForm.getRawValue();
+  //     sessionStorage.setItem('fullName', fullName);
+  
+  //     const userId = Number(sessionStorage.getItem('userId'));
+  //     if (!userId) {
+  //       console.error('לא נמצא userId ב-sessionStorage');
+  //       return;
+  //     }
+  
+  //     this.userService.updateUserDetails( fullName, password).subscribe({
+  //       next: (response) => console.log('פרטי המשתמש עודכנו בהצלחה', response),
+
+  //       error: (err) => console.error('שגיאה בעדכון פרטי המשתמש:', err)
+  //     });
+  //     this.menuTrigger.closeMenu();
+  //     this.profileForm.get('password')?.reset();
+  //   }
+  // }
   onUpdate() {
     if (this.profileForm.valid) {
       const { fullName, password } = this.profileForm.getRawValue();
       sessionStorage.setItem('fullName', fullName);
-  
+
       const userId = Number(sessionStorage.getItem('userId'));
       if (!userId) {
         console.error('לא נמצא userId ב-sessionStorage');
+        Swal.fire({
+          icon: 'error',
+          title: 'שגיאה',
+          text: 'לא נמצא משתמש מחובר',
+        });
         return;
       }
-  
-      this.userService.updateUserDetails( fullName, password).subscribe({
-        next: (response) => console.log('פרטי המשתמש עודכנו בהצלחה', response),
-        error: (err) => console.error('שגיאה בעדכון פרטי המשתמש:', err)
+
+      this.userService.updateUserDetails(fullName, password).subscribe({
+        next: (response) => {
+          console.log('פרטי המשתמש עודכנו בהצלחה', response);
+          Swal.fire({
+            icon: 'success',
+            title: 'הצלחה',
+            text: 'הפרטים עודכנו בהצלחה',
+          });
+        },
+        error: (err) => {
+          console.error('שגיאה בעדכון פרטי המשתמש:', err);
+          Swal.fire({
+            icon: 'error',
+            title: 'שגיאה',
+            text: 'עדכון הפרטים נכשל',
+          });
+        }
       });
-  
+
+      this.menuTrigger.closeMenu();
       this.profileForm.get('password')?.reset();
     }
   }
-  
 
   logout() {
     this.authService.logout();

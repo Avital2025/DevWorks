@@ -10,6 +10,7 @@ namespace DevWork.Core.Entities
        
         public bool IsActive { get; set; }
         public int EmployerID { get; set; } // בעל הקובץ
+        public String EmployerEmail { get; set; } 
         public int AIResponseId { get; set; } // תשובת ה-AI
         public string S3Key { get; set; } // ה-S3 Key של הקובץ
         public DateTime CreatedAt { get; set; } = DateTime.Now;
@@ -25,6 +26,7 @@ namespace DevWork.Core.Entities
         public string? Languages { get; set; }
         public bool? RemoteWork { get; set; }
         public string? EnglishLevel { get; set; }
+
 
 
 

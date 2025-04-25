@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../services/user.service';
 import { Router } from '@angular/router';
@@ -10,7 +10,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { user } from '../../models/user';
 
 @Component({
     selector: 'app-login',
@@ -31,7 +30,8 @@ export class LoginComponent implements OnInit {
     public dialogRef: MatDialogRef<LoginComponent>,
     private fb: FormBuilder,
     private userservice: UserService,
-    private router: Router
+    private router: Router,
+    // private changeDetector: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -68,7 +68,8 @@ export class LoginComponent implements OnInit {
           console.log("user logged in successfully");
   
           // ניווט לעמוד הבית
-          
+          window.location.reload();
+          //  this.changeDetector.detectChanges();
           this.dialogRef.close();
           
         },

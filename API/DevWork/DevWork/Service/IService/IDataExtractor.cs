@@ -6,6 +6,6 @@ namespace DevWork.Service.IService
     {
 
         //Task<ExtractedDataEntity> ExtractData(byte[] fileData, int employerId);
-        Task<ExtractedDataEntity> ExtractData(byte[] fileData, int employerId, AIResponse aiResponse);
+        Task<ExtractedDataEntity> ExtractData(byte[] fileData, int employerId, AIResponse aiResponse, String projectName);
     }
 }

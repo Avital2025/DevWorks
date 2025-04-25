@@ -1,10 +1,16 @@
 import { Link } from "react-router-dom";
 import { useState, useContext } from "react";
-import { Box, IconButton, Drawer, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
-import { Home, Info, UploadFile, Menu, Description, Logout, Login } from "@mui/icons-material";
+import {
+  Box, IconButton, Drawer, List, ListItem, ListItemButton, ListItemText,
+  Dialog
+} from "@mui/material";
+import {
+  Home, Info, UploadFile, Menu, Description, Logout, Login, AccountCircle
+} from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import { IsLogin } from "../App";
-
+import { Menu as MuiMenu, MenuItem } from "@mui/material";
+import UpdateDetails from "./UpdateDetails";
 
 
 const NavBar = styled("nav")({
@@ -50,8 +56,20 @@ const NavLinkStyled = styled(Link)({
 export default function ResponsiveNavBar() {
   const [isLogin, setIsLogin] = useContext(IsLogin);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const open = Boolean(anchorEl);
 
   const toggleMenu = () => setMenuOpen(!menuOpen);
+
+  const handleProfileClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -62,57 +80,46 @@ export default function ResponsiveNavBar() {
 
   return (
     <Box sx={{ position: "absolute", top: 0, right: 0, m: 2 }}>
-     <NavBar>
-  <IconButton sx={{ display: { xs: "block", md: "none" } }} onClick={toggleMenu}>
-    <Menu />
-  </IconButton>
+      <NavBar>
+        <IconButton sx={{ display: { xs: "block", md: "none" } }} onClick={toggleMenu}>
+          <Menu />
+        </IconButton>
 
-  <NavLeft sx={{ display: { xs: "none", md: "flex" } }}>
-    <NavLinkStyled to="/HomePage">
-      <Home /> Home
-    </NavLinkStyled>
-    <NavLinkStyled to="/about">
-      <Info /> About
-    </NavLinkStyled>
-  </NavLeft>
+        <NavLeft sx={{ display: { xs: "none", md: "flex" } }}>
+          <NavLinkStyled to="/HomePage"><Home /> Home</NavLinkStyled>
+          <NavLinkStyled to="/about"><Info /> About</NavLinkStyled>
+        </NavLeft>
 
-  <NavRight sx={{ display: { xs: "none", md: "flex" } }}>
-    {isLogin ? (
-      <>
-        <NavLinkStyled to="/userFiles">
-          <Description /> My files
-        </NavLinkStyled>
-        <NavLinkStyled to="/addFiles">
-          <UploadFile /> Add files
-        </NavLinkStyled>
-        <NavLinkStyled to="/" onClick={handleLogout}>
-          <Logout /> Logout
-        </NavLinkStyled>
-      </>
-    ) : (
-      <NavLinkStyled to="/login">
-       <Login /> Register to upload files and access the site
-      </NavLinkStyled>
-    )}
-  </NavRight>
+        <NavRight sx={{ display: { xs: "none", md: "flex" } }}>
+          {isLogin ? (
+            <>
+              <NavLinkStyled to="/userFiles"><Description /> My files</NavLinkStyled>
+              <NavLinkStyled to="/addFiles"><UploadFile /> Add files</NavLinkStyled>
+              <IconButton onClick={handleProfileClick}><AccountCircle /></IconButton>
+              <MuiMenu anchorEl={anchorEl} open={open} onClose={handleClose}>
+                <MenuItem onClick={() => { setOpenDialog(true); handleClose(); }}>
+                  Update Details
+                </MenuItem>
+                <MenuItem onClick={() => { handleLogout(); handleClose(); }}>
+                  Logout
+                </MenuItem>
+              </MuiMenu>
+            </>
+          ) : (
+            <NavLinkStyled to="/login"><Login /> Register to upload files and access the site</NavLinkStyled>
+          )}
+        </NavRight>
 
-  {/* תפריט צדדי במובייל */}
-  <Box sx={{ display: { xs: "block", md: "none" } }}>
-    {isLogin ? (
-      <NavLinkStyled to="/" onClick={handleLogout}>
-        <Logout /> Logout
-      </NavLinkStyled>
-    ) : (
-      <NavLinkStyled to="/login">
-        Register to upload files and access the site
-      </NavLinkStyled>
-    )}
-  </Box>
-</NavBar>
+        {/* מובייל */}
+        <Box sx={{ display: { xs: "block", md: "none" } }}>
+          {isLogin ? (
+            <NavLinkStyled to="/" onClick={handleLogout}><Logout /> Logout</NavLinkStyled>
+          ) : (
+            <NavLinkStyled to="/login">Register to upload files and access the site</NavLinkStyled>
+          )}
+        </Box>
+      </NavBar>
 
-
-
-      {/* תפריט צדדי במובייל */}
       <Drawer anchor="left" open={menuOpen} onClose={toggleMenu}>
         <List>
           <ListItem disablePadding>
@@ -141,6 +148,10 @@ export default function ResponsiveNavBar() {
           )}
         </List>
       </Drawer>
+     
+      <Dialog open={openDialog} onClose={() => setOpenDialog(false)} maxWidth="sm" fullWidth>
+  <UpdateDetails onClose={() => setOpenDialog(false)} />
+</Dialog>
     </Box>
   );
 }

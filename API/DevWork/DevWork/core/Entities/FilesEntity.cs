@@ -17,6 +17,8 @@ namespace DevWork.Core.Entities
 
         public int? FolderId { get; set; } // תיקיית היעד (null אם לא משויך לתיקיה)
 
+        public string EmployerEmail { get; set; }
+
         public int EmployerID { get; set; } = 0;// בעל הקובץ
 
         [ForeignKey("EmployerID")]

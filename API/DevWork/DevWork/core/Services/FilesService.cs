@@ -38,6 +38,37 @@ public class FilesService : IFilesService
     //    // שימו לב, ה-AI מייצר תשובה על בסיס הנתונים שהפקעתם
     //    var aiResponse = await _aiService.SaveProjectDescriptionToDB(fileText);
 
+    //public async Task<bool> CheckIfFileExistsAsync(string fileName, int employerId)
+    //{
+    //    Console.WriteLine("---------------------------employerId"+ employerId);
+    //    Console.WriteLine("---------------------------fileName" + fileName);
+    //    // בדיקה אם הקובץ כבר קיים במסד הנתונים
+    //    return await _context.filesList
+    //        .AnyAsync(f => f.FileName == fileName && f.EmployerID == employerId);
+
+    //}
+
+    public async Task<bool> CheckIfFileExistsAsync(string fileName, int employerId)
+    {
+        Console.WriteLine("---------------------------employerId: " + employerId);
+        Console.WriteLine("---------------------------fileName: " + fileName);
+
+        // בדיקה אם הקובץ כבר קיים במסד הנתונים
+        bool fileExists = await _context.filesList
+            .AnyAsync(f => f.FileName == fileName && f.EmployerID == employerId);
+
+        // הדפסת התוצאה לקונסול
+        if (fileExists)
+        {
+            Console.WriteLine("File exists: true");
+        }
+        else
+        {
+            Console.WriteLine("File exists: false");
+        }
+
+        return fileExists;
+    }
 
 
     //    // שמירת תשובת ה-AI
@@ -52,7 +83,7 @@ public class FilesService : IFilesService
     //    return extractedData;
     //}
 
-    public async Task<ExtractedDataEntity> ProcessFile(string fileUrl, int employerId)
+    public async Task<ExtractedDataEntity> ProcessFile(string fileUrl, int employerId, string projectName)
     {
         var fileData = await _s3Service.DownloadFileAsync(fileUrl);
         var fileText = Encoding.UTF8.GetString(fileData);
@@ -67,32 +98,74 @@ public class FilesService : IFilesService
         //await _context.SaveChangesAsync();
         //Console.WriteLine("aaaaafter SaveChangesAsync ");
 
-
-
+        var employer = _context.usersList.FirstOrDefault(u => u.Id == employerId);
+        string employerEmail = employer?.Email ?? "";
+        string employerIdString = employerId.ToString();
+        string projectNameWithoutEmployerId = projectName.Substring(employerIdString.Length);
         var fileEntity = new FilesEntity
         {
             // ממלאים את הערכים המתאימים לפי הצורך
-            FileName = Path.GetFileName(fileUrl), // אתה יכול להפיק את שם הקובץ מתוך ה-URL
+            FileName = projectNameWithoutEmployerId, // אתה יכול להפיק את שם הקובץ מתוך ה-URL
             FileType = Path.GetExtension(fileUrl), // סוג הקובץ (למשל .pdf או .jpg)
             Size = fileData.Length,  // גודל הקובץ בבתים
             S3Key = fileUrl,  // אם אתה שומר את ה-URL או המזהה של הקובץ ב-S3
             EmployerID = employerId,  // המעסיק שהעלה את הקובץ
+            EmployerEmail = employerEmail,
             CreatedAt = DateTime.Now,  // זמן יצירת הקובץ
             UpdatedAt = DateTime.Now,  // זמן עדכון הקובץ
             IsDeleted = false,  // אם הקובץ לא נמחק, זה לא פעיל בינתיים
-        };
+        }; 
 
         _context.filesList.Add(fileEntity);  // הוספה לטבלה של הקבצים
         await _context.SaveChangesAsync();   // שמירה ב-DB
 
         // שולח את התשובה לפונקציה ExtractData בלי לקרוא שוב ל-AI
-        var extractedData = await _dataExtractor.ExtractData(fileData, employerId, aiResponse);
+        var extractedData = await _dataExtractor.ExtractData(fileData, employerId, aiResponse, projectName);
 
         _context.extractedDataList.Add(extractedData);
         await _context.SaveChangesAsync();
 
         return extractedData;
     }
+
+
+    // מחיקה לוגית של קובץ
+       public async Task<bool> DeleteFileAsync(int fileId)
+    {
+        // חיפוש הקובץ לפי ה-ID בטבלת הקבצים
+        var file = await _context.filesList.FindAsync(fileId);
+
+        // אם הקובץ לא נמצא, החזר false
+        if (file == null) return false;
+
+        // שינוי השדה isDeleted ל־true
+        file.IsDeleted = true;
+
+        // שמירת השינויים במסד הנתונים
+        await _context.SaveChangesAsync();
+        return true;
+    
+
+}
+
+// עריכת שם קובץ
+public async Task<bool> RenameFileAsync(int fileId, string newFileName)
+    {
+        // חיפוש הקובץ לפי ה-ID בטבלת הקבצים
+        var file = await _context.filesList.FindAsync(fileId);
+
+        // אם הקובץ לא נמצא, החזר false
+        if (file == null) return false;
+
+        // עדכון שם הקובץ
+        file.FileName = newFileName;
+
+        // שמירת השינויים במסד הנתונים
+        await _context.SaveChangesAsync();
+        return true;
+    
+}
+
 
 
     //public async Task<IEnumerable<FilesDto>> GetUserFilesAsync(string userId)
@@ -117,6 +190,34 @@ public class FilesService : IFilesService
     //        .ToListAsync();
     //}
 
+    //public async Task<IEnumerable<FilesDto>> GetUserFilesAsync(string userId)
+    //{
+    //    userId = userId?.Trim(); // חשוב שוב
+    //    if (!int.TryParse(userId, out int employerId))
+    //    {
+    //        Console.WriteLine("Failed to parse userId to int");
+    //        return new List<FilesDto>();
+    //    }
+
+    //    var results = await _context.filesList
+    //        .Where(f => f.EmployerID == employerId)
+    //        .Select(f => new FilesDto
+    //        {
+
+    //            Id = f.Id,
+    //            FileName = f.FileName,
+    //            FileUrl = f.S3Key,
+    //            FileType = f.FileType,
+    //            Size = f.Size,
+    //            CreatedAt = f.CreatedAt,
+    //            EmployerId = f.EmployerID
+    //        })
+    //        .ToListAsync();
+
+    //    Console.WriteLine($"Found {results.Count} files for employerId {employerId}");
+
+    //    return results;
+    //}
     public async Task<IEnumerable<FilesDto>> GetUserFilesAsync(string userId)
     {
         userId = userId?.Trim(); // חשוב שוב
@@ -127,7 +228,7 @@ public class FilesService : IFilesService
         }
 
         var results = await _context.filesList
-            .Where(f => f.EmployerID == employerId)
+            .Where(f => f.EmployerID == employerId && !f.IsDeleted)
             .Select(f => new FilesDto
             {
                 Id = f.Id,
@@ -141,6 +242,11 @@ public class FilesService : IFilesService
             .ToListAsync();
 
         Console.WriteLine($"Found {results.Count} files for employerId {employerId}");
+
+        foreach (var file in results)
+        {
+            Console.WriteLine($"Id: {file.Id} | FileName: {file.FileName} | S3Key/FileUrl: {file.FileUrl}");
+        }
 
         return results;
     }

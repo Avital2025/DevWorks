@@ -65,7 +65,8 @@ public class S3Service : IS3Service
             BucketName ="devwork",
             Key = cleanFileName,
             Verb = verb,
-            Expires = DateTime.UtcNow.AddMinutes(15),  
+            Expires = DateTime.UtcNow.AddDays(7),  // תוקף של 7 ימים
+
             ContentType = "application/octet-stream"
         };
       
@@ -75,12 +76,14 @@ public class S3Service : IS3Service
     public async Task<string> GeneratePreSignedUrlForDownloadAsync(string fileName)
     {
         // יצירת בקשה ל-PreSigned URL עבור פעולה של GET
+
+        Console.WriteLine("fileName" + fileName);
         var request = new GetPreSignedUrlRequest
         {
             BucketName = "devwork",  // שם ה-bucket
             Key = fileName,         // שם הקובץ ב-S3
             Verb = HttpVerb.GET,    // פעולה GET להורדה
-            Expires = DateTime.UtcNow.AddMinutes(15),  // תוקף של 15 דקות
+            Expires = DateTime.UtcNow.AddDays(7),  // תוקף של 7 ימים
         };
 
         // הפקת ה-PreSigned URL

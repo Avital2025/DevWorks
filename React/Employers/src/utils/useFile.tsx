@@ -1,49 +1,149 @@
+// import axios from "axios";
+// import { useCallback, useState } from "react";
+// import Swal from 'sweetalert2';
+
+// const useFile = () => {
+//     const [file, setFile] = useState<File | null>(null);
+//     const [uploadStatus, setUploadStatus] = useState<string | null>(null);
+//     const [loading, setLoading] = useState<boolean>(false);
+//     const [progress, setProgress] = useState(0);
+
+//     const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+//         if (event.target.files && event.target.files.length > 0) {
+//             setFile(event.target.files[0]);
+//             setUploadStatus(null);
+//         }
+//     }, []);
+
+//     const handleUpload = useCallback(async (FileName: string) => {
+//         if (!file) {
+//             setUploadStatus('Please select a file first!');
+//             return;
+//         }
+
+//         setUploadStatus(null);
+//         setLoading(true);
+//         setProgress(0);
+
+//         try {
+//             // יצירת מזהה ייחודי לקובץ
+//             const uniqueId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`; // ייחודי
+//             const uniqueFileName = `${uniqueId}-${file.name}`; // המזהה הייחודי + שם הקובץ
+
+//             // יצירת פריסיינד URL להעלאת הקובץ
+//             const response = await axios.get('http://localhost:5069/files/generate-presigned-url', {
+//                 params: { fileName: uniqueFileName }
+//             });
+
+//             const presignedUrl = response.data.url;
+
+//             await axios.put(presignedUrl, file, {
+//                 headers: {
+//                     'Content-Type': 'application/octet-stream',
+//                 },
+//                 onUploadProgress: (progressEvent) => {
+//                     const percent = Math.round(
+//                         (progressEvent.loaded * 100) / (progressEvent.total || 1)
+//                     );
+//                     setProgress(percent);
+//                 },
+//             });
+
+//             // יצירת פריסיינד URL להורדת הקובץ
+//             const downloadUrlResponse = await axios.get('http://localhost:5069/files/generate-presigned-download-url', {
+//                 params: { fileName: uniqueFileName }
+//             });
+
+//             const downloadUrl = downloadUrlResponse.data.url;
+
+//             const model = {
+//                 FileUrl: downloadUrl,
+//                 FileName: FileName, // שולח את שם הפרויקט
+//                 EmployerId: parseInt(localStorage.getItem('EmployerId') || '0', 10),
+//             };
+
+//             // שליחת המידע לשרת
+//             await axios.post('http://localhost:5069/files/process-file', model);
+
+//             setUploadStatus('File uploaded and processed successfully!');
+//             setFile(null);
+//             Swal.fire({
+//                 position: "top-end",
+//                 icon: "success",
+//                 title: "The file was uploaded successfully.",
+//                 showConfirmButton: false,
+//                 timer: 1500,
+//             });
+//         } catch (error) {
+//             console.error('Error uploading file:', error);
+//             setUploadStatus('Error uploading file.');
+//         } finally {
+//             setLoading(false);
+//         }
+//     }, [file]);
+
+//     return { handleFileChange, uploadStatus, loading, handleUpload, progress, file };
+// };
+
+// export default useFile;
+
+
 
 import axios from "axios";
 import { useCallback, useState } from "react";
-
-
-
+import Swal from 'sweetalert2';
 
 const useFile = () => {
-
     const [file, setFile] = useState<File | null>(null);
     const [uploadStatus, setUploadStatus] = useState<string | null>(null);
-
     const [loading, setLoading] = useState<boolean>(false);
     const [progress, setProgress] = useState(0);
 
-
     const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-
-
         if (event.target.files && event.target.files.length > 0) {
             setFile(event.target.files[0]);
             setUploadStatus(null);
         }
     }, []);
 
-
-    const handleUpload = useCallback(async () => {
+    const handleUpload = useCallback(async (FileName: string) => {
         if (!file) {
             setUploadStatus('Please select a file first!');
             return;
         }
 
+        const employerId = localStorage.getItem('EmployerId') || '0';
+        const uniqueFileName = `${employerId}${FileName}`;
+
         setUploadStatus(null);
         setLoading(true);
         setProgress(0);
-        try {
 
-            // שלב 1: קבלת Presigned URL מהשרת עבור העלאה (PUT)
-            const response = await axios.get('http://localhost:5069/files/generate-presigned-url', {
-                params: { fileName: file.name }
+        try {
+           console.log("starting checking file existence");
+            console.log(uniqueFileName); 
+
+            // קריאה לשרת לבדוק אם הקובץ כבר קיים
+            const checkFileExistsResponse = await axios.get('http://localhost:5069/files/check-file-exists', {
+                params: { fileName: uniqueFileName, employerId }
             });
-            console.log(response.data.url);
+
+            if (checkFileExistsResponse.data.exists) {
+                // אם הקובץ קיים, הצג הודעת שגיאה למשתמש
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Duplicate file name',
+                    text: 'A file with this name already exists. Please choose a different name.',
+                });
+                return; // יצא מהפונקציה כדי שלא נמשיך בהעלאה
+            }
+
+            const response = await axios.get('http://localhost:5069/files/generate-presigned-url', {
+                params: { fileName: uniqueFileName }
+            });
 
             const presignedUrl = response.data.url;
 
-            // שלב 2: העלאת הקובץ ישירות ל-S3
             await axios.put(presignedUrl, file, {
                 headers: {
                     'Content-Type': 'application/octet-stream',
@@ -56,23 +156,29 @@ const useFile = () => {
                 },
             });
 
-            // שלב 3: קבלת URL להורדה (GET) מ-S3
             const downloadUrlResponse = await axios.get('http://localhost:5069/files/generate-presigned-download-url', {
-                params: { fileName: file.name }
+                params: { fileName: uniqueFileName }
             });
+
             const downloadUrl = downloadUrlResponse.data.url;
 
-            // שלב 4: שליחת ה-URL ל-endpoint שמעדכן את ה-DB
             const model = {
-                FileUrl: downloadUrl, // שולח את ה-URL להורדה במקום ה-URL להעלאה
-                EmployerId: parseInt(localStorage.getItem('EmployerId') || '0', 10),
+                FileUrl: downloadUrl,
+                FileName: uniqueFileName,
+                EmployerId: parseInt(employerId, 10),
             };
 
             await axios.post('http://localhost:5069/files/process-file', model);
 
-
             setUploadStatus('File uploaded and processed successfully!');
             setFile(null);
+            Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "The file was uploaded successfully.",
+                showConfirmButton: false,
+                timer: 1500,
+            });
         } catch (error) {
             console.error('Error uploading file:', error);
             setUploadStatus('Error uploading file.');
@@ -81,7 +187,7 @@ const useFile = () => {
         }
     }, [file]);
 
-
     return { handleFileChange, uploadStatus, loading, handleUpload, progress, file };
 };
+
 export default useFile;

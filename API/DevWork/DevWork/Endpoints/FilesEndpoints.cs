@@ -2,6 +2,7 @@
 using Amazon.S3;
 using DevWork.API.Models;
 using DevWork.Core.Dto;
+using DevWork.core.DTOs;
 
 namespace DevWork.Endpoints
 {
@@ -14,23 +15,6 @@ namespace DevWork.Endpoints
          
             var filesRoutes = app.MapGroup("/files");
 
-            //filesRoutes.MapGet("/", async (IFilesService fileService, HttpContext httpContext) =>
-            //{
-            //    var userId = httpContext.User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
-            //    var token = httpContext.Request.Headers["Authorization"].ToString();
-            //    foreach (var claim in httpContext.User.Claims)
-            //    {
-            //        Console.WriteLine($"{claim.Type}: {claim.Value}"); }
-            //    Console.WriteLine(httpContext.User.Identity.IsAuthenticated);
-            //    Console.WriteLine("Token received: " + token);
-            //    if (string.IsNullOrEmpty(userId))
-            //    {   
-            //        return Results.Unauthorized();
-            //    }
-
-            //    var files = await fileService.GetUserFilesAsync(userId);
-            //    return Results.Ok(files);
-            //});
             filesRoutes.MapGet("/", async (IFilesService fileService, HttpContext httpContext) =>
             {
                 var userId = httpContext.User.FindFirst("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")?.Value;
@@ -59,7 +43,7 @@ namespace DevWork.Endpoints
                 }
 
                 return Results.Ok(files);
-            });
+            }).RequireAuthorization();
 
 
 
@@ -68,6 +52,23 @@ namespace DevWork.Endpoints
                 var entity = await service.GetFileById(id);
                 return entity is not null ? Results.Ok(entity) : Results.NotFound();
             });
+
+
+            // מחיקה לוגית
+            filesRoutes.MapPut("/{id:int}/mark-deleted", async (int id, IFilesService service) =>
+            {
+                Console.WriteLine("delete");
+                var result = await service.DeleteFileAsync(id);
+                return result ? Results.Ok() : Results.NotFound();
+            });
+
+            // עריכת שם קובץ
+            filesRoutes.MapPut("/{id:int}/rename", async (int id, RenameFileDto model, IFilesService service) =>
+            {
+                var result = await service.RenameFileAsync(id, model.NewFileName);
+                return result ? Results.Ok() : Results.NotFound();
+            });
+
 
             //filesRoutes.MapPost("/", async (FilesPostModel model, IFilesService service) =>
             //{
@@ -90,9 +91,13 @@ namespace DevWork.Endpoints
                 Console.WriteLine("here???");
                 Console.WriteLine(model.FileUrl);
                 Console.WriteLine("here???");
-                var extractedData = await service.ProcessFile(model.FileUrl,model.EmployerId );
+                var extractedData = await service.ProcessFile(model.FileUrl,model.EmployerId, model.FileName);
                 return Results.Ok(extractedData);
             });
+
+
+
+
 
 
             filesRoutes.MapPut("/{id}", async (int id, FilesPostModel updatedModel, IFilesService service) =>
@@ -105,6 +110,18 @@ namespace DevWork.Endpoints
                 return Results.Ok(updated);
             });
 
+            filesRoutes.MapGet("/check-file-exists", async (string fileName, int employerId, IFilesService service) =>
+            {
+                Console.WriteLine("checkinggg");
+                Console.WriteLine(fileName);
+                Console.WriteLine(employerId);
+                // קריאה לפונקציה בסרביס לבדיקת אם הקובץ קיים
+                var fileExists = await service.CheckIfFileExistsAsync(fileName, employerId);
+
+                // מחזיר תשובה אם הקובץ קיים או לא
+                return Results.Ok(new { exists = fileExists });
+            });
+
             // הוספת פונקציה להפקת presigned URL
             filesRoutes.MapGet("/generate-presigned-url", async (string fileName, IS3Service s3Service) =>
             {
@@ -113,6 +130,10 @@ namespace DevWork.Endpoints
 
                 return Results.Ok(new { url = presignedUrl });
             });
+
+
+
+        
 
             // הוספת פונקציה להפקת presigned URL להורדה (GET)
             filesRoutes.MapGet("/generate-presigned-download-url", async (string fileName, IS3Service s3Service) =>

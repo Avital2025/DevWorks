@@ -70,12 +70,9 @@ export const IsLogin = createContext<[boolean, Dispatch<React.SetStateAction<boo
 function App() {
    const [user, userDispatch] = useReducer(actionUser, {
       id: 0,
-      firstName: '',
-      lastName: '',
+      fullName: '',
       email: '',
-      password: '',
-      address: '',
-      phon: ''
+      passwordHash: '',
    })
 
    const [isLogin, setIsLogin] = useState(false)

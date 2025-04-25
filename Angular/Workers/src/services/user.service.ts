@@ -26,8 +26,14 @@ export class UserService {
     console.log("before");
     
     return this.http.put(`${this.apiUrl}/users/update-credentials`, body); // שיניתי כאן ל-URL הנכון
-    console.log("after");
+
     
+  }
+
+  validateToken(token: string): Observable<any> {
+    console.log("validateToken called with token:", token);
+    
+    return this.http.post(`${this.apiUrl}/validateToken`, { token });
   }
 }
 

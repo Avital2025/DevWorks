@@ -13,6 +13,9 @@ public interface IFilesService
 
     Task<IEnumerable<FilesDto>> GetUserFilesAsync(string userId);
 
+    Task<bool> CheckIfFileExistsAsync(string fileName, int employerId);
+    Task<ExtractedDataEntity> ProcessFile(string fileUrl, int employerId, string projectName);
 
-    Task<ExtractedDataEntity> ProcessFile(string fileUrl, int employerId);
+    Task<bool> DeleteFileAsync(int fileId);
+    Task<bool> RenameFileAsync(int fileId, string newFileName);
 }
