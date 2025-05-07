@@ -1,4 +1,3 @@
-
 import { useNavigate } from 'react-router-dom';  // הוספת import של useNavigate
 import { StyledBox, StyledTypography, StyledTextField, StyledPaper, StyledButton, StyledCircularProgress, StyledAlert } from '../styles/AddFileStyle';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
@@ -10,7 +9,6 @@ import Swal from 'sweetalert2';
 const FileUploader = () => {
   const { uploadStatus, handleFileChange, handleUpload, loading, progress, file } = useFile();
   const [projectName, setProjectName] = useState('');
-  // const [openDialog, setOpenDialog] = useState(false);  // מצב לניהול פתיחת הפופאפ
   const navigate = useNavigate();
 
   const handleUploadClick = () => {
@@ -19,24 +17,12 @@ const FileUploader = () => {
         icon: "error",
         title: "Oops...",
         text: "Please enter a project name!",
-      }); // ✅ פתיחת הודעת שגיאה עם sweetalert
+      }); 
       return;
     }
-  
     handleUpload(projectName);
   };
 
-  // const handleDialogClose = () => {
-  //   setOpenDialog(false);
-  // };
-
-  // const handleDialogConfirm = () => {
-  //   setOpenDialog(false);  // סגור את הפופאפ
-  //   const projectNameInput = document.getElementById('project-name-input');
-  //   if (projectNameInput) {
-  //     projectNameInput.focus();
-  //   }
-  // };
 
   return (
     <StyledBox>
@@ -111,20 +97,6 @@ const FileUploader = () => {
         Go to My Files
       </StyledButton>
 
-      {/* פופאפ אם לא הוזן שם פרויקט */}
-      {/* <Dialog open={openDialog} onClose={handleDialogClose}>
-        <DialogTitle>Missing Project Name</DialogTitle>
-        <DialogContent>
-          <StyledTypography variant="body1">
-            Please enter a project name before uploading your file.
-          </StyledTypography>
-        </DialogContent>
-        <DialogActions>
-          <StyledButton onClick={handleDialogConfirm} color="primary">
-            OK
-          </StyledButton>
-        </DialogActions>
-      </Dialog> */}
     </StyledBox>
   );
 };

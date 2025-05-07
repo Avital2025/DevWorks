@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using DevWork.API.Models;
+using DevWork.core.DTOs;
+using DevWork.core.Entities;
 using DevWork.Core.Dto;
 using DevWork.Core.Entities;
 
@@ -15,7 +17,9 @@ namespace DevWork.core
 
             CreateMap<UserPostModel, UserEntity>().ReverseMap();
             CreateMap<FilesPostModel, FilesEntity>().ReverseMap();
+
             CreateMap<ExtractedDataPostModel, ExtractedDataEntity>().ReverseMap();
+            CreateMap<ReminderCreateDto, Reminder>().ReverseMap();
         }
 
     }

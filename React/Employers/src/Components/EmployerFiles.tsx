@@ -50,7 +50,10 @@ export default function EmployerFiles() {
   const employerId = localStorage.getItem('EmployerId') || '0';
   const openEditDialog = (file: FileType) => {
     setSelectedFile(file);
-    setNewName(`${employerId}${file.fileName}`);
+    const originalName = file.fileName.startsWith(employerId)
+  ? file.fileName.substring(employerId.length)
+  : file.fileName;
+setNewName(originalName);
     setEditDialogOpen(true);
   };
 
@@ -72,6 +75,7 @@ export default function EmployerFiles() {
       const exists = checkResponse.data.exists;
 
       if (exists) {
+        setEditDialogOpen(false);
         Swal.fire({
           icon: "error",
           title: "השם כבר קיים",

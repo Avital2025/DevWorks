@@ -25,18 +25,6 @@ namespace DevWork.Endpoints
                 return entity is not null ? Results.Ok(entity) : Results.NotFound();
             }).RequireAuthorization();
 
-
-            //      usersRoutes.MapPut("/update-credentials", async (
-
-            //UserUpdateCredentialsModel model,
-            //ClaimsPrincipal user,
-            //IUserService service) =>
-            //      {
-            //          var userId = int.Parse(user.FindFirst("sub")?.Value!);
-            //          var result = await service.UpdateCredentialsAsync(userId, model);
-            //          return result ? Results.Ok() : Results.BadRequest("Update failed");
-            //      }).RequireAuthorization();
-
             usersRoutes.MapPut("/update-credentials", async (
       UserUpdateCredentialsModel model,
       ClaimsPrincipal user,
@@ -78,32 +66,6 @@ namespace DevWork.Endpoints
             }).RequireAuthorization();
 
 
-
-
-
-
-            //usersRoutes.MapPost("/login", async (LoginPostModel model, IUserService service) =>
-            //{
-            //    var user = await service.Authenticate(model.email, model.passwordHash);
-
-            //    if (user == null)
-            //    {
-            //        return Results.BadRequest(new { Message = "Invalid email or password" });
-            //    }
-            //    // במקרה שהמשתמש זוהה, החזר את המידע או Token גישה (אם יש לך מערכת כזאת)
-            //    return Results.Ok(new { Message = "Login successful", UserId = user.Id });
-            //});
-
-
-            //usersRoutes.MapPut("/login/{id}", async (int id, UserPostModel updatedModel, IUserService service) =>
-            // {
-            //     var updated = await service.UpdateUser(updatedModel);
-            //     if (updated == null)
-            //     {
-            //         return Results.NotFound();
-            //     }
-            //     return Results.Ok(updated);
-            // });
 
 
         }

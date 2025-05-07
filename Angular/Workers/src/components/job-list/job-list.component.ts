@@ -107,7 +107,9 @@ export class JobListComponent {
       this.currentPage.set(this.currentPage() + 1);
     }
   }
-
+  scrollToTop(): void {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
   prevPage() {
     if (this.currentPage() > 1) {
       this.currentPage.set(this.currentPage() - 1);

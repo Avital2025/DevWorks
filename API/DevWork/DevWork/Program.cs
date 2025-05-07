@@ -39,6 +39,7 @@ builder.Services.AddScoped<IDataExtractor, DataExtractor>();
 builder.Services.AddScoped<IS3Service, S3Service>();
 builder.Services.AddScoped<IAIService, AIService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IReminderService, ReminderService>();
 
 
 
@@ -244,6 +245,8 @@ ExtractedDataEndpoints.ExtractedData(app);
 UsersEndpoints.Users(app);
 AuthEndpoint.Auth(app);
 
+
+ReminderEndpoints.Reminders(app);
 // =========== endpoints injection ===========
 Console.WriteLine("Key: " + builder.Configuration["JWT:Key"]);
 

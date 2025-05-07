@@ -165,6 +165,11 @@ export class FilteringComponent implements OnInit {
   filterForm!: FormGroup;
 
   languages: string[] = ['C#', 'Java', 'Cobol'];
+  workplaceOptions: string[] = [
+    'תל אביב והמרכז', 'ירושלים', 'חיפה והצפון', 'באר שבע והדרום', 'אילת', 'השרון', 'השפלה', 'אחר'
+  ];
+
+
 
   @ViewChild('instructionsDialog') instructionsDialog!: TemplateRef<any>;
   instructions: string = '';
@@ -230,9 +235,9 @@ export class FilteringComponent implements OnInit {
         return 'Choose a level: Low, Medium, or High.';
       case 'remoteWork':
         return 'Choose if the job is remote.';
-      case 'workplace':
-        return 'Enter the workplace name or description.';
-      default:
+        case 'workplace':
+          return 'Choose one of the following options for workplace:';
+        default:
         return 'Fill in this field as required.';
     }
   }
@@ -241,6 +246,10 @@ export class FilteringComponent implements OnInit {
     this.dialogForm.reset();
     // this.dialog.closeAll(); // הסר שורה זו
   }
+  clearSelections(): void {
+    this.selectedValues = {};  // אפס את הערכים שנבחרו
+    this.filterForm.reset();   // אפס את הטופס
+  }
 
   saveSelection(field: string): void {
     const value = this.dialogForm.get('dialogInput')?.value;
@@ -248,6 +257,5 @@ export class FilteringComponent implements OnInit {
       this.selectedValues[field] = value;
       this.filterForm.patchValue({ [field]: value });
     }
-    // this.closeDialog(); // הסר שורה זו
   }
 }

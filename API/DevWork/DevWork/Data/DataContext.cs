@@ -1,4 +1,5 @@
-﻿using DevWork.Core.Dto;
+﻿using DevWork.core.Entities;
+using DevWork.Core.Dto;
 using DevWork.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,6 +16,7 @@ namespace DevWork.Data
      public DbSet<FilesDto> filesListDto { get; set; }
         public DbSet<FilesEntity> filesList { get; set; }
 
+        public DbSet<Reminder> Reminders { get; set; }
 
 
 

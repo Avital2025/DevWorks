@@ -8,12 +8,8 @@ import EmployerFiles from "./Components/EmployerFiles";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import { useContext } from "react";
 import { IsLogin } from "./App";
-import UpdateDetailsWrapper from "./Components/UpdateDetailsWrapper";
-
-// const UpdateDetailsWrapper = () => {
-//   const navigate = useNavigate();
-//   return <UpdateDetails onClose={() => navigate(-1)} />;
-// };
+import AddReminders from "./Components/AddReminders";
+import RemindersPage from "./Components/Reminders";
 
 function LoginOrHome() {
   const [isLogin] = useContext(IsLogin);
@@ -28,11 +24,12 @@ export default createBrowserRouter([
       { path: "about", element: <About /> },
       { path: "HomePage", element: <Home /> },
       { path: "login", element: <LoginOrHome /> }, // משתמשים ברכיב שעושה את הבדיקה
-      // { path: "updateDetails", element: <UpdateDetails /> }, // משתמשים ברכיב שעושה את הבדיקה
-      { path: "updateDetails", element: <UpdateDetailsWrapper /> },
-
       { path: "addfiles", element: (<ProtectedRoute> <AddFiles /> </ProtectedRoute> )},
       { path: "userFiles", element: (<ProtectedRoute> <EmployerFiles /> </ProtectedRoute> )},
+      { path: "reminders", element: (<ProtectedRoute> <RemindersPage /> </ProtectedRoute> )},
+      // { path: "reminders", element: (<ProtectedRoute> <RemindersMenu /> </ProtectedRoute> )},
+      { path: "add-reminders", element: (<ProtectedRoute> <AddReminders /> </ProtectedRoute> )},
+
       { index: true, element: <Home /> },
     ],
   },
