@@ -3,6 +3,7 @@ import { BehaviorSubject, catchError, map, Observable, of } from 'rxjs';
 import { UserService } from './user.service';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { BrowserStorageService } from './browser-storage.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ export class AuthService {
   constructor(
     private userService: UserService,
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private browserStorage: BrowserStorageService
   ) {
     if (typeof window !== 'undefined') {
       const authData = sessionStorage.getItem('auth_data');
@@ -31,9 +33,7 @@ export class AuthService {
   public checkCurrentToken() {
 
     if (typeof window !== 'undefined') {
-      const token = sessionStorage.getItem('token');
-    
-    
+      const token = this.browserStorage.getItem('token'); 
     if (token) {
       return this.validateToken(token);  
     } else {
@@ -70,8 +70,7 @@ export class AuthService {
     return this.userService.login(email, password).subscribe(response => {
       if (response.token && response.user) {
         this.token = response.token;
-
-        
+  
         const authData = {
           token: response.token,
           user: {
@@ -81,18 +80,16 @@ export class AuthService {
             role: response.user.role
           }
         };
-
-        if (typeof window !== 'undefined') {
-          sessionStorage.setItem('auth_data', JSON.stringify(authData));
-        }
-
+  
+        this.browserStorage.setItem('auth_data', JSON.stringify(authData)); 
+  
         this.isLoggedInSubject.next(true);  
       } else {
         console.error('Login response missing token or user data');
       }
     });
   }
-
+  
 
   register(fullName: string, email: string, passwordHash: string, role: string) {
     return this.userService.register(fullName, email, passwordHash, role);
@@ -101,7 +98,7 @@ export class AuthService {
   logout() {
 
     this.token = null;
-    sessionStorage.clear();
+    this.browserStorage.clear();
     this.isLoggedInSubject.next(false);  
   }
 
@@ -111,13 +108,14 @@ export class AuthService {
 
 
   getCurrentUser() {
-    const authData = sessionStorage.getItem('auth_data');
+    const authData = this.browserStorage.getItem('auth_data'); 
     if (authData) {
       const parsed = JSON.parse(authData);
       return parsed.user;
     }
     return null;
   }
+  
 
   getUserId(): number | null {
     const user = this.getCurrentUser();

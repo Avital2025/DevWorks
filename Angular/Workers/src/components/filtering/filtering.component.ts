@@ -62,15 +62,15 @@ export class FilteringComponent implements OnInit {
     this.dialogForm = this.fb.group({
       dialogInput: [''],
     });
-    this.onSubmit();
+    if (typeof window !== 'undefined') {
+      this.onSubmit();
+    }
     
   }
 
   async onSubmit() {
-    console.log("im here");
 
     if (this.filterForm.valid) {
-      console.log("form is valid");
 
       const formValues = this.filterForm.value;
       this.dataService
@@ -82,7 +82,6 @@ export class FilteringComponent implements OnInit {
           formValues.englishLevel
         )
         .subscribe((response) => {
-          console.log(response);
           this.filteredJobs.emit(response);
         });
     }

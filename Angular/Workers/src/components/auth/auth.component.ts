@@ -13,6 +13,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { UserService } from '../../services/user.service';
 import Swal from 'sweetalert2';
+import { BrowserStorageService } from '../../services/browser-storage.service';
 
 @Component({
   selector: 'app-auth',
@@ -43,16 +44,16 @@ export class AuthComponent implements OnInit {
     private authService: AuthService,
     private userService: UserService,
     private router: Router,
+    private browserStorage: BrowserStorageService
   ) {}
 
   ngOnInit() {
     this.checkLoginStatus();
     this.profileForm = this.fb.group({
-      fullName: [sessionStorage.getItem('fullName') || '', Validators.required],
-      email: [{ value: sessionStorage.getItem('email') || '', disabled: true }, [Validators.required, Validators.email]],
+      fullName: [this.browserStorage.getItem('fullName') || '', Validators.required],
+      email: [{ value: this.browserStorage.getItem('email') || '', disabled: true }, [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
-    
   }
 
   togglePasswordVisibility() {
@@ -60,11 +61,7 @@ export class AuthComponent implements OnInit {
   }
 
   checkLoginStatus() {
-    
-    if (typeof window !== 'undefined') {
-      this.isLoggedIn = !!sessionStorage.getItem('token');
-    }
-    
+    this.isLoggedIn = !!this.browserStorage.getItem('token');
   }
 
   openLoginDialog() {
@@ -77,25 +74,21 @@ export class AuthComponent implements OnInit {
     dialogRef.afterClosed().subscribe(() => this.checkLoginStatus());
   }
 
-
   onMenuOpened() {
-    const fullName = sessionStorage.getItem('fullName') || '';
-    const email = sessionStorage.getItem('email') || '';
-  
+    const fullName = this.browserStorage.getItem('fullName') || '';
+    const email = this.browserStorage.getItem('email') || '';
+
     this.profileForm.patchValue({ fullName });
     this.profileForm.get('email')?.setValue(email);
   }
 
-  
-  
   onUpdate() {
     if (this.profileForm.valid) {
       const { fullName, password } = this.profileForm.getRawValue();
-      sessionStorage.setItem('fullName', fullName);
+      this.browserStorage.setItem('fullName', fullName);
 
-      const userId = Number(sessionStorage.getItem('userId'));
+      const userId = Number(this.browserStorage.getItem('userId'));
       if (!userId) {
-        console.error('לא נמצא userId ב-sessionStorage');
         Swal.fire({
           icon: 'error',
           title: 'שגיאה',
@@ -105,14 +98,14 @@ export class AuthComponent implements OnInit {
       }
 
       this.userService.updateUserDetails(fullName, password).subscribe({
-        next: (response) => {
+        next: () => {
           Swal.fire({
             icon: 'success',
             title: 'העדכון נשמר',
             text: 'הפרטים שלך נשמרו במערכת',
           });
         },
-        error: (err) => {
+        error: () => {
           Swal.fire({
             icon: 'error',
             title: 'שגיאה',
@@ -133,9 +126,8 @@ export class AuthComponent implements OnInit {
       this.menuTrigger.closeMenu();
     }
 
-
     this.router.navigate(['/']).then(() => {
-      this.checkLoginStatus(); 
+      this.checkLoginStatus();
     });
   }
 }

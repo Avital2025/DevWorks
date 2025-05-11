@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
+import { BrowserStorageService } from '../../services/browser-storage.service';
 
 @Component({
   selector: 'app-profile',
@@ -25,27 +26,28 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     private dialogRef: MatDialogRef<ProfileComponent>,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private browserStorage: BrowserStorageService
   ) {}
 
   ngOnInit(): void {
     this.profileForm = this.fb.group({
-      fullName: [sessionStorage.getItem('fullName') || '', Validators.required],
-      email: [sessionStorage.getItem('email') || '', [Validators.required, Validators.email]]
+      fullName: [this.browserStorage.getItem('fullName') || '', Validators.required],
+      email: [this.browserStorage.getItem('email') || '', [Validators.required, Validators.email]]
     });
   }
 
   onUpdate() {
     if (this.profileForm.valid) {
       const { fullName, email } = this.profileForm.value;
-      sessionStorage.setItem('fullName', fullName);
-      sessionStorage.setItem('email', email);
+      this.browserStorage.setItem('fullName', fullName);
+      this.browserStorage.setItem('email', email);
       this.dialogRef.close();
     }
   }
 
   logout() {
-    sessionStorage.clear();
+    this.browserStorage.clear();
     this.dialogRef.close();
     location.reload();
   }

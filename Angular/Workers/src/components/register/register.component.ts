@@ -9,30 +9,31 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { user } from '../../models/user';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { BrowserStorageService } from '../../services/browser-storage.service';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-register',
-  
-  imports: [ReactiveFormsModule,
+  imports: [
+    ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatSelectModule,
     MatNativeDateModule
-    ],
+  ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
-
-
 export class RegisterComponent implements OnInit {
 
-
-  constructor(public dialogRef: MatDialogRef<RegisterComponent>,
-              private fb: FormBuilder,
-              private authService: AuthService, 
-              private router: Router) {}
+  constructor(
+    public dialogRef: MatDialogRef<RegisterComponent>,
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router,
+    private browserStorage: BrowserStorageService
+  ) {}
 
   addUserForm!: FormGroup;
 
@@ -50,30 +51,28 @@ export class RegisterComponent implements OnInit {
     });
   }
 
-
-
-
   onSubmit() {
     if (this.addUserForm.valid) {
       const user: user = this.addUserForm.value.userGroup;
       const { FullName, email, passwordHash, role } = user;
-  
+
       this.authService.register(FullName, email, passwordHash, role).subscribe({
         next: (response) => {
-          sessionStorage.setItem('token', response.token);
-          sessionStorage.setItem('userId', response.user.id);
-          sessionStorage.setItem('fullName', response.user.fullName);
-          sessionStorage.setItem('email', response.user.email);
-          sessionStorage.setItem('role', 'worker'); 
-  
-          window.location.reload();
-          this.dialogRef.close(); 
-        
+          this.browserStorage.setItem('token', response.token);
+          this.browserStorage.setItem('userId', response.user.id);
+          this.browserStorage.setItem('fullName', response.user.fullName);
+          this.browserStorage.setItem('email', response.user.email);
+          this.browserStorage.setItem('role', 'worker');
+
+          if (typeof window !== 'undefined') {
+            window.location.reload();
+          }
+          
+          this.dialogRef.close();
         },
-  
         error: (error) => {
           const status = error.status;
-        
+
           if (status === 409) {
             Swal.fire({
               icon: 'warning',
@@ -94,9 +93,10 @@ export class RegisterComponent implements OnInit {
             });
           }
         }
-        
       });
-    } Swal.fire({
+    }
+
+    Swal.fire({
       icon: 'warning',
       title: 'Please fill in all fields correctly.',
     });

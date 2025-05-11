@@ -10,16 +10,22 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import Swal from 'sweetalert2';
+import { BrowserStorageService } from '../../services/browser-storage.service';
 
 @Component({
-    selector: 'app-login',
-    imports: [ReactiveFormsModule, ReactiveFormsModule,
-        MatButtonModule,
-        MatFormFieldModule,
-        MatInputModule, MatIconModule,
-        MatCardModule, MatError],
-    templateUrl: './login.component.html',
-    styleUrls: ['./login.component.css']
+  selector: 'app-login',
+  imports: [
+    ReactiveFormsModule,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatCardModule,
+    MatError
+  ],
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
   addUserForm!: FormGroup;
@@ -31,7 +37,8 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private userservice: UserService,
     private router: Router,
-  ) { }
+    private browserStorage: BrowserStorageService
+  ) {}
 
   ngOnInit(): void {
     this.addUserForm = this.fb.group({
@@ -48,13 +55,16 @@ export class LoginComponent implements OnInit {
 
       this.userservice.login(email, passwordHash).subscribe({
         next: (response) => {
-          sessionStorage.setItem('token', response.token);
-          sessionStorage.setItem('role', 'Worker');
-          sessionStorage.setItem('userId', response.user.id);
-          sessionStorage.setItem('fullName', response.user.fullName);
-          sessionStorage.setItem('email', response.user.email);
+          this.browserStorage.setItem('token', response.token);
+          this.browserStorage.setItem('role', 'Worker');
+          this.browserStorage.setItem('userId', response.user.id);
+          this.browserStorage.setItem('fullName', response.user.fullName);
+          this.browserStorage.setItem('email', response.user.email);
 
-          window.location.reload();
+          if (typeof window !== 'undefined') {
+            window.location.reload();
+          }
+
           this.dialogRef.close();
         },
         error: (err) => {
@@ -68,7 +78,7 @@ export class LoginComponent implements OnInit {
             Swal.fire({
               icon: 'warning',
               title: 'Oops!',
-              text:'User not found. Please Sign up',
+              text: 'User not found. Please Sign up',
             });
           } else if (err.status === 409) {
             Swal.fire({
