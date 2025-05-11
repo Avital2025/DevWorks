@@ -18,7 +18,7 @@ import { Router, RouterModule } from '@angular/router';
 export class HomeComponent {
   
   
-  isLogin: boolean = false; // במידה וצריך לנהל את מצב ההתחברות של המשתמש
+  isLogin: boolean = false; 
  
   
   
@@ -59,16 +59,4 @@ export class HomeComponent {
   
 
 
-
-  // goToLogin() {
-  //   this.router.navigate(['/login']);
-  // }
-
-  // goToAbout() {
-  //   this.router.navigate(['/about']);
-  // }
-
-  // goToBrowseJobs() {
-  //   this.router.navigate(['/jobs']);
-  // }
 }

@@ -1,4 +1,4 @@
 export const environment = {
-    apiUrl: 'http://localhost:5069'
+    apiUrl: 'https://devworksweb.onrender.com'
   };
   
