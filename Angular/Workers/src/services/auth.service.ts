@@ -29,8 +29,11 @@ export class AuthService {
 
 
   public checkCurrentToken() {
-    const token = sessionStorage.getItem('token');
-  
+
+    if (typeof window !== 'undefined') {
+      const token = sessionStorage.getItem('token');
+    
+    
     if (token) {
       return this.validateToken(token);  
     } else {
@@ -39,6 +42,8 @@ export class AuthService {
         observer.complete();
       });
     }
+  }
+  return of(false);
   }
   
   private validateToken(token: string) {

@@ -60,7 +60,11 @@ export class AuthComponent implements OnInit {
   }
 
   checkLoginStatus() {
-    this.isLoggedIn = !!sessionStorage.getItem('token');
+    
+    if (typeof window !== 'undefined') {
+      this.isLoggedIn = !!sessionStorage.getItem('token');
+    }
+    
   }
 
   openLoginDialog() {
