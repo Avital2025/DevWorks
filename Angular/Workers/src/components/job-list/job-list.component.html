@@ -1,68 +1,9 @@
-<!-- <app-filtering (filteredJobs)="updateJobList($event)"></app-filtering>
-
-<h1 class="joblist-heading">ההזדמנות שלך מתחילה כאן – אלו המשרות הפתוחות כרגע</h1>
-<p class="joblist-subheading">תוכל/י לעיין במשרות, לסנן לפי העדפות ולבחור את מה שהכי מתאים לך</p>
-
-@if (loading) {
-  <div class="loading-container">
-    <div class="spinner"></div>
-    <p>טוען משרות...</p>
-  </div>
-} @else {
-  @for (job of pagedJobs(); track job.projectID) {
-    <div class="job-card">
-      <h2>{{ job.title || 'משרה ללא שם' }}</h2>
-      <p><strong>תיאור:</strong> {{ job.description || 'אין תיאור' }}</p>
-      <p><strong>ID מעסיק:</strong> {{ job.employerID }}</p>
-      <p><strong>רמת אנגלית:</strong> {{ job.englishLevel || 'לא צוינה' }}</p>
-      <p><strong>ניסיון:</strong> {{ job.experience || 'לא צוינה' }}</p>
-      <p><strong>שפות:</strong> {{ job.languages || 'לא צוינו' }}</p>
-      <p><strong>עבודה מרחוק:</strong> {{ job.remoteWork ? 'כן' : 'לא' }}</p>
-      <p><strong>מקום עבודה:</strong> {{ job.workPlace || 'לא צוין' }}</p>
-
-      <button (click)="downloadJob(job.s3Key)">הורד משרה</button>
-
-      @if (isLoggedIn) {
-        <button (click)="saveJob(job.projectID)">שמור משרה</button>
-      }
-    </div>
-  } @empty {
-    <p>לא נמצאו משרות שתואמות לסינון.</p>
-  }
-
-
-  @if (jobs().length > pageSize) {
-    <div class="pagination">
-      <button (click)="prevPage()" [disabled]="currentPage() === 1">הקודם</button>
-      <span>עמוד {{ currentPage() }} מתוך {{ totalPages() }}</span>
-      <button (click)="nextPage()" [disabled]="currentPage() === totalPages()">הבא</button>
-    </div>
-  }
-} -->
-<!-- כותרת ראשית -->
-
-
-<!-- <div class="joblist-header">
-  <h1>ההזדמנות שלך בעולם הפיתוח מתחילה כאן</h1>
-  <p>מצא/י משרות שמתאימות בדיוק למה שחיפשת</p>
-  <button (click)="toggleFilters()"> לסינון משרות לחצו כאן 🔍</button>
-</div> -->
-
-<!-- אקורדיון סינון -->
-<!-- <div class="filter-accordion" [style.display]="showFilters() ? '' : 'none'">
-  <h2>סנן/י את המשרות לפי הצרכים שלך</h2>
-  <app-filtering (filteredJobs)="updateJobList($event)"></app-filtering>
-</div> -->
-
-
-<!-- כותרת ראשית -->
 <div class="joblist-header">
   <h1>ההזדמנות שלך בעולם הפיתוח מתחילה כאן</h1>
   <p>מצא משרות שמתאימות בדיוק למה שחיפשת</p>
   <button (click)="toggleFilters()"> לסינון משרות לחצו כאן 🔍 </button>
 </div>
 
-<!-- אקורדיון סינון -->
 
 <div class="filter-container" [ngClass]="{'open': showFilters()}">
   <div class="filter-header"></div>
@@ -71,7 +12,6 @@
 
 
 
-<!-- רשימת משרות -->
 @if (loading) {
 <div class="loading-container">
   <div class="spinner"></div>
@@ -117,7 +57,6 @@
 </div>
 }
 }
-<!-- <button class="scroll-to-top" (click)="scrollToTop()" title="לראש העמוד"></button> -->
 <button class="scroll-to-top" (click)="scrollToTop()" title="לראש העמוד">
   ↑
 </button>

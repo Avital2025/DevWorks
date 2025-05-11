@@ -1,43 +1,3 @@
-// import { Component } from '@angular/core';
-// import { MatDialog } from '@angular/material/dialog';
-// import { LoginComponent } from '../login/login.component';
-// import { RegisterComponent } from '../register/register.component';
-// import { MatButtonModule } from '@angular/material/button';
-// import { MatFormFieldModule } from '@angular/material/form-field';
-// import { MatInputModule } from '@angular/material/input';
-// import { MatIconModule } from '@angular/material/icon';
-// import { MatDialogModule } from '@angular/material/dialog';
-
-
-// @Component({
-//     selector: 'app-auth',
-//     imports: [
-//         MatButtonModule, // כפתורים
-//         MatFormFieldModule, // מסגרת לאינפוטים
-//         MatInputModule, // אינפוטים מעוצבים
-//         MatIconModule, // אייקונים
-//         MatDialogModule,
-//     ],
-//     templateUrl: './auth.component.html',
-//     styleUrl: './auth.component.css'
-// })
-// export class AuthComponent {
-//   constructor(private dialog: MatDialog) {}
-
-//   openLoginDialog() {
-//     this.dialog.open(LoginComponent, {
-//       width: '400px', // ניתן להגדיר גודל
-//     });
-//   }
-//   openRegisterDialog() {
-//     this.dialog.open(RegisterComponent, {
-//       width: '400px', // ניתן להגדיר גודל
-//     });
-//   }
-// }
-
-// auth.component.tsimport { Component, OnInit } from '@angular/core';
-
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
@@ -92,7 +52,6 @@ export class AuthComponent implements OnInit {
       email: [{ value: sessionStorage.getItem('email') || '', disabled: true }, [Validators.required, Validators.email]],
       password: ['', Validators.required]
     });
-    console.log(this.profileForm);
     
   }
 
@@ -125,26 +84,6 @@ export class AuthComponent implements OnInit {
 
   
   
-  // onUpdate() {
-  //   if (this.profileForm.valid) {
-  //     const { fullName, password } = this.profileForm.getRawValue();
-  //     sessionStorage.setItem('fullName', fullName);
-  
-  //     const userId = Number(sessionStorage.getItem('userId'));
-  //     if (!userId) {
-  //       console.error('לא נמצא userId ב-sessionStorage');
-  //       return;
-  //     }
-  
-  //     this.userService.updateUserDetails( fullName, password).subscribe({
-  //       next: (response) => console.log('פרטי המשתמש עודכנו בהצלחה', response),
-
-  //       error: (err) => console.error('שגיאה בעדכון פרטי המשתמש:', err)
-  //     });
-  //     this.menuTrigger.closeMenu();
-  //     this.profileForm.get('password')?.reset();
-  //   }
-  // }
   onUpdate() {
     if (this.profileForm.valid) {
       const { fullName, password } = this.profileForm.getRawValue();
@@ -163,15 +102,13 @@ export class AuthComponent implements OnInit {
 
       this.userService.updateUserDetails(fullName, password).subscribe({
         next: (response) => {
-          console.log('פרטי המשתמש עודכנו בהצלחה', response);
           Swal.fire({
             icon: 'success',
-            title: 'הצלחה',
-            text: 'הפרטים עודכנו בהצלחה',
+            title: 'העדכון נשמר',
+            text: 'הפרטים שלך נשמרו במערכת',
           });
         },
         error: (err) => {
-          console.error('שגיאה בעדכון פרטי המשתמש:', err);
           Swal.fire({
             icon: 'error',
             title: 'שגיאה',
@@ -188,73 +125,13 @@ export class AuthComponent implements OnInit {
   logout() {
     this.authService.logout();
 
-    // סגור תפריט אם פתוח
     if (this.menuTrigger) {
       this.menuTrigger.closeMenu();
     }
 
-    // נווט לדף הבית
+
     this.router.navigate(['/']).then(() => {
-      this.checkLoginStatus(); // <-- עדכון ה־isLoggedIn
+      this.checkLoginStatus(); 
     });
   }
 }
-
-// import { Component, OnInit } from '@angular/core';
-// import { MatDialog } from '@angular/material/dialog';
-// import { LoginComponent } from '../login/login.component';
-// import { RegisterComponent } from '../register/register.component';
-// import { MatButtonModule } from '@angular/material/button';
-// import { MatFormFieldModule } from '@angular/material/form-field';
-// import { MatInputModule } from '@angular/material/input';
-// import { MatIconModule } from '@angular/material/icon';
-// import { MatDialogModule } from '@angular/material/dialog';
-// import { RouterModule } from '@angular/router';
-
-// @Component({
-//   selector: 'app-auth',
-//   standalone: true,
-//   imports: [
-//     MatButtonModule,
-//     MatFormFieldModule,
-//     MatInputModule,
-//     MatIconModule,
-//     MatDialogModule,
-//     RouterModule,
-//   ],
-//   templateUrl: './auth.component.html',
-//   styleUrl: './auth.component.css'
-// })
-// export class AuthComponent implements OnInit {
-//   isLoggedIn: boolean = false;
-
-//   constructor(private dialog: MatDialog) {}
-
-//   ngOnInit() {
-//     this.checkLoginStatus();
-//   }
-
-//   checkLoginStatus() {
-//     this.isLoggedIn = !!sessionStorage.getItem('token');
-//   }
-
-//   openLoginDialog() {
-//     const dialogRef = this.dialog.open(LoginComponent, {
-//       width: '400px',
-//     });
-
-//     dialogRef.afterClosed().subscribe(() => {
-//       this.checkLoginStatus();
-//     });
-//   }
-
-//   openRegisterDialog() {
-//     const dialogRef = this.dialog.open(RegisterComponent, {
-//       width: '400px',
-//     });
-
-//     dialogRef.afterClosed().subscribe(() => {
-//       this.checkLoginStatus();
-//     });
-//   }
-// }

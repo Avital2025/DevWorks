@@ -8,7 +8,7 @@ import { Router, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [NavbarComponent,MatIconModule,RouterModule,NavbarComponent],
+  imports: [MatIconModule,RouterModule],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })

@@ -11,7 +11,6 @@ import { NavbarComponent } from '../components/navbar/navbar.component';
     standalone: true,
     selector: 'app-root',
     imports: [RouterOutlet,RouterModule,FooterComponent,NavbarComponent],
-      // ,FilteringComponent,JobListComponent
     templateUrl: './app.component.html',
     styleUrl: './app.component.css'
 })
@@ -20,9 +19,4 @@ export class AppComponent {
   title = 'Workers';
   jobs: any[] = [];
   
-//   isLoggedIn = true; // או לפי מה שמתאים לך
-
-// updateJobList(filteredJobs: any) {
-//   this.jobs = filteredJobs;
-// }
 }

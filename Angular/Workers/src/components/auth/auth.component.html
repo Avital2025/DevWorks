@@ -1,17 +1,3 @@
-<!-- 
-  <div class="button-container">
-    <div class="button-group">
-      <button mat-raised-button (click)="openLoginDialog()" class="login-button">
-        <mat-icon>login</mat-icon> Login
-      </button>
-    
-      <button mat-raised-button (click)="openRegisterDialog()" class="signup-button">
-        <mat-icon>person_add</mat-icon> Sign Up
-      </button>
-    </div>
-  </div>
-   -->
-
 <div class="button-container">
   <div class="button-group">
     @if (!isLoggedIn) {
@@ -67,24 +53,3 @@
 </div>
 
 
-
-<!--   
-
-
-
-   <div class="button-container">
-  <div class="button-group">
-    @if (!isLoggedIn) {
-      <button mat-raised-button (click)="openLoginDialog()" class="login-button">
-        <mat-icon>login</mat-icon> Login
-      </button>
-      <button mat-raised-button (click)="openRegisterDialog()" class="signup-button">
-        <mat-icon>person_add</mat-icon> Sign Up
-      </button>
-    } @else {
-      <button mat-raised-button routerLink="/profile" class="profile-button">
-        <mat-icon>account_circle</mat-icon> Profile
-      </button>
-    }
-  </div>
-</div> -->

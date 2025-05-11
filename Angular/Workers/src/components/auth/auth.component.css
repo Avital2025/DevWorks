@@ -1,82 +1,3 @@
-/*
- .button-container {
-  display: flex;
- 
-  padding: 10px;
-  justify-content: center; 
-}
-
-.button-group {
-  display: flex;
-  gap: 10px;
-}
-
-
-button {
-
-  button {
-    background: none;
-    border: 2px solid #007bff;
-    color: #007bff; 
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    
-  }
-}
-
-.login-button {
-  color: linear-gradient(135deg, #2b2d42, #1e1f33);
-
-}
-
-.signup-button {
-  color: linear-gradient(135deg, #2b2d42, #1e1f33);
-
-}
-
-button mat-icon {
-  margin-right: 8px;
-}
-
-button:focus {
-  outline: none;
-}
-
-
-.button-container {
-  display: flex;
-  justify-content: flex-end;
-  padding: 10px;
-}
-
-.button-group {
-  display: flex;
-  gap: 10px;
-}
-
-.profile-form {
-  padding: 12px;
-  width: 280px;
-}
-
-.menu-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.full-width {
-  width: 100%;
-  margin-bottom: 12px;
-}
-
-.form-title {
-  margin: 0 0 10px 0;
-  font-size: 16px;
-  font-weight: bold;
-} */
-
-
 .button-container {
   display: flex;
   justify-content: center;
@@ -90,9 +11,9 @@ button:focus {
 
 .profile-content {
   padding: 16px;
-  min-width: auto; /* הסר או שנה את הרוחב המינימלי אם הגדרת אותו קודם */
-
+  min-width: auto; 
 }
+
 .custom-button {
   background-color: #333 !important;
   color: white !important;
@@ -101,9 +22,6 @@ button:focus {
 .custom-button:hover {
   background-color: #555 !important;
 }
-
-
-
 
 .full-width {
   width: 100%;
@@ -119,40 +37,27 @@ button:focus {
   margin: 0 0 8px 0;
   font-size: 18px;
   text-align: center;
-    margin-bottom: 4px; /* הקטן את הריווח מתחת לכותרת הטופס */
-
+  margin-bottom: 4px; 
 }
-
 
 .menu-form {
   display: flex;
   flex-direction: column;
-  gap: 8px; /* הקטן את הריווח האנכי בין כל האלמנטים בטופס */
+  gap: 8px; 
 }
+
 .menu-form mat-form-field {
-  margin-bottom: 4px; /* הקטן עוד יותר את הריווח התחתון של שדות הטופס */
+  margin-bottom: 4px; 
 }
-
-
 
 .menu-form button {
-  margin-top: 4px; /* הוסף ריווח קטן מעל הכפתורים */
-  margin-bottom: 4px; /* הקטן את הריווח התחתון של הכפתורים */
-  padding-top: 6px; /* הקטן את הריווח הפנימי העליון של הכפתורים */
-  padding-bottom: 6px; /* הקטן את הריווח הפנימי התחתון של הכפתורים */
+  margin-top: 4px; 
+  margin-bottom: 4px; 
+  padding-top: 6px; 
+  padding-bottom: 6px; 
 }
 
-
-
-
-
-
-
-
-
-
-
 .profile-content {
-  padding-top: 8px; /* הקטן את הריווח הפנימי העליון של קונטיינר התוכן */
-  padding-bottom: 8px; /* הקטן את הריווח הפנימי התחתון של קונטיינר התוכן */
+  padding-top: 8px; 
+  padding-bottom: 8px; 
 }

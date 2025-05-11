@@ -17,17 +17,11 @@ public class ExtractedDataService : IExtractedDataService
     }
 
 
-    //public async Task<IEnumerable<ExtractedDataDto>> GetAllExtractedFiles()
+    //public async Task<ExtractedDataDto?> GetExtractedFileById(int projectId)
     //{
-    //    var extractedData = await _context._extractedDataList.ToListAsync();
-    //    return _mapper.Map<IEnumerable<ExtractedDataDto>>(extractedData);
+    //    var entity = await _context.extractedDataList.FindAsync(projectId);
+    //    return entity is not null ? _mapper.Map<ExtractedDataDto>(entity) : null;
     //}
-
-    public async Task<ExtractedDataDto?> GetExtractedFileById(int projectId)
-    {
-        var entity = await _context.extractedDataList.FindAsync(projectId);
-        return entity is not null ? _mapper.Map<ExtractedDataDto>(entity) : null;
-    }
 
     //public async Task<List<ExtractedDataEntity>> GetFilteredProjects(string title, string description, int? experience, string workPlace, string languages, bool? remoteWork, string englishLevel)
     //{

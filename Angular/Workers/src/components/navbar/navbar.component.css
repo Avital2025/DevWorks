@@ -43,7 +43,6 @@ button:last-child {
 
 
 
-/* המבורגר תפריט */
 .menu-toggle {
   display: none;
   flex-direction: column;
@@ -82,7 +81,7 @@ button:last-child {
 }
 
 .recruiters-btn:hover {
-  box-shadow: 0 0 10px rgba(63, 81, 181, 0.6); /* זוהר כחול */
+  box-shadow: 0 0 10px rgba(63, 81, 181, 0.6); 
   background-color: white;
   color: #2b2d42;
 }
@@ -152,31 +151,3 @@ background: white;
   }
 }
 
-
-/* 
-
-  
-  .recruiters-container {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 10px; /
-  }
-
- 
-  
-  button.mat-raised-button {
-    background-color: #2b2d42;
-    color: #fff;
-  }
-  
-  button.mat-button {
-    background-color: transparent;
-    color: #2b2d42;
-  }
-  
-  button.mat-button:hover,
-  button.mat-raised-button:hover {
-    background-color: #3a3c5c;
-  }
-   */

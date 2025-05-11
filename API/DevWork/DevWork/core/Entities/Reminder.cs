@@ -9,7 +9,7 @@ namespace DevWork.core.Entities
         public int UserId { get; set; }
         public string Title { get; set; } = string.Empty;
 
-        public string? Content { get; set; } // ← חדש
+        public string? Content { get; set; }
 
         public string TriggerType { get; set; } = "time"; // "time", "download", "save"
         public int? TriggerTargetId { get; set; } // למשל מזהה משרה

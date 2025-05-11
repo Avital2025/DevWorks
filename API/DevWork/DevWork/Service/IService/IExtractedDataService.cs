@@ -5,7 +5,7 @@ using DevWork.Core.Entities;
 public interface IExtractedDataService
 {
     Task<IEnumerable<ExtractedDataDto>> GetAllExtractedFiles();
-    Task<ExtractedDataDto?> GetExtractedFileById(int projectId);
+    //Task<ExtractedDataDto?> GetExtractedFileById(int projectId);
     Task<List<ExtractedDataEntity>> GetFilteredProjects( int? experience, string workPlace, string languages, bool? remoteWork, string englishLevel);
 
 

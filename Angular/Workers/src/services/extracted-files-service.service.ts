@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ExtractedFilesService {
-  private apiUrl = 'http://localhost:5069'; 
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
-  // פונקציה לשליפת המידע המחולץ
   getFilteredProjects(
-    Experience: number | null, 
-    WorkPlace: string, 
-    Languages: string, 
-    RemoteWork: boolean | null, 
+    Experience: number | null,
+    WorkPlace: string,
+    Languages: string,
+    RemoteWork: boolean | null,
     EnglishLevel: string
   ): Observable<any> {
     const params = new HttpParams()
@@ -24,15 +24,13 @@ export class ExtractedFilesService {
       .set('Languages', Languages)
       .set('RemoteWork', RemoteWork !== null ? RemoteWork.toString() : '')
       .set('EnglishLevel', EnglishLevel);
-      console.log('שולח בקשה לשרת עם הפרמטרים הבאים:', params.toString());
+
     return this.http.get<any>(`${this.apiUrl}/extractedData`, { params });
   }
 
   getDownloadUrl(s3Key: string): Observable<{ url: string }> {
-    return this.http.get<{ url: string }>( `${this.apiUrl}/files/generate-presigned-download-url`
-      ,{ params: { fileName: s3Key } }
-    );
+    return this.http.get<{ url: string }>(`${this.apiUrl}/files/generate-presigned-download-url`, {
+      params: { fileName: s3Key }
+    });
   }
-
-  
 }

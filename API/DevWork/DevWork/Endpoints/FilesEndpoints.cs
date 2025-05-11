@@ -70,27 +70,10 @@ namespace DevWork.Endpoints
             });
 
 
-            //filesRoutes.MapPost("/", async (FilesPostModel model, IFilesService service) =>
-            //{
-            //    var created = await service.AddFile(model);
-            //    return Results.Created($"/files/{model.Id}", created);
-            //});
-
-
-            // פונקציה להורדת הקובץ
-            //filesRoutes.MapGet("/download/{id:int}", async (int id, IFilesService service) =>
-            //{
-            //    var presignedUrl = await service.GetDownloadUrl(id);
-            //    return presignedUrl is not null ? Results.Ok(new { url = presignedUrl }) : Results.NotFound();
-            //});
-
-
             // ✅ הוספת פונקציה לשליחת קובץ לניתוח
             filesRoutes.MapPost("/process-file", async (FilesDto model, IFilesService service) =>
             {
-                Console.WriteLine("here???");
                 Console.WriteLine(model.FileUrl);
-                Console.WriteLine("here???");
                 var extractedData = await service.ProcessFile(model.FileUrl,model.EmployerId, model.FileName);
                 return Results.Ok(extractedData);
             });

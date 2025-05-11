@@ -14,7 +14,7 @@ import { ExtractedFilesService } from '../../services/extracted-files-service.se
 })
 export class JobListComponent {
   jobs = signal<any[]>([]);
-  isLoggedIn = false;  // התחלת ברירת מחדל
+  isLoggedIn = false; 
   loading = true;
 
   pageSize = 5;
@@ -25,29 +25,11 @@ export class JobListComponent {
   ) {}
 
 
-  //   ngOnInit(): void {
-  //     console.log("JobListComponent loaded")
-  //   this.authService.isLoggedIn().subscribe(isLoggedIn => {
-  //     this.isLoggedIn = isLoggedIn;  // עדכון הסטטוס של התחברות
-  //     console.log("isLoggedIn:", isLoggedIn);
-  //   });
-  // }
-
-  // ngOnInit(): void {
-  //   console.log("JobListComponent loaded");
-    
-  //   // קריאה לבדיקת סטטוס האימות בכל טעינת הקומפוננטה
-  //   this.authService.checkCurrentToken();
-  
-  // }
 
   ngOnInit(): void {
-    console.log("JobListComponent loaded");
   
-    // קריאה לבדיקת סטטוס האימות בכל טעינת הקומפוננטה
     this.authService.checkCurrentToken().subscribe(isLoggedIn => {
-      this.isLoggedIn = isLoggedIn;  // עדכון של isLoggedIn אחרי שהתשובה מהשרת חזרה
-      console.log("isLoggedIn (from server):", this.isLoggedIn);
+      this.isLoggedIn = isLoggedIn;  
     });
   }
   
@@ -67,18 +49,17 @@ export class JobListComponent {
   updateJobList(filteredJobs: any[]) {
     this.jobs.set(filteredJobs);
     this.loading = false;
-    this.currentPage.set(1); // חזרה לעמוד הראשון
+    this.currentPage.set(1); 
   }
 
   downloadJob(s3Key: string) {
-    console.log("downloadJob called with s3Key:", s3Key);
   
     this.extractedFilesService.getDownloadUrl(s3Key).subscribe({
       next: (res: { url: string }) => {
         const link = document.createElement('a');
         link.href = res.url;
         link.download = s3Key;
-        link.target = '_blank';  // פותח את ההורדה בחלון חדש
+        link.target = '_blank'; 
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -93,7 +74,6 @@ export class JobListComponent {
   
 
   saveJob(jobId: number) {
-    console.log('שמירה של משרה עם ID:', jobId);
   }
   scrollToFilter() {
     const element = document.getElementById('filter-section');
