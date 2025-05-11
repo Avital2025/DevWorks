@@ -35,10 +35,9 @@ export const StyledPaper = styled(Paper)`
   cursor: pointer;
 `;
 
-// Button update to pass props like `variant`, `fullWidth`, etc.
 export const StyledButton = styled(Button).attrs((props) => ({
-  ...props, // Ensures that all props are forwarded
-  component: 'span', // Set component as 'span' (or 'button' if needed)
+  ...props, 
+  component: 'span',
 }))`
   margin-top: 16px;
 `;

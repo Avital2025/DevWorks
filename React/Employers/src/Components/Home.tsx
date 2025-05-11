@@ -1,7 +1,6 @@
-
 import { Box, Typography, Button, Grid } from "@mui/material";
 import { Link } from "react-router-dom";
-import { Home, Info } from "@mui/icons-material"; // אייקונים מתוך MUI
+import { Home, Info } from "@mui/icons-material"; 
 import Hiringemployees from '../assets/Hiring-employees.jpg';
 import { useContext } from "react";
 import { IsLogin } from "../App";
@@ -92,8 +91,8 @@ const HomePage = () => {
             display: "inline-block",
             padding: "10px 30px",
             borderRadius: "50px",
-            backgroundColor: "rgba(55, 71, 79, 0.1)", // רקע עדין
-            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", // צל עדין
+            backgroundColor: "rgba(55, 71, 79, 0.1)", 
+            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)", 
             fontWeight: "bold",
             letterSpacing: "1px",
           }}

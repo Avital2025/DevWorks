@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';  // הוספת import של useNavigate
+import { useNavigate } from 'react-router-dom';
 import { StyledBox, StyledTypography, StyledTextField, StyledPaper, StyledButton, StyledCircularProgress, StyledAlert } from '../styles/AddFileStyle';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import useFile from '../utils/useFile';
@@ -69,7 +69,7 @@ const FileUploader = () => {
         color="primary"
         onClick={handleUploadClick}
         fullWidth
-        disabled={!file} // ✅ לא לחיץ אם לא נבחר קובץ
+        disabled={!file} 
       >
         {loading ? <StyledCircularProgress size={24} /> : '+ Upload Project'}
       </StyledButton>
@@ -87,7 +87,6 @@ const FileUploader = () => {
         </StyledAlert>
       )}
 
-      {/* כפתור ניווט ל- userFiles */}
       <StyledButton
         variant="outlined"
         color="secondary"

@@ -24,9 +24,14 @@ Console.WriteLine("Server started");
 var builder = WebApplication.CreateBuilder(args);
 
 
+DotNetEnv.Env.Load(); // מוסיפים בתחילת Program.cs (אם עוד לא)
+
+
+var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+
 builder.Services.AddDbContext<DataContext>(options =>
-    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
 
 // רישום AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile)); 
@@ -201,7 +206,6 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-DotNetEnv.Env.Load();
 
 // אל תיצור את ה-s3Client שוב כאן, כי יש לך אותו ב-S3Service כבר
 var awsAccessKey = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");

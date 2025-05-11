@@ -153,7 +153,7 @@ setNewName(originalName);
                           });
 
                           const downloadUrl = res.data.url;
-                          window.open(downloadUrl, "_blank"); // פותח לשונית חדשה להורדה
+                          window.open(downloadUrl, "_blank"); 
                         } catch (err) {
                           console.error("Error generating download URL:", err);
                         }
