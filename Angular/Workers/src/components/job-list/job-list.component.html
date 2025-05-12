@@ -46,9 +46,12 @@
 
 </div>
 } @empty {
-<p>לא נמצאו משרות שתואמות לסינון.</p>
-}
-
+    <div class="no-jobs-message">
+      <mat-icon class="no-jobs-icon">search_off</mat-icon>
+      <p>לא נמצאו משרות שתואמות לסינון שבחרת.</p>
+      <p>נסו לשנות את תנאי הסינון או לחפש מחר שוב.</p>
+    </div>
+  }
 @if (jobs().length > pageSize) {
 <div class="pagination">
   <button (click)="prevPage()" [disabled]="currentPage() === 1">הקודם</button>
