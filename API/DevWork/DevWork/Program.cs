@@ -26,11 +26,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 DotNetEnv.Env.Load();
 
-var DATABASE_URL = Environment.GetEnvironmentVariable("DATABASE_URL");
-Console.WriteLine("Connection string: " + DATABASE_URL);
+var connectionString = Environment.GetEnvironmentVariable("ConnectionString");
+Console.WriteLine("Connection string: " + connectionString);
 
 builder.Services.AddDbContext<DataContext>(options =>
-    options.UseMySql(DATABASE_URL, ServerVersion.AutoDetect(DATABASE_URL)));
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 
 
