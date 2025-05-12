@@ -24,7 +24,7 @@ Console.WriteLine("Server started");
 var builder = WebApplication.CreateBuilder(args);
 
 
-DotNetEnv.Env.Load(); // מוסיפים בתחילת Program.cs (אם עוד לא)
+DotNetEnv.Env.Load(); 
 
 
 var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
@@ -97,10 +97,11 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll",
-        policy => policy.AllowAnyOrigin() // אפשר לכל מקור לגשת
-                        .AllowAnyMethod()  // אפשר כל שיטה (GET, POST וכו')
-                        .AllowAnyHeader()); // אפשר כל כותרת
+    options.AddPolicy("AllowClient",
+        policy => policy
+            .WithOrigins("https://devworks.onrender.com", "http://localhost:5069")
+            .AllowAnyMethod()
+            .AllowAnyHeader());
 });
 
 
@@ -197,7 +198,7 @@ builder.Services.AddAWSService<IAmazonS3>();
 
 var app = builder.Build();
 
-app.UseCors("AllowAll");
+app.UseCors("AllowClient");
 
 
 app.MapGet("/", () => "Hello World!");
