@@ -1,43 +1,100 @@
-import {
-    Dialog,
-    DialogTitle,
-    DialogContent,
-    DialogActions,
-    Typography,
-    Button,
-} from "@mui/material";
-import { Reminder } from "../types/reminderType";
+import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, Button, Paper, Box, Fade, Divider, } from "@mui/material"
+import type { Reminder } from "../types/reminderType"
+import AccessTimeIcon from "@mui/icons-material/AccessTime"
 
 export default function ReminderDialog({
     reminder,
     onClose,
 }: {
-    reminder: Reminder | null;
-    onClose: () => void;
+    reminder: Reminder | null
+    onClose: () => void
 }) {
     return (
-        <Dialog open={!!reminder} onClose={onClose} maxWidth="sm" fullWidth>
-            <DialogTitle>
+        <Dialog
+            open={!!reminder}
+            onClose={onClose}
+            maxWidth="sm"
+            fullWidth
+            TransitionComponent={Fade}
+            transitionDuration={300}
+            PaperProps={{
+                elevation: 5,
+                sx: {
+                    borderRadius: 2,
+                    overflow: "hidden",
+                },
+            }}
+        >
+            <DialogTitle
+                sx={{
+                    bgcolor: "primary.light",
+                    color: "primary.contrastText",
+                    py: 2,
+                    fontWeight: "bold",
+                    direction: "rtl",
+                }}
+            >
                 {reminder?.triggerType === "time" ? "תזכורת" : ""} {/* אם "time", תזכורת */}
             </DialogTitle>
-            <DialogContent>
-                <Typography variant="h6" gutterBottom>
+            <DialogContent sx={{ p: 3, direction: "rtl" }}>
+                <Typography
+                    variant="h6"
+                    gutterBottom
+                    sx={{
+                        fontWeight: "bold",
+                        color: "text.primary",
+                        mb: 2,
+                    }}
+                >
                     {reminder?.title}
                 </Typography>
 
                 {reminder?.content && (
-                    <Typography sx={{ mt: 2 }}>{reminder.content}</Typography>
+                    <Paper
+                        variant="outlined"
+                        sx={{
+                            p: 2,
+                            mb: 3,
+                            bgcolor: "background.paper",
+                            borderRadius: 1,
+                        }}
+                    >
+                        <Typography>{reminder.content}</Typography>
+                    </Paper>
                 )}
 
-                <Typography variant="body2" color="textSecondary" gutterBottom>
-                    {reminder?.time
-                        ? new Date(reminder.time).toLocaleString()
-                        : "ללא תאריך"}
-                </Typography>
+                <Box
+                    sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1,
+                        color: "text.secondary",
+                        mt: 2,
+                    }}
+                >
+                    <AccessTimeIcon fontSize="small" />
+                    <Typography variant="body2">
+                        {reminder?.time ? new Date(reminder.time).toLocaleString() : "ללא תאריך"}
+                    </Typography>
+                </Box>
             </DialogContent>
-            <DialogActions>
-                <Button onClick={onClose}>סגור</Button>
+            <Divider />
+            <DialogActions sx={{ p: 2, justifyContent: "flex-start" }}>
+                <Button
+                    onClick={onClose}
+                    variant="contained"
+                    color="primary"
+                    sx={{
+                        borderRadius: 2,
+                        px: 3,
+                    }}
+                >
+                    סגור
+                </Button>
             </DialogActions>
         </Dialog>
-    );
+    )
 }
+
+
+//final

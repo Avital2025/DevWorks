@@ -7,7 +7,6 @@ export interface Reminder {
     triggerTargetId?: number;
     time?: string;
     isRead: boolean;
-    // isDone: boolean;
     createdAt: string;
   }
   

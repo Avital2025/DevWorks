@@ -27,7 +27,6 @@ export default createBrowserRouter([
       { path: "addfiles", element: (<ProtectedRoute> <AddFiles /> </ProtectedRoute> )},
       { path: "userFiles", element: (<ProtectedRoute> <EmployerFiles /> </ProtectedRoute> )},
       { path: "reminders", element: (<ProtectedRoute> <RemindersPage /> </ProtectedRoute> )},
-      // { path: "reminders", element: (<ProtectedRoute> <RemindersMenu /> </ProtectedRoute> )},
       { path: "add-reminders", element: (<ProtectedRoute> <AddReminders /> </ProtectedRoute> )},
 
       { index: true, element: <Home /> },

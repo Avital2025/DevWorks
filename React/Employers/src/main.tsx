@@ -1,27 +1,53 @@
-import { createRoot } from 'react-dom/client'
-import { Provider } from 'react-redux'
-import store from './ReduxStore'
-import './index.css'
-import App from './App.tsx'
-import { ThemeProvider, createTheme } from '@mui/material/styles';
+// import { createRoot } from 'react-dom/client'
+// import { Provider } from 'react-redux'
+// import store from './ReduxStore'
+// import App from './App.tsx'
+// import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+// const theme = createTheme({
+//   palette: {
+//     primary: {
+//       main:'#607d8b'
+//     },
+//     secondary: {
+//       main: '#607d8b' 
+//     },
+//   },
+// });
+
+// createRoot(document.getElementById('root')!).render(
+//     <Provider store={store}>
+//       <ThemeProvider theme={theme}>
+//         <App />
+//       </ThemeProvider>
+//     </Provider>
+// )
+
+import { createRoot } from 'react-dom/client';
+import { Provider } from 'react-redux';
+import store from './ReduxStore';
+import App from './App.tsx';
+import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/styles';
+import { ThemeProvider as StyledThemeProvider } from 'styled-components'; // <- חדש
 
 const theme = createTheme({
   palette: {
     primary: {
-      main:'#607d8b'
+      main: '#607d8b',
     },
     secondary: {
-      main: '#607d8b' 
+      main: '#607d8b',
     },
   },
 });
 
 createRoot(document.getElementById('root')!).render(
-    <Provider store={store}>
-      <ThemeProvider theme={theme}>
+  <Provider store={store}>
+    <MuiThemeProvider theme={theme}>
+      <StyledThemeProvider theme={theme}>
         <App />
-      </ThemeProvider>
-    </Provider>
-)
-
+      </StyledThemeProvider>
+    </MuiThemeProvider>
+  </Provider>
+);
 

@@ -1,72 +1,13 @@
-
 import { Link } from "react-router-dom";
 import { useState, useContext } from "react";
-import {
-  Box,
-  IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemText,
-  Dialog,
-  DialogContent
-} from "@mui/material";
-import {
-  Home,
-  Info,
-  UploadFile,
-  Menu,
-  Description,
-  Logout,
-  Login,
-  AccountCircle
-} from "@mui/icons-material";
-import { styled } from "@mui/material/styles";
+import { Box, IconButton, Drawer, List, ListItem, ListItemButton, ListItemText, Dialog, DialogContent } from "@mui/material";
+import { Home, Info, UploadFile, Menu, Description, Login, AccountCircle } from "@mui/icons-material";
 import { IsLogin } from "../App";
 import { Menu as MuiMenu, MenuItem } from "@mui/material";
 import UpdateDetails from "./UpdateDetails";
 import RemindersMenu from "./ReminderMenu";
+import { NavBar, NavLeft, NavLinkStyled, NavRight } from "../styles/NavBarStyle";
 
-const NavBar = styled("nav")({
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  padding: "5px 50px",
-  height: "30px",
-});
-
-const NavLeft = styled("div")({
-  display: "flex",
-  alignItems: "center",
-  gap: "10px",
-  "@media (max-width: 768px)": {
-    display: "none",
-  },
-});
-
-const NavRight = styled("div")({
-  display: "flex",
-  alignItems: "center",
-  gap: "10px",
-  marginLeft: "auto",
-});
-
-const NavLinkStyled = styled(Link)({
-  textDecoration: "none",
-  fontSize: "16px",
-  fontFamily: "'Roboto', sans-serif",
-  fontWeight: "lighter",
-  color: "#333",
-  display: "flex",
-  alignItems: "center",
-  gap: "8px",
-  padding: "10px",
-  transition: "color 0.3s ease",
-  "&:hover": {
-    color: "#455a64",
-  },
-});
 
 export default function ResponsiveNavBar() {
   const [isLogin, setIsLogin] = useContext(IsLogin);
@@ -91,6 +32,7 @@ export default function ResponsiveNavBar() {
     localStorage.removeItem("user");
     localStorage.removeItem("EmployerId");
     setIsLogin(false);
+    window.location.reload();
   };
 
   return (
@@ -105,16 +47,13 @@ export default function ResponsiveNavBar() {
           <NavLinkStyled to="/about"><Info /> About</NavLinkStyled>
         </NavLeft>
 
-
-
-
         <NavRight sx={{ display: { xs: "none", md: "flex" } }}>
           {isLogin ? (
             <>
               <NavLinkStyled to="/userFiles"><Description /> My files</NavLinkStyled>
               <NavLinkStyled to="/addFiles"><UploadFile /> Add files</NavLinkStyled>
 
-              {/* 🔔 תפריט תזכורות מוקפץ */}
+
               <RemindersMenu />
 
               <IconButton onClick={handleProfileClick}><AccountCircle /></IconButton>
@@ -135,7 +74,6 @@ export default function ResponsiveNavBar() {
         </NavRight>
 
 
-        {/* מובייל */}
         <Box sx={{ display: { xs: "block", md: "none" } }}>
           {isLogin ? (
             <>
@@ -156,6 +94,11 @@ export default function ResponsiveNavBar() {
         </Box>
 
       </NavBar>
+
+
+
+
+
 
       <Drawer anchor="left" open={menuOpen} onClose={toggleMenu}>
         <List>
@@ -210,3 +153,5 @@ export default function ResponsiveNavBar() {
     </Box>
   );
 }
+
+// fnal

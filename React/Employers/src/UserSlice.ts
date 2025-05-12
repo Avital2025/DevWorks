@@ -17,7 +17,7 @@ const initialState: UserState = {
     id: "",
     name: "",
     email: "",
-    role: UserRole.Guest // ערך ברירת מחדל
+    role: UserRole.Guest
 
 };
 

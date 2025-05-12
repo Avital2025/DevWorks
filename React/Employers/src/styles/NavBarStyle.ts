@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { Box, IconButton } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { Box } from '@mui/material';
 
 
 export const NavBar = styled("nav")({
@@ -11,7 +11,7 @@ export const NavBar = styled("nav")({
   height: "30px",
 });
 
-export const NavLeft = styled("div")({
+export const NavLeft = styled(Box)({
   display: "flex",
   alignItems: "center",
   gap: "10px",
@@ -20,14 +20,14 @@ export const NavLeft = styled("div")({
   },
 });
 
-export const NavRight = styled("div")({
+export const NavRight = styled(Box)({
   display: "flex",
   alignItems: "center",
   gap: "10px",
   marginLeft: "auto",
 });
 
-const NavLinkStyled = styled(Link)({
+export const NavLinkStyled = styled(Link)({
   textDecoration: "none",
   fontSize: "16px",
   fontFamily: "'Roboto', sans-serif",

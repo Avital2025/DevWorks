@@ -26,10 +26,10 @@ namespace DevWork.core.Services
             return reminder;
         }
 
-        public async Task<List<Reminder>> GetPendingByTriggerAsync(string triggerType, int triggerTargetId)
+        public async Task<List<Reminder>> GetPendingByTriggerAsync(string triggerType, int triggerTargetId, int userId)
         {
             return await _context.Reminders
-                .Where(r => r.TriggerType == triggerType && r.TriggerTargetId == triggerTargetId && !r.IsRead)
+                .Where(r => r.UserId == userId && r.TriggerType == triggerType && r.TriggerTargetId == triggerTargetId && !r.IsRead)
                 .ToListAsync();
         }
 
@@ -43,11 +43,11 @@ namespace DevWork.core.Services
             }
         }
 
-        public async Task<List<Reminder>> GetShownAsync()
+        public async Task<List<Reminder>> GetShownAsync(int userId)
         {
             var now = DateTime.UtcNow;
             return await _context.Reminders
-                .Where(r => r.IsRead || (r.Time != null && r.Time <= now))
+                .Where(r => r.UserId == userId && (r.IsRead || (r.Time != null && r.Time <= now)))
                 .ToListAsync();
         }
 
@@ -58,5 +58,15 @@ namespace DevWork.core.Services
                 .Where(r => r.Time != null && r.Time <= now && !r.IsRead)
                 .ToListAsync();
         }
+
+        //public async Task DeleteAsync(int id)
+        //{
+        //    var reminder = await _context.Reminders.FindAsync(id);
+        //    if (reminder != null)
+        //    {
+        //        _context.Reminders.Remove(reminder);
+        //        await _context.SaveChangesAsync();
+        //    }
+        //}
     }
 }

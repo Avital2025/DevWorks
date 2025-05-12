@@ -38,15 +38,12 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
         }
       });
     } else {
-      // אם יש טוקן, נמתין לטעינת המשתמש
       setIsChecking(false);
     }
   }, [user.id, dispatch]);
 
-  // אם המידע עדיין בטעינה, לא להציג כלום
   if (isChecking) return null;
 
-  // אם המשתמש מחובר, להציג את התוכן המוגן
   return user.id ? children : <Navigate to="/login" replace />;
 };
 
@@ -64,3 +61,5 @@ const getRandomMessage = () => {
 };
 
 export default ProtectedRoute;
+
+//funal
