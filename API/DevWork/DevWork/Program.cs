@@ -26,15 +26,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 DotNetEnv.Env.Load();
 
-var connectionString = Environment.GetEnvironmentVariable("ConnectionString");
+var DATABASE_URL = Environment.GetEnvironmentVariable("DATABASE_URL");
+Console.WriteLine("Connection string: " + DATABASE_URL);
 
 builder.Services.AddDbContext<DataContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+    options.UseMySql(DATABASE_URL, ServerVersion.AutoDetect(DATABASE_URL)));
 
 
 
 // רישום AutoMapper
-builder.Services.AddAutoMapper(typeof(MappingProfile)); 
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // =========== Add Services ===========
 builder.Services.AddScoped<IExtractedDataService, ExtractedDataService>();
@@ -67,19 +68,19 @@ builder.Services.AddEndpointsApiExplorer();
 //});
 
 
- builder.Services.AddSwaggerGen(options =>
+builder.Services.AddSwaggerGen(options =>
 {
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-    {
-        Scheme = "Bearer",
-        BearerFormat = "JWT",
-        In = ParameterLocation.Header,
-        Name = "Authorization",
-        Description = "Bearer Authentication with JWT Token",
-        Type = SecuritySchemeType.Http
-    });
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
+   options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+   {
+       Scheme = "Bearer",
+       BearerFormat = "JWT",
+       In = ParameterLocation.Header,
+       Name = "Authorization",
+       Description = "Bearer Authentication with JWT Token",
+       Type = SecuritySchemeType.Http
+   });
+   options.AddSecurityRequirement(new OpenApiSecurityRequirement
+   {
         {
             new OpenApiSecurityScheme
             {
@@ -91,7 +92,7 @@ builder.Services.AddEndpointsApiExplorer();
             },
             new List<string>()
         }
-    });
+   });
 });
 
 
@@ -144,7 +145,7 @@ builder.Services.AddAuthentication(options =>
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["JWT:Issuer"],
-        
+
         ValidAudience = builder.Configuration["JWT:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
         NameClaimType = "sub" // זה השורה הקריטית שחסרה לך
