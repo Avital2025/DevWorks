@@ -24,13 +24,12 @@ Console.WriteLine("Server started");
 var builder = WebApplication.CreateBuilder(args);
 
 
-DotNetEnv.Env.Load(); 
+DotNetEnv.Env.Load();
 
-
-var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
 
 builder.Services.AddDbContext<DataContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+    options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))));
 
 
 // רישום AutoMapper
@@ -99,7 +98,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowClient",
         policy => policy
-            .WithOrigins("https://devworks.onrender.com", "http://localhost:5069")
+            .WithOrigins("https://devworks.onrender.com", "http://localhost:5069", "https://devworksemployers.onrender.com")
             .AllowAnyMethod()
             .AllowAnyHeader());
 });
