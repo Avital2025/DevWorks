@@ -1,218 +1,94 @@
-import { Box, Container, Grid, Paper, Typography } from "@mui/material"
-import DescriptionIcon from "@mui/icons-material/Description"
-import PeopleIcon from "@mui/icons-material/People"
-import BoltIcon from "@mui/icons-material/Bolt"
-import CheckCircleIcon from "@mui/icons-material/CheckCircle"
+import { Box, Container, Grid } from "@mui/material"
+import { motion } from "framer-motion"
+import image from "../assets/Hiring-employees.jpg"
+import { sectionStyle, backgroundStyle, containerStyle, titleBoxStyle, overlineStyle, headingStyle,
+  descriptionStyle, featureBoxStyle, iconStyle, featureTitleStyle, featureDescriptionStyle, buttonStyle, imageWrapperStyle, imageStyle,
+  quoteBoxStyle, quoteTextStyle, avatarStyle, userInfoBoxStyle} from "../styles/AboutStyle";
+import { CheckCircle, ArrowRight } from 'lucide-react'
+import { Typography, Stack, Button } from "@mui/material"
 
-export default function Features() {
+export default function About() {
   return (
-    <Box component="section" sx={{ py: { xs: 8, md: 12 }, bgcolor: "#f8f8f8" }}>
-      <Container maxWidth="lg">
-        <Box sx={{ textAlign: "center", mb: 8 }}>
-          <Typography
-            variant="h2"
-            component="h2"
-            sx={{
-              mb: 2,
-              fontSize: { xs: "2rem", md: "2.5rem" },
-              fontWeight: 700,
-            }}
-          >
-            Why Choose DevWork?
-          </Typography>
-          <Typography
-            variant="body1"
-            color="text.secondary"
-            sx={{
-              maxWidth: 700,
-              mx: "auto",
-              fontSize: "1.125rem",
-              lineHeight: 1.6,
-            }}
-          >
-            Our platform streamlines the process of finding and managing developers for your software projects.
-          </Typography>
-        </Box>
-
-        <Grid container spacing={4}>
+    <Box id="about" sx={sectionStyle}>
+      <Box sx={backgroundStyle} />
+      <Container maxWidth="lg" sx={containerStyle}>
+        <Grid container spacing={{ xs: 6, md: 8 }} alignItems="center">
           <Grid item xs={12} md={6}>
-            <Paper
-              elevation={0}
-              sx={{
-                p: 4,
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                borderRadius: 2,
-                border: "1px solid #e0e0e0",
-                transition: "transform 0.2s ease-in-out",
-                "&:hover": {
-                  transform: "translateY(-4px)",
-                  boxShadow: "0 10px 20px rgba(0,0,0,0.05)",
-                },
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                <Box
-                  sx={{
-                    bgcolor: "#000",
-                    color: "#fff",
-                    p: 1,
-                    borderRadius: 1,
-                    mr: 2,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <DescriptionIcon />
-                </Box>
-                <Typography variant="h5" component="h3" fontWeight={600}>
-                  Easy File Management
+            <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
+              <Box sx={titleBoxStyle}>
+                <Typography variant="overline" sx={overlineStyle}>
+                  ABOUT DEVWORK
+                </Typography>
+                <Typography variant="h3" sx={headingStyle}>
+                  Connecting employers with talent
+                </Typography>
+                <Typography variant="body1" sx={descriptionStyle}>
+                  DevWork was created to simplify the job posting process for employers while making it easier for job seekers to find relevant opportunities. Our AI-powered platform streamlines every step of the hiring journey.
                 </Typography>
               </Box>
-              <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.6 }}>
-                Upload, update, and manage your project files with our intuitive interface. Our platform makes it simple
-                to organize your project documentation, requirements, and specifications in one place. You can easily
-                share files with developers and track changes throughout the project lifecycle.
-              </Typography>
-            </Paper>
+
+              <Stack spacing={4} mt={5}>
+                {[
+                  {
+                    title: "For Employers",
+                    description: "Post jobs easily, manage listings, and set reminders all in one platform with powerful AI assistance."
+                  },
+                  {
+                    title: "For Job Seekers",
+                    description: "Find relevant job opportunities that match your skills and connect directly with employers through our platform."
+                  }
+                ].map((item, index) => (
+                  <motion.div key={item.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.2 + index * 0.2 }}>
+                    <Box sx={featureBoxStyle}>
+                      <CheckCircle color="#607d8b" size={24} style={iconStyle} />
+                      <Box>
+                        <Typography variant="h6" sx={featureTitleStyle}>
+                          {item.title}
+                        </Typography>
+                        <Typography variant="body1" sx={featureDescriptionStyle}>
+                          {item.description}
+                        </Typography>
+                      </Box>
+                    </Box>
+                  </motion.div>
+                ))}
+              </Stack>
+
+              <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.6 }}>
+                <Button variant="outlined" size="large" sx={buttonStyle}>
+                  Learn more about us
+                  <ArrowRight style={{ marginLeft: 8, strokeWidth: 2.5 }} size={18} />
+                </Button>
+              </motion.div>
+            </motion.div>
           </Grid>
 
           <Grid item xs={12} md={6}>
-            <Paper
-              elevation={0}
-              sx={{
-                p: 4,
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                borderRadius: 2,
-                border: "1px solid #e0e0e0",
-                transition: "transform 0.2s ease-in-out",
-                "&:hover": {
-                  transform: "translateY(-4px)",
-                  boxShadow: "0 10px 20px rgba(0,0,0,0.05)",
-                },
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                <Box
-                  sx={{
-                    bgcolor: "#000",
-                    color: "#fff",
-                    p: 1,
-                    borderRadius: 1,
-                    mr: 2,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <PeopleIcon />
-                </Box>
-                <Typography variant="h5" component="h3" fontWeight={600}>
-                  Skilled Developers
-                </Typography>
+            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
+              <Box sx={imageWrapperStyle}>
+                <Box component="img" src={image} alt="DevWork platform screenshot" sx={imageStyle} />
               </Box>
-              <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.6 }}>
-                Connect with pre-vetted developers who specialize in your technology stack. Our rigorous screening
-                process ensures you work with only the most qualified professionals. We match you with developers who
-                have proven experience in your specific industry and project requirements.
-              </Typography>
-            </Paper>
-          </Grid>
 
-          <Grid item xs={12} md={6}>
-            <Paper
-              elevation={0}
-              sx={{
-                p: 4,
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                borderRadius: 2,
-                border: "1px solid #e0e0e0",
-                transition: "transform 0.2s ease-in-out",
-                "&:hover": {
-                  transform: "translateY(-4px)",
-                  boxShadow: "0 10px 20px rgba(0,0,0,0.05)",
-                },
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                <Box
-                  sx={{
-                    bgcolor: "#000",
-                    color: "#fff",
-                    p: 1,
-                    borderRadius: 1,
-                    mr: 2,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <BoltIcon />
-                </Box>
-                <Typography variant="h5" component="h3" fontWeight={600}>
-                  Fast Matching
+              <Box sx={quoteBoxStyle}>
+                <Typography variant="body1" sx={quoteTextStyle}>
+                  "DevWork has transformed our hiring process. The AI analysis of job descriptions has improved the quality of applicants significantly."
                 </Typography>
-              </Box>
-              <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.6 }}>
-                Our algorithm quickly matches your project with the most suitable developers. Instead of spending weeks
-                searching for the right talent, our platform analyzes your project requirements and connects you with
-                qualified developers within days, saving you valuable time and resources.
-              </Typography>
-            </Paper>
-          </Grid>
-
-          <Grid item xs={12} md={6}>
-            <Paper
-              elevation={0}
-              sx={{
-                p: 4,
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-                borderRadius: 2,
-                border: "1px solid #e0e0e0",
-                transition: "transform 0.2s ease-in-out",
-                "&:hover": {
-                  transform: "translateY(-4px)",
-                  boxShadow: "0 10px 20px rgba(0,0,0,0.05)",
-                },
-              }}
-            >
-              <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
-                <Box
-                  sx={{
-                    bgcolor: "#000",
-                    color: "#fff",
-                    p: 1,
-                    borderRadius: 1,
-                    mr: 2,
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <CheckCircleIcon />
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Box sx={avatarStyle}>JS</Box>
+                  <Box sx={userInfoBoxStyle}>
+                    <Typography variant="subtitle2" fontWeight={700}>
+                      Jessica Smith
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      HR Director, TechCorp
+                    </Typography>
+                  </Box>
                 </Box>
-                <Typography variant="h5" component="h3" fontWeight={600}>
-                  Quality Assurance
-                </Typography>
               </Box>
-              <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.6 }}>
-                We ensure high-quality deliverables through our comprehensive review process. Every project goes through
-                multiple quality checks to ensure it meets your specifications and industry standards. Our platform
-                includes built-in tools for code reviews, testing, and project milestone tracking.
-              </Typography>
-            </Paper>
+            </motion.div>
           </Grid>
         </Grid>
       </Container>
     </Box>
   )
 }
-

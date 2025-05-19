@@ -106,4 +106,3 @@ const UpdateDetails = ({ onClose }: { onClose: () => void }) => {
 
 export default UpdateDetails;
 
-//final

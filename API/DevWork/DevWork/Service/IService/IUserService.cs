@@ -7,7 +7,6 @@ public interface IUserService
     Task<IEnumerable<UserDto>> GetAllUsers();
     Task<UserDto?> GetUserById(int userId);
     Task<UserDto> AddUser(UserPostModel user);
-    Task<UserDto?> UpdateUser(UserPostModel user);
 
         Task<UserDto> Authenticate(string email, string passwordHash);
         Task<UserEntity?> GetUserByEmail(string email);
@@ -15,7 +14,6 @@ public interface IUserService
     Task<bool> UpdateCredentialsAsync(int userId, UserUpdateCredentialsModel model);
 
 
-    //Task<UserEntity> AddUser(UserPostModel model);
 
 
 

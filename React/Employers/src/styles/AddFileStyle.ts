@@ -25,6 +25,8 @@ export const StyledTextField = styled(TextField)`
 
 export const StyledPaper = styled(Paper)`
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   padding: 32px;
   border: 2px dashed grey;
   display: flex;
@@ -49,3 +51,4 @@ export const StyledCircularProgress = styled(CircularProgress)`
 export const StyledAlert = styled(Alert)`
   margin-top: 16px;
 `;
+

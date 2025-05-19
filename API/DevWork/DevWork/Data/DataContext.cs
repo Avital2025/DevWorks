@@ -18,7 +18,6 @@ namespace DevWork.Data
 
         public DbSet<Reminder> Reminders { get; set; }
 
-        //public DbSet<SavedJob> SavedJobs { get; set; }
 
 
 

@@ -10,6 +10,7 @@ import { MatOptionModule } from '@angular/material/core';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon'; 
+import { FilterModel } from '../../models/filter';
 
 @Component({
   selector: 'app-filtering',
@@ -34,8 +35,8 @@ export class FilteringComponent implements OnInit {
 
   filterForm!: FormGroup;
 
-  languages: string[] = ['JavaScript', 'Python', 'Java', 'C#', 'C++', 'PHP', 'Ruby', 'Swift', 'Kotlin', 'Go'];
-  workplaceOptions: string[] = [
+  languages: string[] = ['JavaScript', 'Python','TypeScript','React',  'Java', 'C#', 'C++', 'PHP', 'Ruby', 'Swift', 'Kotlin', 'Go' , 'C' ,'.Net'];
+    workplaceOptions: string[] = [
     'תל אביב והמרכז', 'ירושלים', 'חיפה והצפון', 'באר שבע והדרום', 'אילת', 'השרון', 'השפלה', 'אחר'
   ];
 
@@ -69,21 +70,20 @@ export class FilteringComponent implements OnInit {
   }
 
   async onSubmit() {
-
     if (this.filterForm.valid) {
-
       const formValues = this.filterForm.value;
-      this.dataService
-        .getFilteredProjects(
-          formValues.experience,
-          formValues.workplace,
-          formValues.languages.join(','),
-          formValues.remoteWork,
-          formValues.englishLevel
-        )
-        .subscribe((response) => {
-          this.filteredJobs.emit(response);
-        });
+  
+      const filter: FilterModel = {
+        Experience: formValues.experience,
+        WorkPlace: formValues.workplace,
+        Languages: formValues.languages.join(','), 
+        RemoteWork: formValues.remoteWork,
+        EnglishLevel: formValues.englishLevel
+      };
+  
+      this.dataService.getFilteredProjects(filter).subscribe((response) => {
+        this.filteredJobs.emit(response);
+      });
     }
   }
 

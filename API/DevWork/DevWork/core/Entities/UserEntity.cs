@@ -5,10 +5,10 @@ namespace DevWork.Core.Entities
     public class UserEntity
     {
 
-        [Key] // מפתח ראשי
+        [Key]
         public int Id { get; set; }
 
-        [Required, MaxLength(100)] // הגבלת אורך
+        [Required, MaxLength(100)] 
         public string FullName { get; set; }
 
         [Required, EmailAddress, MaxLength(255)]

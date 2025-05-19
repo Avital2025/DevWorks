@@ -1,594 +1,188 @@
-// import { useEffect, useState } from "react";
-// import axios from "axios";
-// import {
-//   Card, Table, TableHead, TableRow, TableCell, TableBody, Button, IconButton, Dialog, DialogActions,
-//   DialogContent, DialogTitle, TextField, CircularProgress
-// } from "@mui/material";
-// import DownloadIcon from "@mui/icons-material/Download";
-// import EditIcon from "@mui/icons-material/Edit";
-// import DeleteIcon from "@mui/icons-material/Delete";
-// import { FileType } from "../types/fileType";
-// import Swal from "sweetalert2";
-
-// export default function EmployerFiles() {
-//   const [files, setFiles] = useState<FileType[]>([]);
-//   const [editDialogOpen, setEditDialogOpen] = useState(false);
-//   const [selectedFile, setSelectedFile] = useState<FileType | null>(null);
-//   const [newName, setNewName] = useState("");
-//   const [loading, setLoading] = useState(true);
-//   const token = localStorage.getItem("token");
-
-//   const fetchFiles = () => {
-//     setLoading(true);
-//     axios.get("http://localhost:5069/files", {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//         "Content-Type": "application/json",
-//       },
-//     })
-//       .then((response) => {
-//         if (Array.isArray(response.data)) setFiles(response.data);
-//       })
-//       .catch((error) => console.error("Error fetching files:", error))
-//       .finally(() => setLoading(false));
-//   };
-
-//   useEffect(() => {
-//     fetchFiles();
-//   }, []);
-
-//   const handleDelete = (fileId: string) => {
-//     axios.put(`http://localhost:5069/files/${fileId}/mark-deleted`, {}, {
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//         "Content-Type": "application/json",
-//       },
-//     })
-//       .then(() => fetchFiles())
-//       .catch((error) => console.error("Error deleting file:", error));
-//   };
-//   const employerId = localStorage.getItem('EmployerId') || '0';
-//   const openEditDialog = (file: FileType) => {
-//     setSelectedFile(file);
-//     const originalName = file.fileName.startsWith(employerId)
-//   ? file.fileName.substring(employerId.length)
-//   : file.fileName;
-// setNewName(originalName);
-//     setEditDialogOpen(true);
-//   };
-
-//   const handleSaveEdit = async () => {
-//     if (!selectedFile) return;
-
-//     try {
-//       const checkResponse = await axios.get("http://localhost:5069/files/check-file-exists", {
-//         params: {
-//           fileName: newName,
-//           employerId: employerId,
-//         },
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//           "Content-Type": "application/json",
-//         },
-//       });
-
-//       const exists = checkResponse.data.exists;
-
-//       if (exists) {
-//         setEditDialogOpen(false);
-//         Swal.fire({
-//           icon: "error",
-//           title: "השם כבר קיים",
-//           text: "יש קובץ אחר עם אותו שם. אנא בחרי שם אחר.",
-//         });
-//         return;
-//       }
-
-//       await axios.put(`http://localhost:5069/files/${selectedFile.id}/rename`, {
-//         newFileName: newName,
-//       }, {
-//         headers: {
-//           Authorization: `Bearer ${token}`,
-//           "Content-Type": "application/json",
-//         },
-//       });
-
-//       setEditDialogOpen(false);
-//       setSelectedFile(null);
-//       fetchFiles();
-//     } catch (error) {
-//       console.error("Error checking or updating file name:", error);
-//       Swal.fire({
-//         icon: "error",
-//         title: "שגיאה",
-//         text: "משהו השתבש, נסי שוב.",
-//       });
-//     }
-//   };
-
-//   return (
-//     <Card sx={{ p: 3, maxWidth: "800px", mx: "auto", mt: 3 }}>
-//       <h2 style={{ fontSize: "20px", fontWeight: "bold", marginBottom: "16px" }}>הקבצים שהעלית</h2>
-
-//       {loading ? (
-//         <div style={{ display: "flex", justifyContent: "center", marginBottom: "16px" }}>
-//           <CircularProgress />
-//         </div>
-//       ) : (
-//         <Table>
-//           <TableHead>
-//             <TableRow>
-//               <TableCell>שם הקובץ</TableCell>
-//               <TableCell>תאריך העלאה</TableCell>
-//               <TableCell>הורדה</TableCell>
-//               <TableCell>מחיקה</TableCell>
-//             </TableRow>
-//           </TableHead>
-
-//           <TableBody>
-//             {files.length > 0 ? (
-//               files.map((file) => (
-//                 <TableRow key={file.id}>
-//                   <TableCell>
-//                     <span style={{ display: "flex", alignItems: "center", gap: "8px", flexDirection: "row-reverse" }}>
-//                       {file.fileName}
-//                       <IconButton size="small" onClick={() => openEditDialog(file)}>
-//                         <EditIcon fontSize="small" />
-//                       </IconButton>
-//                     </span>
-//                   </TableCell>
-//                   <TableCell>{new Date(file.createdAt).toLocaleDateString()}</TableCell>
-//                   <TableCell>
-//                     <IconButton
-//                       color="primary"
-//                       onClick={async () => {
-//                         const employerId = localStorage.getItem("EmployerId") || "0";
-//                         const fullName = `${employerId}${file.fileName}`;
-//                         try {
-//                           const res = await axios.get("http://localhost:5069/files/generate-presigned-download-url", {
-//                             params: { fileName: fullName },
-//                             headers: {
-//                               Authorization: `Bearer ${token}`,
-//                             },
-//                           });
-
-//                           const downloadUrl = res.data.url;
-//                           window.open(downloadUrl, "_blank"); 
-//                         } catch (err) {
-//                           console.error("Error generating download URL:", err);
-//                         }
-//                       }}
-//                     >
-//                       <DownloadIcon />
-//                     </IconButton>
-//                   </TableCell>
-
-//                   <TableCell>
-//                     <IconButton
-//                       color="error"
-//                       onClick={() => {
-//                         Swal.fire({
-//                           title: "Are you sure?",
-//                           text: "You won't be able to revert this!",
-//                           icon: "warning",
-//                           showCancelButton: true,
-//                           confirmButtonColor: "#3085d6",
-//                           cancelButtonColor: "#d33",
-//                           confirmButtonText: "Yes, delete it!",
-//                         }).then((result) => {
-//                           if (result.isConfirmed) {
-//                             handleDelete(file.id);
-//                             Swal.fire({
-//                               title: "Deleted!",
-//                               text: "Your file has been deleted.",
-//                               icon: "success",
-//                             });
-//                           }
-//                         });
-//                       }}
-//                     >
-//                       <DeleteIcon />
-//                     </IconButton>
-//                   </TableCell>
-//                 </TableRow>
-//               ))
-//             ) : (
-//               <TableRow>
-//                 <TableCell colSpan={4} style={{ textAlign: "center", color: "gray" }}>
-//                   אין קבצים להציג
-//                 </TableCell>
-//               </TableRow>
-//             )}
-//           </TableBody>
-//         </Table>
-//       )}
-
-//       <Button
-//         variant="contained"
-//         color="primary"
-//         sx={{ mt: 2 }}
-//         onClick={() => (window.location.href = "/addFiles")}
-//       >
-//         העלאת קובץ
-//       </Button>
-
-//       <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)}>
-//         <DialogTitle>עריכת שם קובץ</DialogTitle>
-//         <DialogContent>
-//           <TextField
-//             fullWidth
-//             value={newName}
-//             onChange={(e) => setNewName(e.target.value)}
-//             label="שם הקובץ"
-//             autoFocus
-//           />
-//         </DialogContent>
-//         <DialogActions>
-//           <Button onClick={() => setEditDialogOpen(false)}>ביטול</Button>
-//           <Button onClick={handleSaveEdit} variant="contained">שמירה</Button>
-//         </DialogActions>
-//       </Dialog>
-//     </Card>
-//   );
-// }
-
-
-// // לסדר================================= לקצר ל use
-
-
-
-// מעוצב לפי V0
-"use client"
-
-import { useEffect, useState } from "react"
-import axios from "axios"
+import { useEffect, useState } from "react";
 import {
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Button,
-  IconButton,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField,
-  CircularProgress,
-  Box,
-  Typography,
-  Paper,
-  Chip,
-  Tooltip,
-  Fade,
-  useTheme,
-  alpha,
-  TableContainer,
-} from "@mui/material"
-import DownloadIcon from "@mui/icons-material/Download"
-import EditIcon from "@mui/icons-material/Edit"
-import DeleteIcon from "@mui/icons-material/Delete"
-import UploadFileIcon from "@mui/icons-material/UploadFile"
-import FolderIcon from "@mui/icons-material/Folder"
-import InsertDriveFileIcon from "@mui/icons-material/InsertDriveFile"
-import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf"
-import DescriptionIcon from "@mui/icons-material/Description"
-import ImageIcon from "@mui/icons-material/Image"
-import ArticleIcon from "@mui/icons-material/Article"
-import type { FileType } from "../types/fileType"
-import Swal from "sweetalert2"
+  Table, TableHead, TableRow, TableCell, TableBody, Button, IconButton, Dialog, DialogActions, DialogContent, DialogTitle,
+  TextField, CircularProgress, Box, Typography, Paper, Chip, Tooltip, Fade, useTheme, TableContainer
+} from "@mui/material";
+import {
+  Download as DownloadIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  UploadFile as UploadFileIcon,
+  Folder as FolderIcon,
+  InsertDriveFile as InsertDriveFileIcon,
+  PictureAsPdf as PictureAsPdfIcon,
+  Description as DescriptionIcon,
+  Image as ImageIcon,
+  Article as ArticleIcon
+} from "@mui/icons-material";
+import Swal from "sweetalert2";
+import type { FileType } from "../types/fileType";
+import { useEmployerFileService } from "../utils/useEmployerFilesService";
+import { styles } from  "../styles/EmployerFilesStyle";
 
 export default function EmployerFiles() {
-  const [files, setFiles] = useState<FileType[]>([])
-  const [editDialogOpen, setEditDialogOpen] = useState(false)
-  const [selectedFile, setSelectedFile] = useState<FileType | null>(null)
-  const [newName, setNewName] = useState("")
-  const [loading, setLoading] = useState(true)
-  const token = localStorage.getItem("token")
-  const theme = useTheme()
+  const [files, setFiles] = useState<FileType[]>([]);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<FileType | null>(null);
+  const [newName, setNewName] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  const fetchFiles = () => {
-    setLoading(true)
-    axios
-      .get("http://localhost:5069/files", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      })
-      .then((response) => {
-        if (Array.isArray(response.data)) setFiles(response.data)
-      })
-      .catch((error) => console.error("Error fetching files:", error))
-      .finally(() => setLoading(false))
-  }
+  const {
+    fetchFiles,
+    deleteFile,
+    renameFile,
+    checkFileExists,
+    generateDownloadUrl,
+    employerId,
+  } = useEmployerFileService();
+
+  const theme = useTheme();
 
   useEffect(() => {
-    fetchFiles()
-  }, [])
+    loadFiles();
+  }, []);
 
-  const handleDelete = (fileId: string) => {
-    axios
-      .put(
-        `http://localhost:5069/files/${fileId}/mark-deleted`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        },
-      )
-      .then(() => fetchFiles())
-      .catch((error) => console.error("Error deleting file:", error))
-  }
-
-  const employerId = localStorage.getItem("EmployerId") || "0"
-
-  const openEditDialog = (file: FileType) => {
-    setSelectedFile(file)
-    const originalName = file.fileName.startsWith(employerId)
-      ? file.fileName.substring(employerId.length)
-      : file.fileName
-    setNewName(originalName)
-    setEditDialogOpen(true)
-  }
-
-  const handleSaveEdit = async () => {
-    if (!selectedFile) return
-
+  const loadFiles = async () => {
+    setLoading(true);
     try {
-      const checkResponse = await axios.get("http://localhost:5069/files/check-file-exists", {
-        params: {
-          fileName: newName,
-          employerId: employerId,
-        },
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      })
-
-      const exists = checkResponse.data.exists
-
-      if (exists) {
-        setEditDialogOpen(false)
-        Swal.fire({
-          icon: "error",
-          title: "השם כבר קיים",
-          text: "יש קובץ אחר עם אותו שם. אנא בחרי שם אחר.",
-        })
-        return
-      }
-
-      await axios.put(
-        `http://localhost:5069/files/${selectedFile.id}/rename`,
-        {
-          newFileName: newName,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        },
-      )
-
-      setEditDialogOpen(false)
-      setSelectedFile(null)
-      fetchFiles()
+      const data = await fetchFiles();
+      setFiles(data);
     } catch (error) {
-      console.error("Error checking or updating file name:", error)
+      console.error("Error fetching files:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (fileId: string) => {
+    try {
+      await deleteFile(fileId);
+      await loadFiles();
+    } catch (error) {
+      console.error("Error deleting file:", error);
       Swal.fire({
         icon: "error",
-        title: "שגיאה",
-        text: "משהו השתבש, נסי שוב.",
-      })
+        title: "Failed to delete",
+        text: "Something went wrong while trying to delete the file. Please try again.",
+      });
     }
-  }
+    
+  };
 
-  // Function to determine file icon based on file extension
+  const openEditDialog = (file: FileType) => {
+    setSelectedFile(file);
+    const originalName = file.fileName.startsWith(employerId)
+      ? file.fileName.substring(employerId.length)
+      : file.fileName;
+    setNewName(originalName);
+    setEditDialogOpen(true);
+  };
+
+  const handleSaveEdit = async () => {
+    if (!selectedFile) return;
+
+    try {
+      const exists = await checkFileExists(newName);
+      if (exists) {
+        setEditDialogOpen(false);
+        Swal.fire({
+          icon: "error",
+          title: "Name already exists",
+          text: "There is another file with the same name. Please choose a different name.",
+        });
+        return;
+      }
+
+      await renameFile(selectedFile.id, newName);
+      setEditDialogOpen(false);
+      setSelectedFile(null);
+      loadFiles();
+    } catch (error) {
+      console.error("Error renaming file:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "Something went wrong, please try again.",
+      });
+    }
+  };
+
   const getFileIcon = (fileName: string) => {
-    const extension = fileName.split(".").pop()?.toLowerCase()
-
+    const extension = fileName.split(".").pop()?.toLowerCase();
     switch (extension) {
-      case "pdf":
-        return <PictureAsPdfIcon color="error" />
+      case "pdf": return <PictureAsPdfIcon color="error" />;
       case "doc":
-      case "docx":
-        return <DescriptionIcon sx={{ color: "#4285F4" }} />
+      case "docx": return <DescriptionIcon sx={{ color: "#4285F4" }} />;
       case "jpg":
       case "jpeg":
       case "png":
-      case "gif":
-        return <ImageIcon sx={{ color: "#34A853" }} />
-      default:
-        return <InsertDriveFileIcon color="primary" />
+      case "gif": return <ImageIcon sx={{ color: "#34A853" }} />;
+      default: return <InsertDriveFileIcon color="primary" />;
     }
-  }
+  };
 
-  // Format date to a more readable format
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
-    return date.toLocaleDateString("he-IL", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    })
-  }
+  const formatDate = (dateString: string) =>
+    new Date(dateString).toLocaleDateString("en-US", { year: "numeric", month: "2-digit", day: "2-digit" });
 
   return (
-    <Fade in={true} timeout={500}>
-      <Box
-        sx={{
-          maxWidth: "900px",
-          mx: "auto",
-          p: { xs: 2, md: 3 },
-          direction: "rtl",
-        }}
-      >
-        <Paper
-          elevation={3}
-          sx={{
-            borderRadius: 3,
-            overflow: "hidden",
-            background: `linear-gradient(to bottom, ${alpha(theme.palette.primary.light, 0.05)}, white)`,
-          }}
-        >
-          <Box
-            sx={{
-              bgcolor: theme.palette.primary.main,
-              color: "white",
-              p: 2.5,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+    <Fade in timeout={500}>
+      <Box sx={styles.container}>
+        <Paper elevation={3} sx={styles.paper(theme)}>
+          <Box sx={styles.header(theme)}>
+            <Box sx={styles.headerTitle}>
               <FolderIcon fontSize="large" />
-              <Typography variant="h5" fontWeight="bold">
-                הקבצים שהעלית
-              </Typography>
+              <Typography variant="h5" fontWeight="bold">Your Uploaded Files</Typography>
             </Box>
-            <Chip
-              label={`${files.length} קבצים`}
-              size="medium"
-              sx={{
-                bgcolor: "rgba(255,255,255,0.2)",
-                color: "white",
-                fontWeight: "bold",
-              }}
-            />
+            <Chip label={`${files.length} files`} size="medium" sx={styles.fileCountChip} />
           </Box>
 
           <Box sx={{ p: 3 }}>
             {loading ? (
-              <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", py: 6, gap: 2 }}>
+              <Box sx={styles.loadingBox}>
                 <CircularProgress size={50} thickness={4} />
-                <Typography variant="body1" color="text.secondary">
-                  טוען קבצים...
-                </Typography>
+                <Typography variant="body1" color="text.secondary">Loading files...</Typography>
               </Box>
             ) : (
-              <TableContainer
-                component={Paper}
-                elevation={0}
-                sx={{
-                  borderRadius: 2,
-                  border: "1px solid",
-                  borderColor: "divider",
-                  mb: 3,
-                  overflow: "hidden",
-                }}
-              >
+              <TableContainer component={Paper} elevation={0} sx={styles.tableContainer}>
                 <Table>
                   <TableHead>
-                    <TableRow sx={{ bgcolor: alpha(theme.palette.primary.main, 0.1) }}>
-                      <TableCell
-                        sx={{
-                          fontWeight: "bold",
-                          fontSize: "1rem",
-                          color: theme.palette.primary.dark,
-                        }}
-                      >
-                        שם הקובץ
-                      </TableCell>
-                      <TableCell
-                        sx={{
-                          fontWeight: "bold",
-                          fontSize: "1rem",
-                          color: theme.palette.primary.dark,
-                        }}
-                      >
-                        תאריך העלאה
-                      </TableCell>
-                      <TableCell
-                        align="center"
-                        sx={{
-                          fontWeight: "bold",
-                          fontSize: "1rem",
-                          color: theme.palette.primary.dark,
-                        }}
-                      >
-                        פעולות
-                      </TableCell>
+                    <TableRow sx={styles.tableHeadRow(theme)}>
+                      <TableCell sx={styles.tableHeadCell(theme)}>File Name</TableCell>
+                      <TableCell sx={styles.tableHeadCell(theme)}>Upload Date</TableCell>
+                      <TableCell align="center" sx={styles.tableHeadCell(theme)}>Actions</TableCell>
                     </TableRow>
                   </TableHead>
-
                   <TableBody>
                     {files.length > 0 ? (
                       files.map((file) => (
-                        <TableRow
-                          key={file.id}
-                          sx={{
-                            "&:hover": {
-                              bgcolor: alpha(theme.palette.primary.light, 0.05),
-                            },
-                            transition: "background-color 0.2s",
-                          }}
-                        >
+                        <TableRow key={file.id} sx={styles.tableRow(theme)}>
                           <TableCell>
-                            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+                            <Box sx={styles.fileCellBox}>
                               {getFileIcon(file.fileName)}
                               <Typography variant="body1">{file.fileName}</Typography>
-                              <Tooltip title="ערוך שם קובץ">
-                                <IconButton
-                                  size="small"
-                                  onClick={() => openEditDialog(file)}
-                                  sx={{
-                                    color: theme.palette.text.secondary,
-                                    "&:hover": {
-                                      color: theme.palette.primary.main,
-                                      bgcolor: alpha(theme.palette.primary.main, 0.1),
-                                    },
-                                  }}
-                                >
+                              <Tooltip title="Edit file name">
+                                <IconButton size="small" onClick={() => openEditDialog(file)}>
                                   <EditIcon fontSize="small" />
                                 </IconButton>
                               </Tooltip>
                             </Box>
                           </TableCell>
                           <TableCell>
-                            <Chip
-                              size="small"
-                              label={formatDate(file.createdAt)}
-                              sx={{
-                                bgcolor: alpha(theme.palette.primary.light, 0.1),
-                                fontWeight: "medium",
-                              }}
-                            />
+                            <Chip size="small" label={formatDate(file.createdAt)} sx={styles.dateChip(theme)} />
                           </TableCell>
                           <TableCell>
-                            <Box sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
-                              <Tooltip title="הורד קובץ">
+                            <Box sx={styles.actionButtons}>
+                              <Tooltip title="Download file">
                                 <IconButton
                                   color="primary"
-                                  sx={{
-                                    bgcolor: alpha(theme.palette.primary.main, 0.1),
-                                    "&:hover": {
-                                      bgcolor: alpha(theme.palette.primary.main, 0.2),
-                                    },
-                                  }}
+                                  sx={styles.downloadButton(theme)}
                                   onClick={async () => {
-                                    const employerId = localStorage.getItem("EmployerId") || "0"
-                                    const fullName = `${employerId}${file.fileName}`
                                     try {
-                                      const res = await axios.get(
-                                        "http://localhost:5069/files/generate-presigned-download-url",
-                                        {
-                                          params: { fileName: fullName },
-                                          headers: {
-                                            Authorization: `Bearer ${token}`,
-                                          },
-                                        },
-                                      )
-
-                                      const downloadUrl = res.data.url
-                                      window.open(downloadUrl, "_blank")
+                                      const fullName = `${employerId}${file.fileName}`;
+                                      const url = await generateDownloadUrl(fullName);
+                                      window.open(url, "_blank");
                                     } catch (err) {
-                                      console.error("Error generating download URL:", err)
+                                      console.error("Error generating download URL:", err);
                                     }
                                   }}
                                 >
@@ -596,35 +190,26 @@ export default function EmployerFiles() {
                                 </IconButton>
                               </Tooltip>
 
-                              <Tooltip title="מחק קובץ">
+                              <Tooltip title="Delete file">
                                 <IconButton
                                   color="error"
-                                  sx={{
-                                    bgcolor: alpha(theme.palette.error.main, 0.1),
-                                    "&:hover": {
-                                      bgcolor: alpha(theme.palette.error.main, 0.2),
-                                    },
-                                  }}
+                                  sx={styles.deleteButton(theme)}
                                   onClick={() => {
                                     Swal.fire({
-                                      title: "האם אתה בטוח?",
-                                      text: "לא תוכל לשחזר את הקובץ!",
+                                      title: "Are you sure?",
+                                      text: "You will not be able to recover this file!",
                                       icon: "warning",
                                       showCancelButton: true,
                                       confirmButtonColor: "#3085d6",
                                       cancelButtonColor: "#d33",
-                                      confirmButtonText: "כן, מחק!",
-                                      cancelButtonText: "ביטול",
+                                      confirmButtonText: "Yes, delete it!",
+                                      cancelButtonText: "Cancel",
                                     }).then((result) => {
                                       if (result.isConfirmed) {
-                                        handleDelete(file.id)
-                                        Swal.fire({
-                                          title: "נמחק!",
-                                          text: "הקובץ נמחק בהצלחה.",
-                                          icon: "success",
-                                        })
+                                        handleDelete(file.id);
+                                        Swal.fire("Deleted!", "Your file has been deleted.", "success");
                                       }
-                                    })
+                                    });
                                   }}
                                 >
                                   <DeleteIcon />
@@ -637,22 +222,10 @@ export default function EmployerFiles() {
                     ) : (
                       <TableRow>
                         <TableCell colSpan={3}>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "center",
-                              py: 4,
-                              gap: 1,
-                            }}
-                          >
+                          <Box sx={styles.emptyBox}>
                             <ArticleIcon sx={{ fontSize: 50, color: "text.disabled" }} />
-                            <Typography variant="h6" color="text.secondary">
-                              אין קבצים להציג
-                            </Typography>
-                            <Typography variant="body2" color="text.secondary">
-                              העלה את הקובץ הראשון שלך כדי להתחיל
-                            </Typography>
+                            <Typography variant="h6" color="text.secondary">No files to display</Typography>
+                            <Typography variant="body2" color="text.secondary">Upload your first file to get started</Typography>
                           </Box>
                         </TableCell>
                       </TableRow>
@@ -669,77 +242,41 @@ export default function EmployerFiles() {
                 size="large"
                 startIcon={<UploadFileIcon />}
                 onClick={() => (window.location.href = "/addFiles")}
-                sx={{
-                  borderRadius: 2,
-                  py: 1.2,
-                  px: 4,
-                  fontWeight: "bold",
-                  boxShadow: 2,
-                  "&:hover": {
-                    transform: "translateY(-2px)",
-                    boxShadow: 4,
-                  },
-                  transition: "all 0.2s",
-                }}
+                sx={styles.uploadButton}
               >
-                העלאת קובץ חדש
+                Upload New File
               </Button>
             </Box>
           </Box>
         </Paper>
 
-        <Dialog
-          open={editDialogOpen}
-          onClose={() => setEditDialogOpen(false)}
-          PaperProps={{
-            sx: {
-              borderRadius: 2,
-              overflow: "hidden",
-              direction: "rtl",
-            },
-          }}
-        >
-          <DialogTitle
-            sx={{
-              bgcolor: theme.palette.primary.main,
-              color: "white",
-              py: 2,
-            }}
-          >
-            עריכת שם קובץ
-          </DialogTitle>
-          <DialogContent sx={{ pt: 3, pb: 1, px: 3, mt: 1 }}>
+        <Dialog open={editDialogOpen} onClose={() => setEditDialogOpen(false)} PaperProps={{ sx: { borderRadius: 2 } }}>
+          <DialogTitle sx={styles.dialogTitle(theme)}>Edit File Name</DialogTitle>
+          <DialogContent sx={styles.dialogContent}>
             <TextField
               fullWidth
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
-              label="שם הקובץ"
+              label="File Name"
               variant="outlined"
               autoFocus
               InputProps={{
                 startAdornment: selectedFile && (
-                  <Box sx={{ mr: 1, display: "flex", alignItems: "center" }}>{getFileIcon(selectedFile.fileName)}</Box>
+                  <Box sx={{ mr: 1, display: "flex", alignItems: "center" }}>
+                    {getFileIcon(selectedFile.fileName)}
+                  </Box>
                 ),
               }}
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: 1.5,
-                },
-              }}
+              sx={{ "& .MuiOutlinedInput-root": { borderRadius: 1.5 } }}
             />
           </DialogContent>
-          <DialogActions sx={{ px: 3, py: 2 }}>
-            <Button onClick={() => setEditDialogOpen(false)} variant="outlined" sx={{ borderRadius: 1.5 }}>
-              ביטול
-            </Button>
-            <Button onClick={handleSaveEdit} variant="contained" sx={{ borderRadius: 1.5 }}>
-              שמירה
-            </Button>
+          <DialogActions sx={styles.dialogActions}>
+            <Button onClick={() => setEditDialogOpen(false)} variant="outlined" sx={{ borderRadius: 1.5 }}>Cancel</Button>
+            <Button onClick={handleSaveEdit} variant="contained" sx={{ borderRadius: 1.5 }}>Save</Button>
           </DialogActions>
         </Dialog>
       </Box>
     </Fade>
-  )
+  );
 }
-
 

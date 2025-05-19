@@ -1,7 +1,7 @@
 ﻿using DevWork.Core.Entities;
 using DevWork.Data;
 using DevWork.Service.Iservice;
-using System.Linq;
+using Newtonsoft.Json.Linq;
 
 public class AIService : IAIService
 {
@@ -16,294 +16,141 @@ public class AIService : IAIService
         _apiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY")
             ?? throw new Exception("API Key is missing!");
     }
+    private async Task<AIResponse> GetAiResponseAsync(string jsonResponse)
+    {
+       
+
+        var jsonObject = JObject.Parse(jsonResponse);
+        var content = jsonObject["choices"]?[0]?["message"]?["content"]?.ToString();
+
+        if (string.IsNullOrEmpty(content))
+            return null;
+
+        var cleanedContent = content
+            .Replace("```json", "", StringComparison.OrdinalIgnoreCase)
+            .Replace("```", "", StringComparison.OrdinalIgnoreCase)
+            .Trim();
 
 
-    // פונקציה שתשלח את המחרוזת ל-AI, תנתח את התשובה, ותשמור אותה ב-BD
-    //public async Task SaveProjectDescriptionToDB(string s3Key, int employerId)
-    //{
-    //    var file = await _context.filesList.FirstOrDefaultAsync(f => f.S3Key == s3Key);
-    //    if (file == null)
-    //    {
-    //        throw new Exception("קובץ לא נמצא.");
-    //    }
 
-    //    var response = await _httpClient.PostAsJsonAsync("https://api.ai-service.com/parse", new { text = s3Key });
+        var jObj = JObject.Parse(cleanedContent);
 
-    //    if (!response.IsSuccessStatusCode)
-    //    {
-    //        throw new Exception("לא הצלחנו לנתח את המידע.");
-    //    }
+        if (jObj["Languages"] is JArray langArray)
+        {
+            jObj["Languages"] = string.Join(", ", langArray.Select(l => l.ToString()));
+        }
 
-    //    var aiResponse = await response.Content.ReadFromJsonAsync<AIResponse>();
-    //    if (aiResponse == null)
-    //    {
-    //        throw new Exception("AI החזיר תשובה ריקה.");
-    //    }
-
-    //    // שמירת תשובת ה-AI לטבלה
-    //    _context.AIResponses.Add(aiResponse);
-    //    await _context.SaveChangesAsync();
-
-    //    // שמירת הנתונים בטבלת ExtractedData
-    //    var extractedData = new ExtractedDataEntity
-    //    {
-    //        EmployerID = employerId,
-    //        AIResponseId = aiResponse.Id, // לוודא ש-AIResponse מכיל ID
-    //        S3Key = s3Key,
-    //        CreatedAt = DateTime.Now,
-    //        UpdatedAt = DateTime.Now
-    //    };
-
-    //    _context.extractedDataList.Add(extractedData);
-    //    await _context.SaveChangesAsync();
-    //}
-    //public async Task<AIResponse> SaveProjectDescriptionToDB(string fileText)
-    //{
-    //    var response = await _httpClient.PostAsJsonAsync("https://api.ai-service.com/parse", new { text = fileText });
-
-    //    if (!response.IsSuccessStatusCode)
-    //    {
-    //        throw new Exception("לא הצלחנו לנתח את המידע.");
-    //    }
-
-    //    var aiResponse = await response.Content.ReadFromJsonAsync<AIResponse>();
-    //    if (aiResponse == null)
-    //    {
-    //        throw new Exception("AI החזיר תשובה ריקה.");
-    //    }
-
-    //    _context.AIResponses.Add(aiResponse);
-    //    await _context.SaveChangesAsync();
-
-    //    return aiResponse;
-    //}
+        var aiResponse = jObj.ToObject<AIResponse>();
+        return aiResponse;
+    }
 
 
-    //====================
-    //public async Task<AIResponse> SaveProjectDescriptionToDB(string fileText)
-    //{
-    //    var prompt = new
-    //    {
-    //        model = "gpt-4",
-    //        messages = new[]
-    //        {
-    //        new { role = "system", content = "אתה מודל NLP שמחפש תיאורים של משרות טכנולוגיות ומחזיר רק את המידע המבוקש בפורמט JSON." },
-    //        new {
-    //            role = "user",
-    //            content = $"נתון התיאור הבא של משרה:\n\n{fileText}\n\n" +
-    //                      "חלץ את הנתונים הבאים והחזר אותם בפורמט JSON:\n" +
-    //                      "- כותרת המשרה (Title)\n" +
-    //                      "- תיאור המשרה (Description)\n" +
-    //                      "- שנות ניסיון נדרשות (Experience), החזר את מספר שנות הניסיון הנמוך ביותר הקיים בטקסט, אם יש, אם יש כמה פעמים שנות ניסיון- תביא את הערך הנמוך ביותר מתוכם.  תחזיר כערך מספרי בלבד (למשל: 1, 2, 3). אל תחזיר טקסט כמו \"שנה\", \"שנתיים\", אלא את המספר בלבד \n" +
-    //                      "- מקום העבודה (WorkPlace), אחד מהערכים: 'תל אביב והמרכז', 'ירושלים', 'חיפה והצפון', 'באר שבע והדרום', 'אילת', 'השרון', 'השפלה', 'אחר'\n" +
-    //                      "- שפות (Languages), החזר רק שפות מתוך הרשימה: c, c++, java, cobol, python, javascript, ruby, php, .net\n" +
-    //                      "- עבודה מרחוק (RemoteWork), אחת מהאפשרויות: 'כן', 'לא', 'היברידי'\n" +
-    //                      "- רמת אנגלית (EnglishLevel), אחת מהאפשרויות: 'High', 'Medium', 'Low'\n\n" +
-    //                      "החזר תשובה בפורמט JSON לדוגמה:\n```json\n{\n  \"Title\": \"בודק/ת תוכנה בכיר/ה\",\n  \"Description\": \"בדיקות פונקציונליות על מערכות WEB.\",\n  \"Experience\": 4,\n  \"WorkPlace\": \"תל אביב והמרכז\",\n  \"Languages\": [\"Java\", \"SQL\"],\n  \"RemoteWork\": \"היברידי\",\n  \"EnglishLevel\": \"High\"\n}\n```"
-    //        }
-    //    }
-    //    };
-
-    //    var response = await _httpClient.PostAsJsonAsync("https://api.openai.com/v1/chat/completions", prompt);
-
-    //    if (!response.IsSuccessStatusCode)
-    //    {
-    //        throw new Exception("לא הצלחנו לנתח את המידע.");
-    //    }
-
-    //    var aiResponse = await response.Content.ReadFromJsonAsync<AIResponse>();
-    //    if (aiResponse == null)
-    //    {
-    //        throw new Exception("AI החזיר תשובה ריקה.");
-    //    }
-
-    //    aiResponse.Languages = aiResponse.Languages != null
-    //? string.Join(", ", aiResponse.Languages)
-    //: null;
-
-    //    if (aiResponse.Experience != null)
-    //    {
-    //        aiResponse.Experience = int.TryParse(aiResponse.Experience.ToString(), out int experienceYears) ? experienceYears : 0;
-    //    }
-    //    else
-    //    {
-    //        aiResponse.Experience = 0; // אם אין מידע, מגדירים 0
-    //    }
-
-    //    _context.AIResponses.Add(aiResponse);
-    //    await _context.SaveChangesAsync();
-
-    //    return aiResponse;
-    //}
-
-
-    //public async Task<AIResponse> SaveProjectDescriptionToDB(string fileText)
-    //{
-    //    var prompt = new
-    //    {
-    //        model = "gpt-3.5",
-    //        messages = new[] {
-    //        new {
-    //            role = "system",
-    //            content = "אתה מודל NLP שמחפש תיאורים של משרות טכנולוגיות ומחזיר רק את המידע המבוקש בפורמט JSON."
-    //        },
-    //        new {
-    //            role = "user",
-    //            content = $"נתון התיאור הבא של משרה:\n\n{fileText}\n\n" +
-    //                      "חלץ את הנתונים הבאים והחזר אותם בפורמט JSON:\n" +
-    //                      "- כותרת המשרה (Title)\n" +
-    //                      "- תיאור המשרה (Description)\n" +
-    //                      "- שנות ניסיון נדרשות (Experience), החזר את מספר שנות הניסיון הנמוך ביותר הקיים בטקסט, אם יש, אם יש כמה פעמים שנות ניסיון- תביא את הערך הנמוך ביותר מתוכם.  תחזיר כערך מספרי בלבד (למשל: 1, 2, 3). אל תחזיר טקסט כמו \"שנה\", \"שנתיים\", אלא את המספר בלבד \n" +
-    //                      "- מקום העבודה (WorkPlace), אחד מהערכים: 'תל אביב והמרכז', 'ירושלים', 'חיפה והצפון', 'באר שבע והדרום', 'אילת', 'השרון', 'השפלה', 'אחר'\n" +
-    //                      "- שפות (Languages), החזר רק שפות מתוך הרשימה: c, c++, java, cobol, python, javascript, ruby, php, .net\n" +
-    //                      "- עבודה מרחוק (RemoteWork), אחת מהאפשרויות: 'כן', 'לא', 'היברידי'\n" +
-    //                      "- רמת אנגלית (EnglishLevel), אחת מהאפשרויות: 'High', 'Medium', 'Low'\n\n" +
-    //                      "החזר תשובה בפורמט JSON לדוגמה:\n```json\n{\n  \"Title\": \"בודק/ת תוכנה בכיר/ה\",\n  \"Description\": \"בדיקות פונקציונליות על מערכות WEB.\",\n  \"Experience\": 4,\n  \"WorkPlace\": \"תל אביב והמרכז\",\n  \"Languages\": [\"Java\", \"SQL\"],\n  \"RemoteWork\": \"היברידי\",\n  \"EnglishLevel\": \"High\"\n}\n```"
-    //        }
-    //    }
-    //    };
-
-
-    //    // הוספת ה-API Key לכותרת
-    //    var request = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/chat/completions")
-    //    {
-    //        Content = JsonContent.Create(prompt)
-    //    };
-    //    request.Headers.Add("Authorization", $"Bearer {_apiKey}");
-    //    Console.WriteLine($"Using API Key: {_apiKey}");
-
-    //    var response = await _httpClient.SendAsync(request);
-
-    //    if (!response.IsSuccessStatusCode)
-    //    {
-    //        throw new Exception($"לא הצלחנו לנתח את המידע. סטטוס: {response.StatusCode}");
-    //    }
-
-    //    var aiResponse = await response.Content.ReadFromJsonAsync<AIResponse>();
-    //    if (aiResponse == null)
-    //    {
-    //        throw new Exception("AI החזיר תשובה ריקה.");
-    //    }
-
-    //    // עיבוד תשובה
-    //    ProcessAiResponse(aiResponse);
-
-    //    // שמירה למסד הנתונים
-    //    _context.AIResponses.Add(aiResponse);
-    //    await _context.SaveChangesAsync();
-
-    //    return aiResponse;
-    //}
     public async Task<AIResponse> SaveProjectDescriptionToDB(string fileText)
     {
         try
         {
+
             var prompt = new
             {
                 model = "gpt-4o-mini",
                 messages = new[] {
-                new {
-                    role = "system",
-                    content = "אתה מודל NLP שמחפש תיאורים של משרות טכנולוגיות ומחזיר רק את המידע המבוקש בפורמט JSON."
-                },
-                new {
-                    role = "user",
-                    content = $"נתון התיאור הבא של משרה:\n\n{fileText}\n\n" +
-                              "חלץ את הנתונים הבאים והחזר אותם בפורמט JSON:\n" +
-                              "- כותרת המשרה (Title)\n" +
-                              "- תיאור המשרה (Description)\n" +
-                              "- שנות ניסיון נדרשות (Experience), החזר את מספר שנות הניסיון הנמוך ביותר הקיים בטקסט, אם יש, אם יש כמה פעמים שנות ניסיון- תביא את הערך הנמוך ביותר מתוכם.  תחזיר כערך מספרי בלבד (למשל: 1, 2, 3). אל תחזיר טקסט כמו \"שנה\", \"שנתיים\", אלא את המספר בלבד \n" +
-                              "- מקום העבודה (WorkPlace), אחד מהערכים: 'תל אביב והמרכז', 'ירושלים', 'חיפה והצפון', 'באר שבע והדרום', 'אילת', 'השרון', 'השפלה', 'אחר'\n" +
-                              "- שפות (Languages), החזר רק שפות מתוך הרשימה: c, c++, java, cobol, python, javascript, ruby, php, .net\n" +
-                              "- עבודה מרחוק (RemoteWork), אחת מהאפשרויות: 'כן', 'לא', 'היברידי'\n" +
-                              "- רמת אנגלית (EnglishLevel), אחת מהאפשרויות: 'High', 'Medium', 'Low'\n\n" +
-                              "החזר תשובה בפורמט JSON לדוגמה:\n```json\n{\n  \"Title\": \"בודק/ת תוכנה בכיר/ה\",\n  \"Description\": \"בדיקות פונקציונליות על מערכות WEB.\",\n  \"Experience\": 4,\n  \"WorkPlace\": \"תל אביב והמרכז\",\n  \"Languages\": [\"Java\", \"SQL\"],\n  \"RemoteWork\": \"היברידי\",\n  \"EnglishLevel\": \"High\"\n}\n```"
-                }
-            }
+        new {
+            role = "system",
+            content = "אתה מודל NLP שמחלץ תיאורים של משרות טכנולוגיות ומחזיר רק את המידע המבוקש בפורמט JSON תקני. אין להחזיר הסברים, ניסוחים יצירתיים או טקסט חופשי – JSON בלבד."
+        },
+        new {
+            role = "user",
+            content = "להלן תיאור משרה:\n\n" +
+                      fileText + "\n\n" +
+                      "חלץ את הנתונים הבאים והחזר אותם אך ורק בפורמט JSON. אל תוסיף הסברים או טקסט נוסף.\n\n" +
+                      "הנחיות:\n" +
+                      "- \"RemoteWork\": החזר true אם המשרה כוללת עבודה מהבית או עבודה היברידית, אחרת החזר false. אין להחזיר מחרוזת.\n" +
+                      "- \"Title\": כותרת המשרה מתוך הטקסט.\n" +
+                      "- \"Description\": תיאור המשרה בקצרה.\n" +
+                      "- \"Experience\": מספר שנות הניסיון הנמוך ביותר שמופיע בטקסט (רק מספר, לדוגמה: 1, 2, 3). אין להחזיר מילים כמו \"שנה\" או \"שנתיים\".\n" +
+                      "- \"WorkPlace\": אחד מהערכים בלבד – 'תל אביב והמרכז', 'ירושלים', 'חיפה והצפון', 'באר שבע והדרום', 'אילת', 'השרון', 'השפלה', 'אחר'.\n" +
+                      "- \"Languages\": החזר רשימה של שפות מתוך הרשימה הבאה בלבד (אם קיימות בטקסט): 'Python', 'Java', 'C#', 'C++', 'JavaScript', 'TypeScript', 'PHP', 'Ruby', 'Swift', 'Kotlin', 'Go' , 'C' ,'.Net', 'React' \n" +
+                      "- \"EnglishLevel\": אחת מהאפשרויות בלבד – 'High', 'Medium', 'Low'.\n\n" +
+                      "החזר תשובה בפורמט הבא:\n" +
+                      "```json\n" +
+                      "{\n" +
+                      "  \"Title\": \"בודק/ת תוכנה בכיר/ה\",\n" +
+                      "  \"Description\": \"בדיקות פונקציונליות על מערכות WEB.\",\n" +
+                      "  \"Experience\": 4,\n" +
+                      "  \"WorkPlace\": \"תל אביב והמרכז\",\n" +
+                      "  \"Languages\": [\"java\", \"python\"],\n" +
+                      "  \"RemoteWork\": true,\n" +
+                      "  \"EnglishLevel\": \"High\"\n" +
+                      "}\n" +
+                      "```"
+        }
+    }
             };
 
-            // הוספת ה-API Key לכותרת
+
+
             var request = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/chat/completions")
             {
                 Content = JsonContent.Create(prompt)
             };
             request.Headers.Add("Authorization", $"Bearer {_apiKey}");
-            Console.WriteLine($"Using API Key: {_apiKey}");
 
-            // שליחת הבקשה ל-API
             var response = await _httpClient.SendAsync(request);
-            Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAשש");
 
             var responseContent1 = await response.Content.ReadAsStringAsync();
-            Console.WriteLine($"Response Content: {responseContent1}" + "קמד");
 
-            // טיפול בתשובה שלא הצליחה
             if (!response.IsSuccessStatusCode)
             {
                 var responseContent = await response.Content.ReadAsStringAsync();
                 throw new Exception($"לא הצלחנו לנתח את המידע. סטטוס: {response.StatusCode}. תשובה: {responseContent}");
             }
-            Console.WriteLine("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
-            // קריאת התשובה מ-API
+            var responseString = await response.Content.ReadAsStringAsync();
 
-            var aiResponse = await response.Content.ReadFromJsonAsync<AIResponse>();
-            Console.WriteLine("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC");
+            var aiResponse = await GetAiResponseAsync(responseString);
             if (aiResponse == null)
             {
                 throw new Exception("AI החזיר תשובה ריקה.");
             }
-            Console.WriteLine("--------------------------***********************************");
-            // עיבוד התשובה
-          
+
+
             ProcessAiResponse(aiResponse);
-            Console.WriteLine("-3333333333333333333333333333-***********************************");
 
 
-            //_context.AIResponses.Add(aiResponse);
-            //await _context.SaveChangesAsync();
+         
 
             return aiResponse;
         }
         catch (HttpRequestException httpEx)
         {
-            // טיפול בשגיאות רשת (כגון בעיות חיבור ל-API)
-            Console.WriteLine($"שגיאה בחיבור ל-API: {httpEx.Message}");
             throw new Exception("בעיה בחיבור ל-API.", httpEx);
         }
         catch (System.Text.Json.JsonException jsonEx)
         {
-            // טיפול בשגיאות parsing של JSON
-            Console.WriteLine($"שגיאה בקריאת התשובה מ-API: {jsonEx.Message}");
             throw new Exception("שגיאה בקריאת התשובה מ-API.", jsonEx);
         }
         catch (Exception ex)
         {
-            // טיפול בשגיאות כלליות
-            Console.WriteLine($"שגיאה כללית: {ex.Message}");
             throw new Exception("שגיאה כלשהי במהלך הפעולה.", ex);
         }
     }
 
+
     private void ProcessAiResponse(AIResponse aiResponse)
     {
-        Console.WriteLine("2222222222222222222222222***********************************");
-        // עיבוד שפות
 
-        // רשימת השפות התקניות
-        var validLanguages = new[] { "c", "c++", "java", "cobol", "python", "javascript", "ruby", "php", ".net" };
+        var validLanguages = new[] { "python", "java", "c#", "c++", "javascript", "typescript", "php", "ruby", "swift", "kotlin", "go", "c", ".net", "react" };
 
         if (aiResponse.Languages != null)
         {
             aiResponse.Languages = string.Join(", ", aiResponse.Languages
-                .Split(',') // מפריד את המיתר לפי פסיקים
-                .Select(language => language.Trim().ToLower()) // מנקה רווחים וממיר לאותיות קטנות
-                .Where(language => validLanguages.Contains(language)) // מסנן לפי שפות תקניות
-                .ToList());
+          .Split(',')
+          .Select(language => language.Trim())
+          .Where(language => validLanguages.Contains(language, StringComparer.OrdinalIgnoreCase))
+          .ToList());
+
+
         }
 
-
-
-        // המרת ניסיון
         if (aiResponse.Experience != null)
         {
             aiResponse.Experience = int.TryParse(aiResponse.Experience.ToString(), out int experienceYears)
@@ -312,9 +159,11 @@ public class AIService : IAIService
         }
         else
         {
-            aiResponse.Experience = 0; // אם אין מידע, מגדירים 0
+            aiResponse.Experience = 0;
         }
+
     }
+
 
 }
 

@@ -14,6 +14,7 @@ using Amazon.Extensions.NETCore.Setup;
 using Microsoft.Extensions.Options;
 using DevWork.core.Services;
 using Microsoft.IdentityModel.Logging;
+using System;
 
 
 Console.WriteLine("Server started");
@@ -25,15 +26,22 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 DotNetEnv.Env.Load();
+//--------------- להחזיר כשמעלה לענן
+//var connectionString = Environment.GetEnvironmentVariable("ConnectionString");
 
-var connectionString = Environment.GetEnvironmentVariable("ConnectionString");
+//Console.WriteLine("Connection string: " + connectionString);
 
-Console.WriteLine("Connection string: " + connectionString);
+//builder.Services.AddDbContext<DataContext>(options =>
+//    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+
+//--------להוריד כשמחזירה לענן, ולהסיר מ appsetting את המשתנה
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-
+//-------------עד כאן
 
 // רישום AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
@@ -190,7 +198,6 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-//------------------------------------------
 IdentityModelEventSource.ShowPII = true;
 
 
@@ -209,7 +216,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 
-// אל תיצור את ה-s3Client שוב כאן, כי יש לך אותו ב-S3Service כבר
 var awsAccessKey = Environment.GetEnvironmentVariable("AWS_ACCESS_KEY_ID");
 var awsSecretKey = Environment.GetEnvironmentVariable("AWS_SECRET_ACCESS_KEY");
 var region = Amazon.RegionEndpoint.GetBySystemName(Environment.GetEnvironmentVariable("AWS_REGION"));
@@ -218,23 +224,11 @@ var region = Amazon.RegionEndpoint.GetBySystemName(Environment.GetEnvironmentVar
 
 if (string.IsNullOrEmpty(awsAccessKey) || string.IsNullOrEmpty(awsSecretKey) || region == null)
 {
-    // הוספת טיפול בשגיאה אם יש משהו חסר
     Console.WriteLine("חסרים פרטי AWS.");
     return;
 }
 
 var s3Service = new S3Service(awsAccessKey, awsSecretKey, region);
-
-// הוספת אפשרות להעביר contentType בקונטקסט של ה-URL
-//app.MapGet("/generate-presigned-url", ([FromQuery] string fileName, [FromQuery] string contentType) =>
-//{
-//    var presignedUrl = s3Service.GeneratePresignedUrl(fileName, contentType);
-//    return Results.Ok(new { url = presignedUrl });
-//});
-
-
-
-
 
 
 
@@ -250,11 +244,10 @@ FilesEndpoints.Files(app);
 ExtractedDataEndpoints.ExtractedData(app);
 UsersEndpoints.Users(app);
 AuthEndpoint.Auth(app);
-
-
 ReminderEndpoints.Reminders(app);
 // =========== endpoints injection ===========
-Console.WriteLine("Key: " + builder.Configuration["JWT:Key"]);
+
+
 
 
 

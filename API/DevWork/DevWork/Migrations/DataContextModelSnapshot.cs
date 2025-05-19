@@ -73,6 +73,9 @@ namespace DevWork.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext");
 
+                    b.Property<string>("DisplayName")
+                        .HasColumnType("longtext");
+
                     b.Property<string>("EmployerEmail")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -125,6 +128,10 @@ namespace DevWork.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<string>("DisplayName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("EmployerEmail")
                         .IsRequired()

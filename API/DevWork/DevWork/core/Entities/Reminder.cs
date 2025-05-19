@@ -11,9 +11,9 @@ namespace DevWork.core.Entities
 
         public string? Content { get; set; }
 
-        public string TriggerType { get; set; } = "time"; // "time", "download", "save"
-        public int? TriggerTargetId { get; set; } // למשל מזהה משרה
-        public DateTime? Time { get; set; } // רלוונטי רק ל-type 'time'
+        public string TriggerType { get; set; } = "time"; // time, save, download - for development
+        public int? TriggerTargetId { get; set; }
+        public DateTime? Time { get; set; } 
         public bool IsRead { get; set; } = false;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }

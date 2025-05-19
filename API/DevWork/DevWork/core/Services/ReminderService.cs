@@ -26,12 +26,6 @@ namespace DevWork.core.Services
             return reminder;
         }
 
-        public async Task<List<Reminder>> GetPendingByTriggerAsync(string triggerType, int triggerTargetId, int userId)
-        {
-            return await _context.Reminders
-                .Where(r => r.UserId == userId && r.TriggerType == triggerType && r.TriggerTargetId == triggerTargetId && !r.IsRead)
-                .ToListAsync();
-        }
 
         public async Task SetAsDoneAsync(int id)
         {
@@ -59,14 +53,6 @@ namespace DevWork.core.Services
                 .ToListAsync();
         }
 
-        //public async Task DeleteAsync(int id)
-        //{
-        //    var reminder = await _context.Reminders.FindAsync(id);
-        //    if (reminder != null)
-        //    {
-        //        _context.Reminders.Remove(reminder);
-        //        await _context.SaveChangesAsync();
-        //    }
-        //}
+
     }
 }

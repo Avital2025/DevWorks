@@ -12,11 +12,6 @@ public interface IS3Service
 public class S3Service : IS3Service
 {
     private readonly IAmazonS3 _s3Client;
-    private string SanitizeFileName(string fileName)
-    {
-        // מנקה תווים לא חוקיים
-        return string.Concat(fileName.Split(Path.GetInvalidFileNameChars()));
-    }
     public S3Service(string awsAccessKey, string awsSecretKey, Amazon.RegionEndpoint region)
     {
         _s3Client = new AmazonS3Client(awsAccessKey, awsSecretKey, region);
@@ -27,22 +22,24 @@ public class S3Service : IS3Service
       
     }
 
+    private string SanitizeFileName(string fileName)
+    {
+        return string.Concat(fileName.Split(Path.GetInvalidFileNameChars()));
+    }
+
+
+
     public async Task<byte[]> DownloadFileAsync(string signedFileUrl)
     {
-        // שימוש ב-URL חתום (כפי שקיבלת מ-API)
         var uri = new Uri(signedFileUrl);
 
         var key = Uri.UnescapeDataString(uri.AbsolutePath.TrimStart('/'));
-        var fileName = Path.GetFileName(key); // מקבל רק את שם הקובץ, בלי פרמטרי חתימה
+        var fileName = Path.GetFileName(key); 
         fileName = SanitizeFileName(fileName);
-        //Console.WriteLine("File Name: " + fileName);
-
-        //Console.WriteLine($"Decoded Key: {key}");
-        //Console.WriteLine($"------------------------- uri: {uri}");
-
+   
         var request = new GetObjectRequest
         {
-            BucketName = "devwork",  // bucket שאת משתמשת בו
+            BucketName = "devwork",
             Key = key
         };
 
@@ -56,16 +53,15 @@ public class S3Service : IS3Service
     public async Task<string> GeneratePreSignedUrlAsync(string fileName, HttpVerb verb)
     {
 
-        Console.WriteLine("2222222222222222222");
-        string cleanFileName = fileName.Trim().Replace(" ", "_"); // מחליף רווחים בקו תחתון
-        cleanFileName = Uri.EscapeDataString(cleanFileName); // ממיר תווים מיוחדים
+        string cleanFileName = fileName.Trim().Replace(" ", "_"); 
+        cleanFileName = Uri.EscapeDataString(cleanFileName); 
         var extension = Path.GetExtension(fileName).ToLower();
         var request = new GetPreSignedUrlRequest
         {
             BucketName ="devwork",
             Key = cleanFileName,
             Verb = verb,
-            Expires = DateTime.UtcNow.AddDays(7),  // תוקף של 7 ימים
+            Expires = DateTime.UtcNow.AddDays(7),  
 
             ContentType = "application/octet-stream"
         };
@@ -75,18 +71,16 @@ public class S3Service : IS3Service
 
     public async Task<string> GeneratePreSignedUrlForDownloadAsync(string fileName)
     {
-        // יצירת בקשה ל-PreSigned URL עבור פעולה של GET
 
         Console.WriteLine("fileName" + fileName);
         var request = new GetPreSignedUrlRequest
         {
-            BucketName = "devwork",  // שם ה-bucket
-            Key = fileName,         // שם הקובץ ב-S3
-            Verb = HttpVerb.GET,    // פעולה GET להורדה
-            Expires = DateTime.UtcNow.AddDays(7),  // תוקף של 7 ימים
+            BucketName = "devwork",  
+            Key = fileName,        
+            Verb = HttpVerb.GET,    
+            Expires = DateTime.UtcNow.AddDays(7),
         };
 
-        // הפקת ה-PreSigned URL
         string presignedUrl = _s3Client.GetPreSignedURL(request);
 
         return presignedUrl;

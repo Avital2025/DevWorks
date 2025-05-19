@@ -1,6 +1,6 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Typography, Button, Paper, Box, Fade, Divider, } from "@mui/material"
-import type { Reminder } from "../types/reminderType"
 import AccessTimeIcon from "@mui/icons-material/AccessTime"
+import { Reminder } from "../../types/reminderType"
 
 export default function ReminderDialog({
     reminder,
@@ -97,4 +97,3 @@ export default function ReminderDialog({
 }
 
 
-//final

@@ -62,4 +62,3 @@ const getRandomMessage = () => {
 
 export default ProtectedRoute;
 
-//funal

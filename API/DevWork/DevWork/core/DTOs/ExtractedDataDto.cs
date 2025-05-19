@@ -6,21 +6,16 @@ namespace DevWork.Core.Dto
     public class ExtractedDataDto
     {
 
-        public string ProjectTitle { get; set; }
-        public string ProjectDescription { get; set; }
-        public int? RequiredExperience { get; set; }
-
-        //public bool IsActive { get; set; }
-
-
-        public UserDto employer { get; set; }
-
-        public string WorkPlace { get; set; }
-        public string ProgrammingLanguages { get; set; }
-        public string RemoteWorkAvailable { get; set; }
-        public string EnglishLevel { get; set; }
-
-       public DateTime CreatedAt { get; set; }
-       public DateTime UpdatedAt { get; set; }
+        public string Title { get; set; }       
+        public string DisplayName { get; set; }       
+        public string Description { get; set; }         
+        public string EmployerEmail { get; set; }         
+        public int  EmployerID { get; set; }         
+        public string EnglishLevel { get; set; }          
+        public int? Experience { get; set; }              
+        public string Languages { get; set; }           
+        public bool? RemoteWork { get; set; }            
+        public string WorkPlace { get; set; }           
     }
 }
+

@@ -1,6 +1,4 @@
-"use client"
 import reminder from "../assets/reminder.png";
-
 import type React from "react"
 import { useReminderService } from "../utils/useReminderService"
 import { Box, Button, Container, TextField, Typography, Paper, InputAdornment, Fade } from "@mui/material"
@@ -16,7 +14,6 @@ export default function AddReminderPage() {
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const [dateTime, setDateTime] = useState("")
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
@@ -46,7 +43,6 @@ export default function AddReminderPage() {
     setContent("")
     setDateTime("")
   }
-
   return (
 <Box
   sx={{
@@ -60,9 +56,6 @@ export default function AddReminderPage() {
     py: 6,
   }}
 >
-
-
-
     <Container maxWidth="sm" sx={{ py: 3 }}>
       <Fade in={true} timeout={500}>
         <Paper
@@ -88,7 +81,6 @@ export default function AddReminderPage() {
               Add a New Reminder
             </Typography>
           </Box>
-
           <Box component="form" onSubmit={handleSubmit} sx={{ p: 3 }}>
             <Box display="flex" flexDirection="column" gap={2.5}>
               <TextField
@@ -112,7 +104,6 @@ export default function AddReminderPage() {
                   },
                 }}
               />
-
               <TextField
                 label="Content (optional)"
                 value={content}
@@ -135,7 +126,6 @@ export default function AddReminderPage() {
                   },
                 }}
               />
-
               <TextField
                 label="Reminder Date & Time"
                 type="datetime-local"
@@ -187,4 +177,3 @@ export default function AddReminderPage() {
 }
 
 
-// להוציא עיצוב

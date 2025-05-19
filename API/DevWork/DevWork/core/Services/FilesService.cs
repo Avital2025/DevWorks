@@ -9,7 +9,8 @@ using DevWork.Service.Iservice;
 using DevWork.Service.IService;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
-using static DevWork.Core.Dto.FilesDto;
+using DocumentFormat.OpenXml.Packaging;
+using UglyToad.PdfPig;
 
 public class FilesService : IFilesService
 {
@@ -27,101 +28,109 @@ public class FilesService : IFilesService
         _dataExtractor = dataExtractor;
         _aiService = aIService;
     }
-    //public async Task<ExtractedDataEntity> ProcessFile(string fileUrl, int employerId )
-    //{
-    //    var fileData = await _s3Service.DownloadFileAsync(fileUrl);
-    //    var extractedData = await _dataExtractor.ExtractData(fileData, employerId);
 
 
-    //    var fileText = Encoding.UTF8.GetString(fileData);
 
-    //    // שימו לב, ה-AI מייצר תשובה על בסיס הנתונים שהפקעתם
-    //    var aiResponse = await _aiService.SaveProjectDescriptionToDB(fileText);
 
-    //public async Task<bool> CheckIfFileExistsAsync(string fileName, int employerId)
-    //{
-    //    Console.WriteLine("---------------------------employerId"+ employerId);
-    //    Console.WriteLine("---------------------------fileName" + fileName);
-    //    // בדיקה אם הקובץ כבר קיים במסד הנתונים
-    //    return await _context.filesList
-    //        .AnyAsync(f => f.FileName == fileName && f.EmployerID == employerId);
-
-    //}
-
-    public async Task<bool> CheckIfFileExistsAsync(string fileName, int employerId)
+    public async Task<bool> CheckIfFileExistsAsync(string displayName, int employerId)
     {
-        Console.WriteLine("---------------------------employerId: " + employerId);
-        Console.WriteLine("---------------------------fileName: " + fileName);
-
-        // בדיקה אם הקובץ כבר קיים במסד הנתונים
         bool fileExists = await _context.filesList
-            .AnyAsync(f => f.FileName == fileName && f.EmployerID == employerId);
-
-        // הדפסת התוצאה לקונסול
-        if (fileExists)
-        {
-            Console.WriteLine("File exists: true");
-        }
-        else
-        {
-            Console.WriteLine("File exists: false");
-        }
-
+            .AnyAsync(f => f.DisplayName == displayName && f.EmployerID == employerId);
         return fileExists;
     }
 
+    public static string DetectFileType(byte[] fileBytes)
+    {
+        if (fileBytes == null || fileBytes.Length < 4)
+            return "unknown";
 
-    //    // שמירת תשובת ה-AI
-    //    _context.AIResponses.Add(aiResponse);
-    //    await _context.SaveChangesAsync();
+        // PDF
+        if (fileBytes.Take(4).SequenceEqual(new byte[] { 0x25, 0x50, 0x44, 0x46 })) // %PDF
+            return "pdf";
 
-    //    // שמירת ExtractedData עם AIResponseId
-    //    extractedData.AIResponseId = aiResponse.Id;
-    //    _context.extractedDataList.Add(extractedData);
-    //    await _context.SaveChangesAsync();
+        // DOCX
+        try
+        {
+            using var ms = new MemoryStream(fileBytes);
+            using var archive = new System.IO.Compression.ZipArchive(ms);
+            if (archive.Entries.Any(e => e.FullName == "[Content_Types].xml"))
+                return "docx";
+        }
+        catch
+        {
+            // Not a zip – ignore
+        }
 
-    //    return extractedData;
-    //}
+        // DOC (ישן)
+        if (fileBytes.Take(4).SequenceEqual(new byte[] { 0xD0, 0xCF, 0x11, 0xE0 }))
+            return "doc";
+
+        return "unknown";
+    }
 
     public async Task<ExtractedDataEntity> ProcessFile(string fileUrl, int employerId, string projectName)
     {
         var fileData = await _s3Service.DownloadFileAsync(fileUrl);
-        var fileText = Encoding.UTF8.GetString(fileData);
-        Console.WriteLine("????????????????????????????");
+        var fileType = DetectFileType(fileData); // זיהוי אמיתי לפי תוכן
+        Console.WriteLine($"File type is: {fileType}");
 
+        string fileText;
 
-        // קריאת ה-AI פעם אחת בלבד
+        switch (fileType)
+        {
+            case "docx":
+                using (var stream = new MemoryStream(fileData))
+                using (var doc = WordprocessingDocument.Open(stream, false))
+                {
+                    fileText = doc.MainDocumentPart.Document.Body.InnerText;
+                }
+                break;
+
+            case "pdf":
+                using (var stream = new MemoryStream(fileData))
+                using (var pdf = PdfDocument.Open(stream))
+                {
+                    var sb = new StringBuilder();
+                    foreach (var page in pdf.GetPages())
+                    {
+                        sb.Append(page.Text);
+                    }
+                    fileText = sb.ToString();
+                }
+                break;
+
+            case "txt":
+            default:
+                fileText = Encoding.UTF8.GetString(fileData);
+                break;
+        }
+
         var aiResponse = await _aiService.SaveProjectDescriptionToDB(fileText);
-        Console.WriteLine("aaaaafter  SaveProjectDescriptionToDB");
-        //_context.AIResponses.Add(aiResponse);
-        //Console.WriteLine("aaaaafter  add");
-        //await _context.SaveChangesAsync();
-        //Console.WriteLine("aaaaafter SaveChangesAsync ");
+        Console.WriteLine("Done calling SaveProjectDescriptionToDB");
 
         var employer = _context.usersList.FirstOrDefault(u => u.Id == employerId);
         string employerEmail = employer?.Email ?? "";
         string employerIdString = employerId.ToString();
         string projectNameWithoutEmployerId = projectName.Substring(employerIdString.Length);
+
         var fileEntity = new FilesEntity
         {
-            // ממלאים את הערכים המתאימים לפי הצורך
-            FileName = projectNameWithoutEmployerId, // אתה יכול להפיק את שם הקובץ מתוך ה-URL
-            FileType = Path.GetExtension(fileUrl), // סוג הקובץ (למשל .pdf או .jpg)
-            Size = fileData.Length,  // גודל הקובץ בבתים
-            S3Key = fileUrl,  // אם אתה שומר את ה-URL או המזהה של הקובץ ב-S3
-            EmployerID = employerId,  // המעסיק שהעלה את הקובץ
+            FileName = projectNameWithoutEmployerId,
+            DisplayName = projectNameWithoutEmployerId,
+            FileType = "." + fileType,
+            Size = fileData.Length,
+            S3Key = fileUrl,
+            EmployerID = employerId,
             EmployerEmail = employerEmail,
-            CreatedAt = DateTime.Now,  // זמן יצירת הקובץ
-            UpdatedAt = DateTime.Now,  // זמן עדכון הקובץ
-            IsDeleted = false,  // אם הקובץ לא נמחק, זה לא פעיל בינתיים
-        }; 
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now,
+            IsDeleted = false,
+        };
 
-        _context.filesList.Add(fileEntity);  // הוספה לטבלה של הקבצים
-        await _context.SaveChangesAsync();   // שמירה ב-DB
+        _context.filesList.Add(fileEntity);
+        await _context.SaveChangesAsync();
 
-        // שולח את התשובה לפונקציה ExtractData בלי לקרוא שוב ל-AI
         var extractedData = await _dataExtractor.ExtractData(fileData, employerId, aiResponse, projectName);
-
         _context.extractedDataList.Add(extractedData);
         await _context.SaveChangesAsync();
 
@@ -129,110 +138,73 @@ public class FilesService : IFilesService
     }
 
 
-    // מחיקה לוגית של קובץ
-       public async Task<bool> DeleteFileAsync(int fileId)
+    public async Task<bool> DeleteFileAsync(int fileId)
     {
-        // חיפוש הקובץ לפי ה-ID בטבלת הקבצים
         var file = await _context.filesList.FindAsync(fileId);
-
-        // אם הקובץ לא נמצא, החזר false
         if (file == null) return false;
 
-        // שינוי השדה isDeleted ל־true
         file.IsDeleted = true;
 
-        // שמירת השינויים במסד הנתונים
+        var employerId = file.EmployerID;
+        var fileTitle = file.FileName;
+
+        var extractedData = await _context.extractedDataList
+            .Where(e => e.EmployerID == employerId && e.Title == fileTitle)
+            .ToListAsync();
+
+        foreach (var data in extractedData)
+        {
+            data.IsActive = false;
+            data.UpdatedAt = DateTime.Now;
+        }
+
         await _context.SaveChangesAsync();
         return true;
-    
+    }
 
-}
-
-// עריכת שם קובץ
-public async Task<bool> RenameFileAsync(int fileId, string newFileName)
+    public async Task<bool> RenameFileAsync(int fileId, string newFileName)
     {
-        // חיפוש הקובץ לפי ה-ID בטבלת הקבצים
         var file = await _context.filesList.FindAsync(fileId);
-
-        // אם הקובץ לא נמצא, החזר false
         if (file == null) return false;
 
-        // עדכון שם הקובץ
-        file.FileName = newFileName;
+        var oldFileName = file.FileName;
+        var employerId = file.EmployerID;
 
-        // שמירת השינויים במסד הנתונים
+        // עדכון שם הקובץ בטבלת filesList
+        file.DisplayName = newFileName;
+        file.UpdatedAt = DateTime.Now; // עדכון תאריך שינוי
+
+        // עדכון גם בטבלת ExtractedDataEntity לפי EmployerID + ProjectTitle (שזה שם הקובץ)
+        var matchingData = await _context.extractedDataList
+            .Where(x => x.EmployerID == employerId && x.Title == oldFileName)
+            .ToListAsync();
+
+        foreach (var data in matchingData)
+        {
+            data.DisplayName = newFileName;
+            data.UpdatedAt = DateTime.Now;
+        }
+
         await _context.SaveChangesAsync();
         return true;
-    
-}
+    }
 
 
-
-    //public async Task<IEnumerable<FilesDto>> GetUserFilesAsync(string userId)
-    //{
-    //    if (!int.TryParse(userId, out int employerId))
-    //    {
-    //        return new List<FilesDto>(); // במקרה שה-ID לא תקין
-    //    }
-
-    //    return await _context.filesListDto
-    //        .Where(f => f.EmployerId == employerId)
-    //        .Select(f => new FilesDto
-    //        {
-    //            Id = f.Id,
-    //            FileName = f.FileName,
-    //            FileUrl = f.FileUrl,
-    //            FileType = f.FileType,
-    //            Size = f.Size,
-    //            CreatedAt = f.CreatedAt,
-    //            EmployerId = f.EmployerId  // כאן אנחנו מחזירים את ה-EmployerId
-    //        })
-    //        .ToListAsync();
-    //}
-
-    //public async Task<IEnumerable<FilesDto>> GetUserFilesAsync(string userId)
-    //{
-    //    userId = userId?.Trim(); // חשוב שוב
-    //    if (!int.TryParse(userId, out int employerId))
-    //    {
-    //        Console.WriteLine("Failed to parse userId to int");
-    //        return new List<FilesDto>();
-    //    }
-
-    //    var results = await _context.filesList
-    //        .Where(f => f.EmployerID == employerId)
-    //        .Select(f => new FilesDto
-    //        {
-
-    //            Id = f.Id,
-    //            FileName = f.FileName,
-    //            FileUrl = f.S3Key,
-    //            FileType = f.FileType,
-    //            Size = f.Size,
-    //            CreatedAt = f.CreatedAt,
-    //            EmployerId = f.EmployerID
-    //        })
-    //        .ToListAsync();
-
-    //    Console.WriteLine($"Found {results.Count} files for employerId {employerId}");
-
-    //    return results;
-    //}
     public async Task<IEnumerable<FilesDto>> GetUserFilesAsync(string userId)
     {
-        userId = userId?.Trim(); // חשוב שוב
+        userId = userId?.Trim(); 
         if (!int.TryParse(userId, out int employerId))
         {
             Console.WriteLine("Failed to parse userId to int");
             return new List<FilesDto>();
         }
 
-        var results = await _context.filesList
+        return await _context.filesList
             .Where(f => f.EmployerID == employerId && !f.IsDeleted)
             .Select(f => new FilesDto
             {
                 Id = f.Id,
-                FileName = f.FileName,
+                FileName = f.DisplayName,
                 FileUrl = f.S3Key,
                 FileType = f.FileType,
                 Size = f.Size,
@@ -241,42 +213,10 @@ public async Task<bool> RenameFileAsync(int fileId, string newFileName)
             })
             .ToListAsync();
 
-        Console.WriteLine($"Found {results.Count} files for employerId {employerId}");
 
-        foreach (var file in results)
-        {
-            Console.WriteLine($"Id: {file.Id} | FileName: {file.FileName} | S3Key/FileUrl: {file.FileUrl}");
-        }
-
-        return results;
     }
 
 
-    // פונקציה להורדת הקובץ!!
-
-    //public async Task<string?> GetDownloadUrl(int fileId)
-    //{
-    //    var file = await _context.filesList.FindAsync(fileId);
-    //    if (file is null) return null;
-
-    //    var request = new GetPreSignedUrlRequest
-    //    {
-    //        BucketName = "devwork", // שם הבקט שלך
-    //        Key = file.StoredFileName, // שם הקובץ כפי שהוא נשמר ב-S3
-    //        Verb = HttpVerb.GET,
-    //        Expires = DateTime.UtcNow.AddMinutes(15) // תוקף הלינק
-    //    };
-
-    //    return await _s3Service.GeneratePreSignedUrlAsync(fileName, HttpVerb.PUT);
-    //}
-
-
-
-    public async Task<IEnumerable<FilesDto>> GetAllFiles()
-    {
-        var files = await _context.filesList.ToListAsync();
-        return _mapper.Map<IEnumerable<FilesDto>>(files);
-    }
 
     public async Task<FilesDto?> GetFileById(int fileId)
     {
@@ -284,13 +224,6 @@ public async Task<bool> RenameFileAsync(int fileId, string newFileName)
         return file is not null ? _mapper.Map<FilesDto>(file) : null;
     }
 
-    //public async Task<FilesDto> AddFile(FilesPostModel filePostModel)
-    //{
-    //    var fileEntity = _mapper.Map<FilesEntity>(filePostModel);
-    //    _context.filesList.Add(fileEntity);
-    //    await _context.SaveChangesAsync();
-    //    return _mapper.Map<FilesDto>(fileEntity);
-    //}
 
     public async Task<FilesDto?> UpdateFile(FilesPostModel filePostModel)
     {

@@ -1,72 +1,38 @@
-import type React from "react"
-import { useEffect, useState } from "react"
-import { useReminderService } from "../utils/useReminderService"
-import type { Reminder } from "../types/reminderType"
-import { Box, Typography, Container, CircularProgress, Pagination, Paper, List, ListItem, IconButton, 
-  Tooltip, Chip, Card,} from "@mui/material"
-import ReminderDialog from "./ReminderDialog"
+import {
+  Box, Typography, Paper, List, ListItem, IconButton, Tooltip, Chip, Card, Pagination,
+} from "@mui/material"
 import AccessTimeIcon from "@mui/icons-material/AccessTime"
 import CheckCircleIcon from "@mui/icons-material/CheckCircle"
 import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive"
 import NotificationsOffIcon from "@mui/icons-material/NotificationsOff"
 import InfoIcon from "@mui/icons-material/Info"
+import { ReactNode } from "react"
+import { Reminder } from "../../types/reminderType"
 
-const PAGE_SIZE = 8 
-export default function RemindersPage() {
-  const { fetchReminders, markAsDone } = useReminderService()
-  const [reminders, setReminders] = useState<Reminder[]>([])
-  const [loading, setLoading] = useState(true)
-  const [selectedReminder, setSelectedReminder] = useState<Reminder | null>(null)
-  const [page, setPage] = useState(1)
+type Props = {
+  reminders: Reminder[]
+  pagedReminders: Reminder[]
+  page: number
+  totalPages: number
+  onDone: (id: number) => void
+  onPageChange: (_: React.ChangeEvent<unknown>, value: number) => void
+  onOpenDetails: (reminder: Reminder) => void
+  children?: ReactNode
+}
 
-  useEffect(() => {
-    fetchReminders()
-      .then((data) => {
-        const sorted = data.sort((a, b) => {
-          if (a.isRead !== b.isRead) return a.isRead ? 1 : -1
-          return new Date(b.time ?? 0).getTime() - new Date(a.time ?? 0).getTime()
-        })
-        setReminders(sorted)
-      })
-      .finally(() => setLoading(false))
-  }, [])
-
-  const handleDone = async (id: number) => {
-    await markAsDone(id)
-    setReminders((prev) => prev.map((r) => (r.id === id ? { ...r, isRead: true } : r)))
-    window.dispatchEvent(new Event("reminders-updated"))
-  }
-
-  const openDetails = (reminder: Reminder) => setSelectedReminder(reminder)
-  const closeDetails = () => setSelectedReminder(null)
-
-  const totalPages = Math.ceil(reminders.length / PAGE_SIZE)
-  const pagedReminders = reminders.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE)
-
-  const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value)
-  }
-
-  if (loading) {
-    return (
-      <Container maxWidth="sm" sx={{ textAlign: "center", mt: 4, mb: 4 }}>
-        <CircularProgress size={40} thickness={4} color="primary" />
-        <Typography variant="body1" sx={{ mt: 2, color: "text.secondary" }}>
-          Loading reminders...
-        </Typography>
-      </Container>
-    )
-  }
+export default function ReminderList({
+  reminders,
+  pagedReminders,
+  page,
+  totalPages,
+  onDone,
+  onPageChange,
+  onOpenDetails,
+  children,
+}: Props) {
   return (
-    <Container maxWidth="sm" sx={{ py: 2 }}>
-      <Paper
-        elevation={2}
-        sx={{
-          borderRadius: 2,
-          overflow: "hidden",
-          direction: "rtl",
-        }}
-      >
+    <Box maxWidth="sm" mx="auto" py={2}>
+      <Paper elevation={2} sx={{ borderRadius: 2, overflow: "hidden", direction: "rtl" }}>
         <Box
           sx={{
             bgcolor: "primary.light",
@@ -80,7 +46,7 @@ export default function RemindersPage() {
           <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <NotificationsActiveIcon />
             <Typography variant="h6" fontWeight="bold">
-            Recent reminders
+              Recent reminders
             </Typography>
           </Box>
           {reminders.length > 0 && (
@@ -95,30 +61,14 @@ export default function RemindersPage() {
 
         <Box sx={{ p: 2 }}>
           {reminders.length === 0 ? (
-            <Box
-              sx={{
-                textAlign: "center",
-                py: 4,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                gap: 1,
-              }}
-            >
+            <Box sx={{ textAlign: "center", py: 4, display: "flex", flexDirection: "column", alignItems: "center", gap: 1 }}>
               <NotificationsOffIcon sx={{ fontSize: 40, color: "text.disabled" }} />
               <Typography variant="body1" color="text.secondary">
                 No reminders to display.
               </Typography>
             </Box>
           ) : (
-            <List
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 2,
-                p: 0,
-              }}
-            >
+            <List sx={{ display: "flex", flexDirection: "column", gap: 2, p: 0 }}>
               {pagedReminders.map((reminder) => (
                 <Card
                   key={reminder.id}
@@ -134,12 +84,7 @@ export default function RemindersPage() {
                     },
                   }}
                 >
-                  <ListItem
-                    sx={{
-                      py: 1.5,
-                      px: 2,
-                    }}
-                  >
+                  <ListItem sx={{ py: 1.5, px: 2 }}>
                     <Box sx={{ width: "100%" }}>
                       <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 0.5 }}>
                         <Typography
@@ -187,7 +132,7 @@ export default function RemindersPage() {
                           <Tooltip title="פרטים">
                             <IconButton
                               size="small"
-                              onClick={() => openDetails(reminder)}
+                              onClick={() => onOpenDetails(reminder)}
                               sx={{ color: "primary.main" }}
                             >
                               <InfoIcon fontSize="small" />
@@ -201,7 +146,7 @@ export default function RemindersPage() {
                                 color="success"
                                 onClick={(e) => {
                                   e.stopPropagation()
-                                  handleDone(reminder.id)
+                                  onDone(reminder.id)
                                 }}
                               >
                                 <CheckCircleIcon fontSize="small" />
@@ -217,13 +162,12 @@ export default function RemindersPage() {
             </List>
           )}
 
-          {/* פאגינציה */}
-          {reminders.length > PAGE_SIZE && (
+          {reminders.length > 8 && (
             <Box py={2} display="flex" justifyContent="center" mt={2}>
               <Pagination
                 count={totalPages}
                 page={page}
-                onChange={handlePageChange}
+                onChange={onPageChange}
                 color="primary"
                 size="small"
                 sx={{
@@ -236,11 +180,7 @@ export default function RemindersPage() {
           )}
         </Box>
       </Paper>
-
-      <ReminderDialog reminder={selectedReminder} onClose={closeDetails} />
-    </Container>
+      {children}
+    </Box>
   )
 }
-
-
-// לחלק את העמוד?

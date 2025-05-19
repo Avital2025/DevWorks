@@ -9,7 +9,7 @@ import ProtectedRoute from "./Components/ProtectedRoute";
 import { useContext } from "react";
 import { IsLogin } from "./App";
 import AddReminders from "./Components/AddReminders";
-import RemindersPage from "./Components/Reminders";
+import RemindersPage from "./Components/Notifications/Reminders";
 
 function LoginOrHome() {
   const [isLogin] = useContext(IsLogin);
@@ -23,7 +23,7 @@ export default createBrowserRouter([
     children: [
       { path: "about", element: <About /> },
       { path: "HomePage", element: <Home /> },
-      { path: "login", element: <LoginOrHome /> }, // משתמשים ברכיב שעושה את הבדיקה
+      { path: "login", element: <LoginOrHome /> }, 
       { path: "addfiles", element: (<ProtectedRoute> <AddFiles /> </ProtectedRoute> )},
       { path: "userFiles", element: (<ProtectedRoute> <EmployerFiles /> </ProtectedRoute> )},
       { path: "reminders", element: (<ProtectedRoute> <RemindersPage /> </ProtectedRoute> )},

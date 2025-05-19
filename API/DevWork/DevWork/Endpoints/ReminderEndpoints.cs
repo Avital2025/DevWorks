@@ -21,25 +21,11 @@ namespace DevWork.Endpoints
                 if (string.IsNullOrEmpty(userId))
                     return Results.Unauthorized();
 
-                dto.UserId = int.Parse(userId); // יש לשלוח את ה-UserId מתוך ה-Token
+                dto.UserId = int.Parse(userId); 
                 var reminder = await service.CreateAsync(dto);
                 return Results.Created($"/reminders/{reminder.Id}", reminder);
             }).RequireAuthorization();
 
-            remindersRoutes.MapGet("/pending", async (
-                string triggerType,
-                int triggerTargetId,
-                IReminderService service,
-                HttpContext httpContext) =>
-            {
-                var userId = httpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value?.Trim();
-
-                if (string.IsNullOrEmpty(userId))
-                    return Results.Unauthorized();
-
-                var results = await service.GetPendingByTriggerAsync(triggerType, triggerTargetId, int.Parse(userId)); // העברת ה-UserId לשירות
-                return Results.Ok(results);
-            }).RequireAuthorization();
 
             remindersRoutes.MapPost("/{id:int}/done", async (
                 int id,
@@ -68,14 +54,7 @@ namespace DevWork.Endpoints
                 return Results.Ok(results);
             }).RequireAuthorization();
 
-            //remindersRoutes.MapDelete("/{id:int}", async (
-            //    int id,
-            //    IReminderService service) =>
-            //{
-            //    await service.DeleteAsync(id); // אפשר להוסיף פונקציה למחיקה אם דרוש
-            //    return Results.NoContent();
-            //}).RequireAuthorization();
-
+    
 
         }
     }

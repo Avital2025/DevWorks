@@ -17,10 +17,5 @@ namespace DevWork.Core.Dto
 
             public DateTime UpdatedAt { get; set; }
 
-            //public enum UserType
-            //{
-            //    Employer,
-            //    Worker
-            //}
         }
 }

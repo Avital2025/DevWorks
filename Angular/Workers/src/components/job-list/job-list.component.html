@@ -4,13 +4,10 @@
   <button (click)="toggleFilters()"> לסינון משרות לחצו כאן 🔍 </button>
 </div>
 
-
 <div class="filter-container" [ngClass]="{'open': showFilters()}">
   <div class="filter-header"></div>
   <app-filtering (filteredJobs)="updateJobList($event)"></app-filtering>
 </div>
-
-
 
 @if (loading) {
 <div class="loading-container">
@@ -20,11 +17,11 @@
 } @else {
 @for (job of pagedJobs(); track job.projectID) {
 <div class="job-card">
-  <h2>{{ job.title || 'משרה ללא שם' }}</h2>
-  <p><strong>תיאור:</strong> {{ job.description || 'אין תיאור' }}</p>
+  <h2>{{ job.displayName  || 'משרה ללא שם' }}</h2>
+  <p><strong>תיאור משרה:</strong> {{ job.description || 'אין תיאור' }}</p>
   <p><strong>מייל מעסיק:</strong> {{ job.employerEmail }}</p>
   <p><strong>רמת אנגלית:</strong> {{ job.englishLevel || 'לא צוינה' }}</p>
-  <p><strong>ניסיון:</strong> {{ job.experience || 'לא צוינה' }}</p>
+  <p><strong>שנות ניסיון נדרשות:</strong> {{ job.experience || 'לא צוינה' }}</p>
   <p><strong>שפות:</strong> {{ job.languages || 'לא צוינו' }}</p>
   <p><strong>עבודה מרחוק:</strong> {{ job.remoteWork ? 'כן' : 'לא' }}</p>
   <p><strong>מקום עבודה:</strong> {{ job.workPlace || 'לא צוין' }}</p>
@@ -49,7 +46,7 @@
     <div class="no-jobs-message">
       <mat-icon class="no-jobs-icon">search_off</mat-icon>
       <p>לא נמצאו משרות שתואמות לסינון שבחרת.</p>
-      <p>נסו לשנות את תנאי הסינון או לחפש מחר שוב.</p>
+      <p>נסו לשנות את תנאי הסינון או לחפש שוב מאוחר יותר .</p>
     </div>
   }
 @if (jobs().length > pageSize) {

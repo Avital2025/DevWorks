@@ -1,13 +1,15 @@
 ﻿using DevWork.Core.Entities;
+using DevWork.Data;
 namespace DevWork.Service.Iservice
 {
     public interface IAIService
     {
 
 
-        //Task<ProjectAnalysisResult> ParseProjectDescription(string description);
-       // Task SaveProjectDescriptionToDB(string description, int projectId)
-         Task<AIResponse> SaveProjectDescriptionToDB(string fileText);
+
+        Task<AIResponse> SaveProjectDescriptionToDB(string fileText);
+
+
     }
 
 

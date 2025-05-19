@@ -102,6 +102,7 @@
 // };
 
 // export default useFile;
+
 import { useCallback, useState } from "react";
 import Swal from 'sweetalert2';
 import axiosInstance from "../axiosInstance";
@@ -135,7 +136,7 @@ const useFile = () => {
 
     try {
       const checkFileExistsResponse = await axiosInstance.get(`/files/check-file-exists`, {
-        params: { fileName: uniqueFileName, employerId }
+        params: { fileName: FileName, employerId }
       });
 
       if (checkFileExistsResponse.data.exists) {

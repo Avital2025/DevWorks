@@ -34,46 +34,10 @@ public class UserService : IUserService
         _context.usersList.Add(userEntity);
         await _context.SaveChangesAsync();
 
-        // מחזיר את ה-DTO, שכולל את ה-id, fullName ו-email
         return _mapper.Map<UserDto>(userEntity);
     }
 
-    /*
-     * public async Task<User> AddUser(UserPostModel model)
-    {
-        var user = new User
-        {
-            Email = model.Email,
-            PasswordHash = model.PasswordHash,
-            FullName = model.FullName
-        };
 
-        _context.Users.Add(user);
-        await _context.SaveChangesAsync();
-        return user;
-    }
-     * */
-
-    public async Task<UserDto?> UpdateUser(UserPostModel userPostModel)
-    {
-        var existingUser = await _context.usersList.FindAsync(userPostModel.Id);
-        if (existingUser is null) return null;
-
-        _mapper.Map(userPostModel, existingUser); // מעדכן את הישות עם הנתונים מה-DTO
-        await _context.SaveChangesAsync();
-
-        return _mapper.Map<UserDto>(existingUser);
-    }
-
-    public async Task<bool> DeleteUser(int id)
-    {
-
-        var user = await _context.usersList.FindAsync(id);
-        if (user == null) return false;
-        _context.usersList.Remove(user);
-        await _context.SaveChangesAsync();
-        return true;
-    }
     public async Task<UserDto> Authenticate(string email, string password)
     {
         var userEntity = await _context.usersList.FirstOrDefaultAsync(u => u.Email == email);
@@ -83,7 +47,6 @@ public class UserService : IUserService
             return null;
         }
 
-        // המרה מ-UserEntity ל-UserDto
         var userDto = new UserDto
         {
             Id = userEntity.Id,
@@ -96,19 +59,6 @@ public class UserService : IUserService
 
         return userDto;
     }
-
-    //public async Task<UserEntity> Authenticate(string email, string password)
-    //{
-    //    // חפש את המשתמש לפי המייל
-    //    var user = await _context.usersList
-    //        .FirstOrDefaultAsync(u => u.Email == email);
-
-    //    if (user == null || !BCrypt.Net.BCrypt.Verify(password, user.PasswordHash)) // השווה את הסיסמה ל-Hash
-    //    {
-    //        return null; // לא נמצא משתמש עם המייל הזה או שהסיסמה לא נכונה
-    //    }
-    //    return user; // הלוגין הצליח
-    //}
 
 
     public async Task<UserEntity?> GetUserByEmail(string email)
@@ -124,6 +74,8 @@ public class UserService : IUserService
 
         user.FullName = model.FullName;
         user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(model.PasswordHash);
+        user.UpdatedAt = DateTime.UtcNow;
+
 
         await _context.SaveChangesAsync();
         return true;

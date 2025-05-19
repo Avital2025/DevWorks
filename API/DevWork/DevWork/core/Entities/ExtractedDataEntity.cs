@@ -9,10 +9,10 @@ namespace DevWork.Core.Entities
         public int ProjectID { get; set; }
        
         public bool IsActive { get; set; }
-        public int EmployerID { get; set; } // בעל הקובץ
+        public int EmployerID { get; set; } 
         public String EmployerEmail { get; set; } 
-        public int AIResponseId { get; set; } // תשובת ה-AI
-        public string S3Key { get; set; } // ה-S3 Key של הקובץ
+        public int AIResponseId { get; set; } 
+        public string S3Key { get; set; } 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
@@ -20,6 +20,7 @@ namespace DevWork.Core.Entities
         public UserEntity Employer { get; set; }
 
         public string? Title { get; set; }
+        public string? DisplayName { get; set; }
         public string? Description { get; set; }
         public int? Experience { get; set; }
         public string? WorkPlace { get; set; }

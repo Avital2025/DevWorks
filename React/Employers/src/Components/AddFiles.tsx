@@ -61,7 +61,7 @@ const FileUploader = () => {
       </StyledPaper>
 
       <StyledTypography variant="caption" color="textSecondary" align="left">
-        Supported formats: PDF, DOCX, ZIP (max 10MB)
+        Supported formats: PDF, DOCX, txt(max 10MB)
       </StyledTypography>
 
       <StyledButton
@@ -101,5 +101,3 @@ const FileUploader = () => {
 };
 
 export default FileUploader;
-
-//final

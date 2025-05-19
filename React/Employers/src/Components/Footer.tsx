@@ -1,5 +1,3 @@
-"use client"
-
 import {
   Box, Container, Typography, Grid, Link, IconButton,
   Divider, useTheme, alpha, Paper
@@ -175,3 +173,4 @@ export default function Footer() {
     </Paper>
   )
 }
+

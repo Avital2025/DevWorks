@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, useContext } from "react";
 import { Box, IconButton, Drawer, List, ListItem, ListItemButton, ListItemText, Dialog, DialogContent } from "@mui/material";
-import { Home, Info, UploadFile, Menu, Description, Login, AccountCircle } from "@mui/icons-material";
+import { Home, UploadFile, Menu, Description, Login, AccountCircle } from "@mui/icons-material";
 import { IsLogin } from "../App";
 import { Menu as MuiMenu, MenuItem } from "@mui/material";
 import UpdateDetails from "./UpdateDetails";
@@ -44,7 +44,6 @@ export default function ResponsiveNavBar() {
 
         <NavLeft sx={{ display: { xs: "none", md: "flex" } }}>
           <NavLinkStyled to="/HomePage"><Home /> Home</NavLinkStyled>
-          <NavLinkStyled to="/about"><Info /> About</NavLinkStyled>
         </NavLeft>
 
         <NavRight sx={{ display: { xs: "none", md: "flex" } }}>
@@ -107,11 +106,7 @@ export default function ResponsiveNavBar() {
               <Home /> <ListItemText primary="Home" />
             </ListItemButton>
           </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton component={Link} to="/about" onClick={toggleMenu}>
-              <Info /> <ListItemText primary="About" />
-            </ListItemButton>
-          </ListItem>
+
 
           {isLogin && (
             <>
@@ -123,16 +118,6 @@ export default function ResponsiveNavBar() {
               <ListItem disablePadding>
                 <ListItemButton component={Link} to="/addFiles" onClick={toggleMenu}>
                   <UploadFile /> <ListItemText primary="Add files" />
-                </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton component={Link} to="/reminders" onClick={toggleMenu}>
-                  <Info /> <ListItemText primary="Reminders" />
-                </ListItemButton>
-              </ListItem>
-              <ListItem disablePadding>
-                <ListItemButton component={Link} to="/add-reminders" onClick={toggleMenu}>
-                  <Info /> <ListItemText primary="Add reminders" />
                 </ListItemButton>
               </ListItem>
             </>
@@ -154,4 +139,3 @@ export default function ResponsiveNavBar() {
   );
 }
 
-// fnal

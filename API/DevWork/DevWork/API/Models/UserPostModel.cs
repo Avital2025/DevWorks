@@ -14,6 +14,6 @@ namespace DevWork.API.Models
 
         public UserType Type { get; set; }
 
-      
+
     }
 }
