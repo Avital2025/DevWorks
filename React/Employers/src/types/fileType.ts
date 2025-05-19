@@ -1,5 +1,5 @@
 export type FileType = {
-    id: string;  // או number אם ה-id מספרי
+    id: string;  
     fileName: string; 
     createdAt: string; 
     url: string;

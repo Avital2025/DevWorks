@@ -1,4 +1,3 @@
-// src/styles/employerFiles.styles.ts
 import { alpha } from "@mui/material/styles";
 
 export const containerBox = {

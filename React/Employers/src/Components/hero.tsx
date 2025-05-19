@@ -10,7 +10,6 @@ export default function Hero() {
   const theme = useTheme()
   const [isLogin] = useContext(IsLogin);
 
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { 

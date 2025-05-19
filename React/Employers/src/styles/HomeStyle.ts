@@ -81,5 +81,3 @@ export const CenteredBox = styled(Box)`
   gap: 16px;
 `;
 
-
-//final

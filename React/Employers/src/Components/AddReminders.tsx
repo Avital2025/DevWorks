@@ -50,7 +50,7 @@ export default function AddReminderPage() {
     backgroundSize: "cover",
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.8)", // לבן שקוף
+    backgroundColor: "rgba(255, 255, 255, 0.8)", 
     backgroundBlendMode: "overlay",
     minHeight: "100vh",
     py: 6,

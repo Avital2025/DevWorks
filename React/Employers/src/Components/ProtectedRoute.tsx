@@ -18,13 +18,11 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     const token = localStorage.getItem("token");
 
     if (token && !user.id) {
-      // אם יש טוקן אבל המשתמש לא נטען, נעדכן את ה-Redux store
       const savedUser = JSON.parse(localStorage.getItem("user") || "{}");
       dispatch(setUser(savedUser));
     }
 
     if (!token) {
-      // אם אין טוקן, נציג הודעת שגיאה
       Swal.fire({
         title: "Access Denied! 🚫",
         text: getRandomMessage(),
@@ -47,7 +45,6 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   return user.id ? children : <Navigate to="/login" replace />;
 };
 
-// פונקציה שבוחרת הודעה רנדומלית
 const getRandomMessage = () => {
   const messages = [
     "Nice try, but you need to log in first! No free passes here. 😜",

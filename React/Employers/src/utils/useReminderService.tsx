@@ -71,5 +71,3 @@ export const useReminderService = () => {
     deleteReminder,
   };
 };
-
-//final

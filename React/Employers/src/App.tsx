@@ -20,20 +20,18 @@ function App() {
 
       if (storedUser && token) {
          const parsedUser = JSON.parse(storedUser);
-         dispatch(setUser(parsedUser)); // טוען ל-Redux
-         setIsLogin(true); // מעדכן שהמשתמש מחובר
+         dispatch(setUser(parsedUser)); 
+         setIsLogin(true); 
       } else {
-         setIsLogin(false); // אם אין נתונים תקפים, המשתמש לא מחובר
+         setIsLogin(false); 
       }
    }, [dispatch]);
 
    return (
       <IsLogin.Provider value={[isLogin, setIsLogin]}>
-         {/* <User.Provider value={{ user, userDispatch }}> */}
             <Provider store={store}>
                <RouterProvider router={MyRouter} />
             </Provider>
-         {/* </User.Provider> */}
       </IsLogin.Provider>
    )
 }
