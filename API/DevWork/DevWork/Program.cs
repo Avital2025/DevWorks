@@ -28,10 +28,10 @@ var builder = WebApplication.CreateBuilder(args);
 //-------------------להחזיר במקומי
 DotNetEnv.Env.Load();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-builder.Services.AddDbContext<DataContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+//builder.Services.AddDbContext<DataContext>(options =>
+//    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 //להוסיף את המשתנה ב appsetting
 //"DefaultConnection": "Server=bjwgjmq5iij9kwuamglz-mysql.services.clever-cloud.com;Port=3306;Database=bjwgjmq5iij9kwuamglz;User=ucgeulqqiwi99mif;Password=T39db7kYoayCuTSQE8KI;"
@@ -41,12 +41,12 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 
 //-----------------להסיר במקומי
-//var connectionString = Environment.GetEnvironmentVariable("ConnectionString");
+var connectionString = Environment.GetEnvironmentVariable("ConnectionString");
 
-//Console.WriteLine("Connection string: " + connectionString);
+Console.WriteLine("Connection string: " + connectionString);
 
-//builder.Services.AddDbContext<DataContext>(options =>
-//    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+builder.Services.AddDbContext<DataContext>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 
 //----------- עד כאן
