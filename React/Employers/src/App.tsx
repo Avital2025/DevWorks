@@ -15,16 +15,32 @@ function App() {
    const dispatch = useDispatch();
 
    useEffect(() => {
-      const storedUser = localStorage.getItem('user');
-      const token = localStorage.getItem('token');
+      // const storedUser = localStorage.getItem('user');
+      // const token = localStorage.getItem('token');
 
-      if (storedUser && token) {
-         const parsedUser = JSON.parse(storedUser);
-         dispatch(setUser(parsedUser)); 
-         setIsLogin(true); 
-      } else {
-         setIsLogin(false); 
+      // if (storedUser && token) {
+      //    const parsedUser = JSON.parse(storedUser);
+      //    dispatch(setUser(parsedUser)); 
+      //    setIsLogin(true); 
+      // } else {
+      //    setIsLogin(false); 
+      // }
+      try {
+         const storedUser = localStorage.getItem('user');
+         const token = localStorage.getItem('token');
+      
+         if (storedUser && token && storedUser !== "undefined") {
+            const parsedUser = JSON.parse(storedUser);
+            dispatch(setUser(parsedUser)); 
+            setIsLogin(true); 
+         } else {
+            setIsLogin(false); 
+         }
+      } catch (error) {
+         console.error('Failed to parse user from localStorage:', error);
+         setIsLogin(false);
       }
+      
    }, [dispatch]);
 
    return (
