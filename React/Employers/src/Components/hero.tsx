@@ -183,6 +183,7 @@ export default function Hero() {
                 <Button 
                   variant="outlined" 
                   size="large"
+                  onClick={() => navigate('/about')}
                   sx={{
                     color: '#607d8b',
                     borderColor: '#607d8b',

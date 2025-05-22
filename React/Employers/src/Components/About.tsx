@@ -2,10 +2,10 @@ import { Box, Container, Grid } from "@mui/material"
 import { motion } from "framer-motion"
 import image from "../assets/Hiring-employees.jpg"
 import { sectionStyle, backgroundStyle, containerStyle, titleBoxStyle, overlineStyle, headingStyle,
-  descriptionStyle, featureBoxStyle, iconStyle, featureTitleStyle, featureDescriptionStyle, buttonStyle, imageWrapperStyle, imageStyle,
+  descriptionStyle, featureBoxStyle, iconStyle, featureTitleStyle, featureDescriptionStyle,  imageWrapperStyle, imageStyle,
   quoteBoxStyle, quoteTextStyle, avatarStyle, userInfoBoxStyle} from "../styles/AboutStyle";
-import { CheckCircle, ArrowRight } from 'lucide-react'
-import { Typography, Stack, Button } from "@mui/material"
+import { CheckCircle } from 'lucide-react'
+import { Typography, Stack } from "@mui/material"
 
 export default function About() {
   return (
@@ -55,10 +55,7 @@ export default function About() {
               </Stack>
 
               <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: 0.6 }}>
-                <Button variant="outlined" size="large" sx={buttonStyle}>
-                  Learn more about us
-                  <ArrowRight style={{ marginLeft: 8, strokeWidth: 2.5 }} size={18} />
-                </Button>
+ 
               </motion.div>
             </motion.div>
           </Grid>
