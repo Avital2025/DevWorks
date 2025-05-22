@@ -170,11 +170,9 @@ public class FilesService : IFilesService
         var oldFileName = file.FileName;
         var employerId = file.EmployerID;
 
-        // עדכון שם הקובץ בטבלת filesList
         file.DisplayName = newFileName;
         file.UpdatedAt = DateTime.Now; // עדכון תאריך שינוי
 
-        // עדכון גם בטבלת ExtractedDataEntity לפי EmployerID + ProjectTitle (שזה שם הקובץ)
         var matchingData = await _context.extractedDataList
             .Where(x => x.EmployerID == employerId && x.Title == oldFileName)
             .ToListAsync();

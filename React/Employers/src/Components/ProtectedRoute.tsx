@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Navigate } from "react-router-dom";
+import {  Navigate, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { RootStore } from "../ReduxStore";
 import { setUser } from "../UserSlice";
@@ -13,6 +13,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const dispatch = useDispatch();
   const user = useSelector((state: RootStore) => state.user);
   const [isChecking, setIsChecking] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -33,10 +34,15 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
       }).then((result) => {
         if (result.isConfirmed) {
           window.location.href = "/login";
+        } else{
+          navigate("/");
         }
+
       });
     } else {
       setIsChecking(false);
+      
+
     }
   }, [user.id, dispatch]);
 

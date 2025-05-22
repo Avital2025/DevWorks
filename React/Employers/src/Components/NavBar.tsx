@@ -38,11 +38,10 @@ export default function ResponsiveNavBar() {
   return (
     <Box sx={{ position: "absolute", top: 0, right: 0, m: 2 }}>
       <NavBar>
+        <NavLeft sx={{ display: { xs: "none", md: "flex" } }}>
         <IconButton sx={{ display: { xs: "block", md: "none" } }} onClick={toggleMenu}>
           <Menu />
         </IconButton>
-
-        <NavLeft sx={{ display: { xs: "none", md: "flex" } }}>
           <NavLinkStyled to="/HomePage"><Home /> Home</NavLinkStyled>
         </NavLeft>
 
@@ -50,7 +49,7 @@ export default function ResponsiveNavBar() {
           {isLogin ? (
             <>
               <NavLinkStyled to="/userFiles"><Description /> My files</NavLinkStyled>
-              <NavLinkStyled to="/addFiles"><UploadFile /> Add files</NavLinkStyled>
+              <NavLinkStyled to="/addFiles"><UploadFile /> Add file</NavLinkStyled>
 
 
               <RemindersMenu />
@@ -67,7 +66,7 @@ export default function ResponsiveNavBar() {
             </>
           ) : (
             <NavLinkStyled to="/login">
-              <Login /> Register to upload files and access the site
+              <Login /> Log in to access the site
             </NavLinkStyled>
           )}
         </NavRight>

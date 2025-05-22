@@ -9,6 +9,7 @@ export const NavBar = styled("nav")({
   alignItems: "center",
   padding: "5px 50px",
   height: "30px",
+   direction: "ltr",
 });
 
 export const NavLeft = styled(Box)({
@@ -24,7 +25,6 @@ export const NavRight = styled(Box)({
   display: "flex",
   alignItems: "center",
   gap: "10px",
-  marginLeft: "auto",
 });
 
 export const NavLinkStyled = styled(Link)({

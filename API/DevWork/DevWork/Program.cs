@@ -25,8 +25,22 @@ Console.WriteLine("Server started");
 var builder = WebApplication.CreateBuilder(args);
 
 
+//-------------------להחזיר במקומי
 DotNetEnv.Env.Load();
-//--------------- להחזיר כשמעלה לענן
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<DataContext>(options =>
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+//להוסיף את המשתנה ב appsetting
+//"DefaultConnection": "Server=bjwgjmq5iij9kwuamglz-mysql.services.clever-cloud.com;Port=3306;Database=bjwgjmq5iij9kwuamglz;User=ucgeulqqiwi99mif;Password=T39db7kYoayCuTSQE8KI;"
+
+//-------------------עד כאן
+
+
+
+//-----------------להסיר במקומי
 //var connectionString = Environment.GetEnvironmentVariable("ConnectionString");
 
 //Console.WriteLine("Connection string: " + connectionString);
@@ -35,13 +49,9 @@ DotNetEnv.Env.Load();
 //    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 
-//--------להוריד כשמחזירה לענן, ולהסיר מ appsetting את המשתנה
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+//----------- עד כאן
 
-builder.Services.AddDbContext<DataContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
-//-------------עד כאן
 
 // רישום AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
@@ -62,80 +72,46 @@ builder.Services.AddHttpClient();
 // הוספת Swagger
 builder.Services.AddEndpointsApiExplorer();
 
-//builder.Services.AddSwaggerGen(c =>
+
+//builder.Services.AddSwaggerGen(options =>
 //{
-//    c.SwaggerDoc("v1", new OpenApiInfo
-//    { Title = "HireSphere API",
-//        Version = "v1" ,
-//        Description = "API for managing job candidates",
-//        Contact = new OpenApiContact
+//   options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+//   {
+//       Scheme = "Bearer",
+//       BearerFormat = "JWT",
+//       In = ParameterLocation.Header,
+//       Name = "Authorization",
+//       Description = "Bearer Authentication with JWT Token",
+//       Type = SecuritySchemeType.Http
+//   });
+//   options.AddSecurityRequirement(new OpenApiSecurityRequirement
+//   {
 //        {
-//            Name = "Avital",
-//            Email = "A0583273344@gmail.com"
+//            new OpenApiSecurityScheme
+//            {
+//                Reference = new OpenApiReference
+//                {
+//                    Id = "Bearer",
+//                    Type = ReferenceType.SecurityScheme
+//                }
+//            },
+//            new List<string>()
 //        }
-//    });
+//   });
 //});
-
-
-builder.Services.AddSwaggerGen(options =>
-{
-   options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-   {
-       Scheme = "Bearer",
-       BearerFormat = "JWT",
-       In = ParameterLocation.Header,
-       Name = "Authorization",
-       Description = "Bearer Authentication with JWT Token",
-       Type = SecuritySchemeType.Http
-   });
-   options.AddSecurityRequirement(new OpenApiSecurityRequirement
-   {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Id = "Bearer",
-                    Type = ReferenceType.SecurityScheme
-                }
-            },
-            new List<string>()
-        }
-   });
-});
 
 
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll",
-        policy => policy.AllowAnyOrigin() // אפשר לכל מקור לגשת
-                        .AllowAnyMethod()  // אפשר כל שיטה (GET, POST וכו')
-                        .AllowAnyHeader()); // אפשר כל כותרת
+        policy => policy.AllowAnyOrigin() 
+                        .AllowAnyMethod()  
+                        .AllowAnyHeader());
 });
 
 
-//builder.Services.AddAuthentication(options =>
-//{
-//    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-//    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-//})
-//    .AddJwtBearer(options =>
-//    {
-//        options.TokenValidationParameters = new TokenValidationParameters
-//        {
-//            ValidateIssuer = true,
-//            ValidateAudience = true,
 
-
-//            ValidateLifetime = true,
-//            ValidateIssuerSigningKey = true,
-//            ValidIssuer = builder.Configuration["JWT:Issuer"],
-//            ValidAudience = builder.Configuration["JWT:Audience"],
-//            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
-//        NameClaimType = "sub" // זה השורה הקריטית שחסרה לך
-//        };
-//    });
 
 
 
@@ -156,25 +132,12 @@ builder.Services.AddAuthentication(options =>
 
         ValidAudience = builder.Configuration["JWT:Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
-        NameClaimType = "sub" // זה השורה הקריטית שחסרה לך
+        NameClaimType = "sub"
     };
-    Console.WriteLine("Issuer: " + builder.Configuration["JWT:Issuer"]);
-    Console.WriteLine("Audience: " + builder.Configuration["JWT:Audience"]);
-    Console.WriteLine("Key:" + builder.Configuration["JWT:Key"]);
-    // הוספת לוג לשגיאות אימות
-    //options.Events = new JwtBearerEvents
-    //{
-    //    OnAuthenticationFailed = context =>
-    //    {
-    //        Console.WriteLine("Authentication failed: " + context.Exception.Message);
-    //        return Task.CompletedTask;
-    //    }
-    //};
     options.Events = new JwtBearerEvents
     {
         OnTokenValidated = context =>
         {
-            Console.WriteLine("Token validated successfully");
             return Task.CompletedTask;
         },
         OnAuthenticationFailed = context =>
@@ -245,7 +208,6 @@ ExtractedDataEndpoints.ExtractedData(app);
 UsersEndpoints.Users(app);
 AuthEndpoint.Auth(app);
 ReminderEndpoints.Reminders(app);
-// =========== endpoints injection ===========
 
 
 

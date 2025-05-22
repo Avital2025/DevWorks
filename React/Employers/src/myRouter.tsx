@@ -10,7 +10,6 @@ import { useContext } from "react";
 import { IsLogin } from "./App";
 import AddReminders from "./Components/AddReminders";
 import RemindersPage from "./Components/Notifications/Reminders";
-
 function LoginOrHome() {
   const [isLogin] = useContext(IsLogin);
   return isLogin ? <Navigate to="/HomePage" replace /> : <Login />; 
@@ -28,6 +27,8 @@ export default createBrowserRouter([
       { path: "userFiles", element: (<ProtectedRoute> <EmployerFiles /> </ProtectedRoute> )},
       { path: "reminders", element: (<ProtectedRoute> <RemindersPage /> </ProtectedRoute> )},
       { path: "add-reminders", element: (<ProtectedRoute> <AddReminders /> </ProtectedRoute> )},
+
+      
 
       { index: true, element: <Home /> },
     ],

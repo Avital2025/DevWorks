@@ -17,12 +17,6 @@ export function useEmployerFileService() {
     await axiosInstance.put(`/files/${fileId}/rename`, { newFileName })
   }
 
-  const checkFileExists = async (fileName: string): Promise<boolean> => {
-    const response = await axiosInstance.get("/files/check-file-exists", {
-      params: { fileName, employerId },
-    })
-    return response.data.exists
-  }
 
   const generateDownloadUrl = async (fileName: string): Promise<string> => {
     const response = await axiosInstance.get("/files/generate-presigned-download-url", {
@@ -35,7 +29,6 @@ export function useEmployerFileService() {
     fetchFiles,
     deleteFile,
     renameFile,
-    checkFileExists,
     generateDownloadUrl,
     employerId,
   }

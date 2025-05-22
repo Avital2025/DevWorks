@@ -36,7 +36,6 @@ export default function Hero() {
         pb: { xs: 10, md: 14 }
       }}
     >
-      {/* Background decorative elements */}
       <Box 
         sx={{
           position: 'absolute',

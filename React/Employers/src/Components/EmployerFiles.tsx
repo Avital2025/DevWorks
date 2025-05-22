@@ -31,7 +31,6 @@ export default function EmployerFiles() {
     fetchFiles,
     deleteFile,
     renameFile,
-    checkFileExists,
     generateDownloadUrl,
     employerId,
   } = useEmployerFileService();
@@ -82,16 +81,6 @@ export default function EmployerFiles() {
     if (!selectedFile) return;
 
     try {
-      const exists = await checkFileExists(newName);
-      if (exists) {
-        setEditDialogOpen(false);
-        Swal.fire({
-          icon: "error",
-          title: "Name already exists",
-          text: "There is another file with the same name. Please choose a different name.",
-        });
-        return;
-      }
 
       await renameFile(selectedFile.id, newName);
       setEditDialogOpen(false);
