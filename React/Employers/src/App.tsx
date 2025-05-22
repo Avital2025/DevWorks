@@ -15,16 +15,6 @@ function App() {
    const dispatch = useDispatch();
 
    useEffect(() => {
-      // const storedUser = localStorage.getItem('user');
-      // const token = localStorage.getItem('token');
-
-      // if (storedUser && token) {
-      //    const parsedUser = JSON.parse(storedUser);
-      //    dispatch(setUser(parsedUser)); 
-      //    setIsLogin(true); 
-      // } else {
-      //    setIsLogin(false); 
-      // }
       try {
          const storedUser = localStorage.getItem('user');
          const token = localStorage.getItem('token');
