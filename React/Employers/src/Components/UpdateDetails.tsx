@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { style } from "../styleModel";
 import { RootStore } from "../ReduxStore";
 import { setUser } from "../UserSlice";
-import axiosInstance from "../axiosInstance"; 
+import axiosInstance from "../axiosInstance";
+import Swal from "sweetalert2";
 
 const UpdateDetails = ({ onClose }: { onClose: () => void }) => {
   const dispatch = useDispatch();
@@ -36,7 +37,7 @@ const UpdateDetails = ({ onClose }: { onClose: () => void }) => {
         name: user.fullName
       }));
 
-      alert("Details updated successfully");
+      Swal.fire({ position: "top-end", icon: "success", title: "Details updated successfully", showConfirmButton: false, timer: 3000 })
       onClose();
     } catch (e: any) {
       if (e.response?.status === 401) alert("Unauthorized. Please log in again.");
