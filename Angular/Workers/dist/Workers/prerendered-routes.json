@@ -1,0 +1,10 @@
+{
+  "routes": {
+    "/": {},
+    "/filtering": {},
+    "/home": {},
+    "/joblist": {},
+    "/login": {},
+    "/register": {}
+  }
+}
