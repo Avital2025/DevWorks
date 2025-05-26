@@ -24,15 +24,15 @@ export const useRestService = () => {
       const data =
         click === "Register"
           ? {
-              FullName: fullName,
-              email: email,
-              passwordHash: password,
-              role: "Employer",
-            }
+            FullName: fullName,
+            email: email,
+            passwordHash: password,
+            role: "Employer",
+          }
           : {
-              email: email,
-              passwordHash: password,
-            };
+            email: email,
+            passwordHash: password,
+          };
 
       const res = await axiosInstance.post(`/Auth/${click.toLowerCase()}`, data);
       const { user } = res.data;
@@ -53,7 +53,10 @@ export const useRestService = () => {
         Swal.fire("Oops...", "This email already exists!", "error");
       } else if (e.response?.status === 422) {
         alert(e.response.data.message);
-      } else {
+      }else if (e.response?.status === 500) {
+        Swal.fire("Oops...", "Something went wrong on our end. We're on it! Please try again shortly.", "error");
+      }
+      else {
         throw e;
       }
     }

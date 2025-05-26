@@ -45,7 +45,6 @@ namespace DevWork.Endpoints
 
             filesRoutes.MapPut("/{id:int}/mark-deleted", async (int id, IFilesService service) =>
             {
-                Console.WriteLine("delete");
                 var result = await service.DeleteFileAsync(id);
                 return result ? Results.Ok() : Results.NotFound();
             });
@@ -87,7 +86,7 @@ namespace DevWork.Endpoints
 
             filesRoutes.MapGet("/generate-presigned-url", async (string fileName, IS3Service s3Service) =>
             {
-                var presignedUrl = await s3Service.GeneratePreSignedUrlAsync(fileName, HttpVerb.PUT);;
+                var presignedUrl = await s3Service.GeneratePreSignedUrlAsync(fileName, HttpVerb.PUT);
 
                 return Results.Ok(new { url = presignedUrl });
             });

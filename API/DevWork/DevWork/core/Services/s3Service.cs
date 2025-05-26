@@ -72,7 +72,6 @@ public class S3Service : IS3Service
     public async Task<string> GeneratePreSignedUrlForDownloadAsync(string fileName)
     {
 
-        Console.WriteLine("fileName" + fileName);
         var request = new GetPreSignedUrlRequest
         {
             BucketName = "devwork",  

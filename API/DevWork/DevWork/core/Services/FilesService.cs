@@ -72,7 +72,6 @@ public class FilesService : IFilesService
     {
         var fileData = await _s3Service.DownloadFileAsync(fileUrl);
         var fileType = DetectFileType(fileData); // זיהוי אמיתי לפי תוכן
-        Console.WriteLine($"File type is: {fileType}");
 
         string fileText;
 
@@ -106,7 +105,6 @@ public class FilesService : IFilesService
         }
 
         var aiResponse = await _aiService.SaveProjectDescriptionToDB(fileText);
-        Console.WriteLine("Done calling SaveProjectDescriptionToDB");
 
         var employer = _context.usersList.FirstOrDefault(u => u.Id == employerId);
         string employerEmail = employer?.Email ?? "";
@@ -193,7 +191,6 @@ public class FilesService : IFilesService
         userId = userId?.Trim(); 
         if (!int.TryParse(userId, out int employerId))
         {
-            Console.WriteLine("Failed to parse userId to int");
             return new List<FilesDto>();
         }
 

@@ -17,46 +17,20 @@ using Microsoft.IdentityModel.Logging;
 using System;
 
 
-Console.WriteLine("Server started");
-
-
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-//-------------------להחזיר במקומי
-DotNetEnv.Env.Load();
-
-//var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-
-//builder.Services.AddDbContext<DataContext>(options =>
-//    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
-
-//להוסיף את המשתנה ב appsetting
-//"DefaultConnection": "Server=bjwgjmq5iij9kwuamglz-mysql.services.clever-cloud.com;Port=3306;Database=bjwgjmq5iij9kwuamglz;User=ucgeulqqiwi99mif;Password=T39db7kYoayCuTSQE8KI;"
-
-//-------------------עד כאן
-
-
-
-//-----------------להסיר במקומי
 var connectionString = Environment.GetEnvironmentVariable("ConnectionString");
-
-Console.WriteLine("Connection string: " + connectionString);
 
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 
-//----------- עד כאן
 
-
-
-// רישום AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-// =========== Add Services ===========
+
 builder.Services.AddScoped<IExtractedDataService, ExtractedDataService>();
 builder.Services.AddScoped<IFilesService, FilesService>();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -69,9 +43,8 @@ builder.Services.AddScoped<IReminderService, ReminderService>();
 
 
 builder.Services.AddHttpClient();
-// הוספת Swagger
-builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -112,9 +85,6 @@ builder.Services.AddCors(options =>
 
 
 
-
-
-
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -142,8 +112,6 @@ builder.Services.AddAuthentication(options =>
         },
         OnAuthenticationFailed = context =>
         {
-            Console.WriteLine("Authentication failed: " + context.Exception.Message);
-            Console.WriteLine("Exception type: " + context.Exception.GetType().Name);
             if (context.Exception.InnerException != null)
             {
                 Console.WriteLine("Inner exception: " + context.Exception.InnerException.Message);
@@ -152,7 +120,6 @@ builder.Services.AddAuthentication(options =>
         },
         OnChallenge = context =>
         {
-            Console.WriteLine("Challenge issued");
             return Task.CompletedTask;
         }
     };
@@ -211,12 +178,6 @@ ReminderEndpoints.Reminders(app);
 
 
 
-
-
-
-
-
-// Start app
 app.Run();
 
 
