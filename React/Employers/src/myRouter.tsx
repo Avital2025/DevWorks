@@ -10,7 +10,7 @@ import { useContext } from "react";
 import { IsLogin } from "./App";
 import AddReminders from "./Components/AddReminders";
 import RemindersPage from "./Components/Notifications/Reminders";
-import ChatBot from "./Components/chat";
+import ChatBot from "./Components/ChatBot";
 function LoginOrHome() {
   const [isLogin] = useContext(IsLogin);
   return isLogin ? <Navigate to="/HomePage" replace /> : <Login />; 

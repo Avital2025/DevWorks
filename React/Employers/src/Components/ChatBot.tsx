@@ -9,24 +9,50 @@ export default function ChatBot() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // const handleSend = async () => {
+  //   if (!userInput.trim()) return;
+  //   setLoading(true);
+  //   setError("");
+  //   try {
+  //     const res = await axios.post("/chat", userInput, {
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     });
+  //     setResponse(res.data);
+  //   } catch (err: any) {
+  //     setError("שגיאה בשליחת הבקשה ל-AI.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const handleSend = async () => {
-    if (!userInput.trim()) return;
+    console.log("handleSend called"); // בדיקה שהפונקציה הופעלה
+  
+    if (!userInput.trim()) {
+      console.log("Empty input - aborting");
+      return;
+    }
+  
     setLoading(true);
     setError("");
     try {
+      console.log("Sending request to /chat with:", userInput);
       const res = await axios.post("/chat", userInput, {
         headers: {
           "Content-Type": "application/json",
         },
       });
+      console.log("Response from server:", res.data);
       setResponse(res.data);
     } catch (err: any) {
+      console.error("Error sending request:", err);
       setError("שגיאה בשליחת הבקשה ל-AI.");
     } finally {
       setLoading(false);
     }
   };
-
+  
   return (
     <Paper elevation={3} sx={{ p: 4, maxWidth: 600, mx: "auto", mt: 4 }}>
       <Typography variant="h5" gutterBottom>
