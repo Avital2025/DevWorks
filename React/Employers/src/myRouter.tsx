@@ -10,6 +10,7 @@ import { useContext } from "react";
 import { IsLogin } from "./App";
 import AddReminders from "./Components/AddReminders";
 import RemindersPage from "./Components/Notifications/Reminders";
+import ChatBot from "./Components/chat";
 function LoginOrHome() {
   const [isLogin] = useContext(IsLogin);
   return isLogin ? <Navigate to="/HomePage" replace /> : <Login />; 
@@ -23,6 +24,7 @@ export default createBrowserRouter([
       { path: "about", element: <About /> },
       { path: "HomePage", element: <Home /> },
       { path: "login", element: <LoginOrHome /> }, 
+      { path: "chat", element: <ChatBot /> }, 
       { path: "addfiles", element: (<ProtectedRoute> <AddFiles /> </ProtectedRoute> )},
       { path: "userFiles", element: (<ProtectedRoute> <EmployerFiles /> </ProtectedRoute> )},
       { path: "reminders", element: (<ProtectedRoute> <RemindersPage /> </ProtectedRoute> )},
