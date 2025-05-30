@@ -38,9 +38,10 @@ export default function ChatBot() {
     setError("");
     try {
       console.log("Sending request to /chat with:", userInput);
-      const res = await axios.post("/chat", { userInput }, {
+      const res = await axios.post("/chat", JSON.stringify(userInput), {
         headers: { "Content-Type": "application/json" }
       });
+      
       
       console.log("Response from server:", res.data);
       setResponse(res.data);
