@@ -175,7 +175,7 @@ ExtractedDataEndpoints.ExtractedData(app);
 UsersEndpoints.Users(app);
 AuthEndpoint.Auth(app);
 ReminderEndpoints.Reminders(app);
-
+ChatBotEndpoints.AI(app);
 
 
 app.Run();
