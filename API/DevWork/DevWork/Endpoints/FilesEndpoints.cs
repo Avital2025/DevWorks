@@ -1,9 +1,10 @@
 ﻿using Amazon.S3.Model;
 using Amazon.S3;
 using DevWork.API.Models;
-using DevWork.Core.Dto;
-using DevWork.core.DTOs;
+
 using DevWork.Service.Iservice;
+using DevWork.core.DTOs;
+using DevWork.Core.Dto;
 
 namespace DevWork.Endpoints
 {

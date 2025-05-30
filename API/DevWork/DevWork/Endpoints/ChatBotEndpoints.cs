@@ -1,4 +1,5 @@
-﻿using DevWork.Core.Dto;
+﻿using DevWork.core.DTOs;
+using DevWork.Core.Dto;
 using DevWork.Service.Iservice;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,13 +17,13 @@ public static void AI(WebApplication app)
         var AIRoutes = app.MapGroup("/chat");
         Console.WriteLine("endpoint2");
 
-        AIRoutes.MapPost("/", async ([FromBody] string userInput, IAIService aiService) =>
-        {
-            Console.WriteLine("endpointttt3");
-            var response = await aiService.GetAnswerAsync(userInput);
-            return Results.Ok(response);
-        });
-    }
+            AIRoutes.MapPost("/", async ([FromBody] ChatRequestDTO request, IAIService aiService) =>
+            {
+                Console.WriteLine("endpointttt3");
+                var response = await aiService.GetAnswerAsync(request.UserInput);
+                return Results.Ok(response);
+            });
+        }
 
 }
 }
