@@ -64,7 +64,7 @@ namespace DevWork.Endpoints
                 return Results.Ok(extractedData);
             });
 
-            app.MapPost("/chat", async (ChatRequestDTO request, IAIService aiService) =>
+            filesRoutes.MapPost("/chat", async (ChatRequestDTO request, IAIService aiService) =>
             {
                 if (string.IsNullOrWhiteSpace(request.UserInput))
                     return Results.BadRequest("שדה הקלט ריק");

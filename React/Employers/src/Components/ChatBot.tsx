@@ -26,24 +26,44 @@ export default function ChatBot() {
   //     setLoading(false);
   //   }
   // };
+  // const handleSend = async () => {
+  //   console.log("handleSend called"); // בדיקה שהפונקציה הופעלה
+  
+  //   // if (!userInput.trim()) {
+  //   //   console.log("Empty input - aborting");
+  //   //   return;
+  //   // }
+  
+  //   setLoading(true);
+  //   setError("");
+  //   try {
+  //     console.log("Sending request to /chat with:", userInput);
+  //     const res = await axios.post("/files/chat", { userInput }, {
+  //       headers: { "Content-Type": "application/json" }
+  //     });
+      
+      
+  //     console.log("Response from server:", res.data);
+  //     setResponse(res.data);
+  //   } catch (err: any) {
+  //     console.error("Error sending request:", err);
+  //     setError("שגיאה בשליחת הבקשה ל-AI.");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
   const handleSend = async () => {
-    console.log("handleSend called"); // בדיקה שהפונקציה הופעלה
-  
-    if (!userInput.trim()) {
-      console.log("Empty input - aborting");
-      return;
-    }
-  
     setLoading(true);
     setError("");
+  
     try {
-      console.log("Sending request to /chat with:", userInput);
-      const res = await axios.post("/files/chat", { userInput }, {
-        headers: { "Content-Type": "application/json" }
-      });
-      
-      
-      console.log("Response from server:", res.data);
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/files/chat`,
+        { userInput },
+        {
+          headers: { "Content-Type": "application/json" }, // בלי Authorization
+        }
+      );
       setResponse(res.data);
     } catch (err: any) {
       console.error("Error sending request:", err);
