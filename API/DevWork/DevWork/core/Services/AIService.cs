@@ -2,6 +2,7 @@
 using DevWork.Data;
 using DevWork.Service.Iservice;
 using Newtonsoft.Json.Linq;
+using System.Text.Json;
 
 public class AIService : IAIService
 {
@@ -18,7 +19,7 @@ public class AIService : IAIService
     }
     private async Task<AIResponse> GetAiResponseAsync(string jsonResponse)
     {
-       
+
 
         var jsonObject = JObject.Parse(jsonResponse);
         var content = jsonObject["choices"]?[0]?["message"]?["content"]?.ToString();
@@ -116,7 +117,7 @@ public class AIService : IAIService
             ProcessAiResponse(aiResponse);
 
 
-         
+
 
             return aiResponse;
         }
@@ -163,6 +164,71 @@ public class AIService : IAIService
         }
 
     }
+
+
+
+
+
+    public async Task<string> GetAnswerAsync(string userInput)
+    {
+        try
+        {
+            var prompt = new
+            {
+                model = "gpt-4o-mini",
+                messages = new[]
+                {
+                new {
+                    role = "system",
+                    content = "אתה עוזר וירטואלי באתר DevWork, אתר המיועד למעסיקים בתחום פיתוח תוכנה. אתה עונה אך ורק על שאלות שקשורות לפיתוח תוכנה (למשל: טכנולוגיות, גיוס מפתחים, ניסוח משרות, שפות תכנות וכו') או פרסום משרות באתר. אם נשאלת שאלה שאינה קשורה לנושאים האלה, השב בצורה אדיבה: \"מצטער, אני יכול לעזור רק בנושאים שקשורים לפיתוח תוכנה או לפרסום משרות באתר DevWork.\" אל תסטה מהנחיה זו."
+                },
+                new {
+                    role = "user",
+                    content = userInput
+                }
+            }
+            };
+
+            var request = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/chat/completions")
+            {
+                Content = JsonContent.Create(prompt)
+            };
+
+            request.Headers.Add("Authorization", $"Bearer {_apiKey}");
+
+            var response = await _httpClient.SendAsync(request);
+            var responseContent = await response.Content.ReadAsStringAsync();
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception($"API error: {response.StatusCode} - {responseContent}");
+            }
+
+            using var jsonDoc = JsonDocument.Parse(responseContent);
+            var messageContent = jsonDoc.RootElement
+                .GetProperty("choices")[0]
+                .GetProperty("message")
+                .GetProperty("content")
+                .GetString();
+
+            return messageContent ?? "AI החזיר תשובה ריקה.";
+        }
+        catch (HttpRequestException httpEx)
+        {
+            throw new Exception("בעיה בחיבור ל-API.", httpEx);
+        }
+        catch (JsonException jsonEx)
+        {
+            throw new Exception("שגיאה בקריאת התשובה מ-API.", jsonEx);
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("שגיאה כללית במהלך הפעולה.", ex);
+        }
+    }
+
+
+
 
 
 }

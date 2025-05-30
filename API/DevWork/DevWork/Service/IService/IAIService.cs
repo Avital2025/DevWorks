@@ -9,6 +9,8 @@ namespace DevWork.Service.Iservice
 
         Task<AIResponse> SaveProjectDescriptionToDB(string fileText);
 
+        Task<string> GetAnswerAsync(string prompt);
+
 
     }
 

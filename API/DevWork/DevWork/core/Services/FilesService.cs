@@ -71,7 +71,7 @@ public class FilesService : IFilesService
     public async Task<ExtractedDataEntity> ProcessFile(string fileUrl, int employerId, string projectName)
     {
         var fileData = await _s3Service.DownloadFileAsync(fileUrl);
-        var fileType = DetectFileType(fileData); // זיהוי אמיתי לפי תוכן
+        var fileType = DetectFileType(fileData); 
 
         string fileText;
 
