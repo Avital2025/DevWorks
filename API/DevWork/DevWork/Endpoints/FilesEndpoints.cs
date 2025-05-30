@@ -3,6 +3,7 @@ using Amazon.S3;
 using DevWork.API.Models;
 using DevWork.Core.Dto;
 using DevWork.core.DTOs;
+using DevWork.Service.Iservice;
 
 namespace DevWork.Endpoints
 {
@@ -62,6 +63,15 @@ namespace DevWork.Endpoints
                 return Results.Ok(extractedData);
             });
 
+            app.MapPost("/chat", async (ChatRequestDTO request, IAIService aiService) =>
+            {
+                if (string.IsNullOrWhiteSpace(request.UserInput))
+                    return Results.BadRequest("שדה הקלט ריק");
+                Console.WriteLine("---------------------------------------------------------");
+
+                var response = await aiService.GetAnswerAsync(request.UserInput);
+                return Results.Ok(response);
+            });
 
 
 
