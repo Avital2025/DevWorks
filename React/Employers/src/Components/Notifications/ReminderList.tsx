@@ -31,7 +31,7 @@ export default function ReminderList({
   children,
 }: Props) {
   return (
-    <Box maxWidth="sm" mx="auto" py={2}>
+    <Box maxWidth="sm" mx="auto" py={2} mt={17}>
       <Paper elevation={2} sx={{ borderRadius: 2, overflow: "hidden", direction: "rtl" }}>
         <Box
           sx={{

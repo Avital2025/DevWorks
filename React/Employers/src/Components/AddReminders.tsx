@@ -47,7 +47,7 @@ export default function AddReminderCalendarPage() {
   }
 
   return (
-    <Box sx={{ minHeight: "100vh", py: 4, background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)", position: "relative", overflow: "hidden" }}>
+    <Box sx={{ minHeight: "100vh",mt: 10, py: 4, background: "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)", position: "relative", overflow: "hidden" }}>
       <Box sx={{ position: "absolute", top: "5%", right: "5%", width: 200, height: 200, borderRadius: "50%", background: alpha(theme.palette.primary.main, 0.1), zIndex: 0 }} />
       <Box sx={{ position: "absolute", bottom: "10%", left: "5%", width: 150, height: 150, borderRadius: "50%", background: alpha(theme.palette.secondary.main, 0.1), zIndex: 0 }} />
       <Container maxWidth="lg" sx={{ position: "relative", zIndex: 1 }}>

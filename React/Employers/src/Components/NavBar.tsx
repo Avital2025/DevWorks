@@ -49,7 +49,7 @@ export default function ResponsiveNavBar() {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <AppBar position="static" sx={{ backgroundColor: 'white', boxShadow: 1, px: { xs: 3, sm: 6, md: 8 } }}>
+      <AppBar position="fixed" sx={{ backgroundColor: 'white', boxShadow: 1, px: { xs: 3, sm: 6, md: 8 } }}>
         <Toolbar sx={{
           maxWidth: '1200px', width: '100%', mx: 'auto', py: 1,
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',

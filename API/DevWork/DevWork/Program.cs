@@ -175,8 +175,8 @@ ExtractedDataEndpoints.ExtractedData(app);
 UsersEndpoints.Users(app);
 AuthEndpoint.Auth(app);
 ReminderEndpoints.Reminders(app);
-ChatBotEndpoints.AI(app);
-Console.WriteLine("רשום endpoint");
+//ChatBotEndpoints.AI(app);
+//Console.WriteLine("רשום endpoint");
 
 
 app.Run();

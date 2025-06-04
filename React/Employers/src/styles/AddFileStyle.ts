@@ -11,7 +11,7 @@ export const StyledBox = styled(Box)`
   box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   max-width: 400px;
-  margin: 0 auto;
+ margin: 150px auto 0 auto;
 `;
 
 export const StyledTypography = styled(Typography)`

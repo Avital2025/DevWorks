@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import store from './ReduxStore';
 import App from './App.tsx';
 import { ThemeProvider as MuiThemeProvider, createTheme } from '@mui/material/styles';
-import { ThemeProvider as StyledThemeProvider } from 'styled-components'; // <- חדש
+import { ThemeProvider as StyledThemeProvider } from 'styled-components'; 
 
 const theme = createTheme({
   palette: {

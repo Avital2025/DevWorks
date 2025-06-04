@@ -1,7 +1,7 @@
 import { Theme, alpha } from "@mui/material";
 
 export const styles = {
-  container: { maxWidth: "900px", mx: "auto", p: { xs: 2, md: 3 } },
+  container: { maxWidth: "900px", mx: "auto", p: { xs: 2, md: 3 } , mt: 17,},
   paper: (theme: Theme) => ({
     borderRadius: 3,
     overflow: "hidden",
