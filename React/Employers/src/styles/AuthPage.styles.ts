@@ -14,7 +14,7 @@ export const AuthWrapper = styled(Box)(({ theme }) => ({
       rgba(245, 247, 250, 0.6) 70%,
       rgba(245, 247, 250, 0) 100%
     )`,
-    paddingTop: theme.spacing(5),
+    paddingTop: theme.spacing(11),
     paddingBottom: theme.spacing(5),
   }))
   
