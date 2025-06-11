@@ -39,16 +39,16 @@ DevWork היא פלטפורמה חדשנית שמחברת בין מעסיקים 
 
 ```bash
 # API
-cd api
+cd API/DevWork
 dotnet run
 
 # Angular
-cd client-angular
+cd Angular/Workers
 npm install
 ng serve
 
 # React
-cd client-react
+cd React/Employers
 npm install
 npm run dev
 
