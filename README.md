@@ -26,7 +26,14 @@ With smart filtering based on programming languages, experience, conditions, and
 - **Deployment**  
   - Frontend: Render  
   - API: Render  
-  - Database: Clever Cloud  
+  - Database: Clever Cloud
+ 
+  - ## 🌐 Live Demo
+
+- React (Job Seekers app): [https://devworksemployers.onrender.com](https://devworksemployers.onrender.com)  
+- Angular (Employer interface): [https://devworks.onrender.com](https://devworks.onrender.com)
+
+
 
 ## 📦 Project Structure
 
