@@ -55,3 +55,5 @@ npm run dev
 ## 🙋 About Me
 Created by Avital Faraji – a fullstack developer passionate about building clean and intelligent systems.
 Happy to receive feedback or collaborate! ✨
+
+📫 AvitalFaraji@gmail.com
