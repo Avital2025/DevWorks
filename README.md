@@ -30,8 +30,8 @@ With smart filtering based on programming languages, experience, conditions, and
  
  ## 🌐 Live Demo
 
-- React (Job Seekers app): [https://devworksemployers.onrender.com](https://devworksemployers.onrender.com)  
-- Angular (Employer interface): [https://devworks.onrender.com](https://devworks.onrender.com)
+- React (Employer interface): [https://devworksemployers.onrender.com](https://devworksemployers.onrender.com)  
+- Angular (Job Seekers app): [https://devworks.onrender.com](https://devworks.onrender.com)
 
 
 
