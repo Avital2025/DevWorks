@@ -1,41 +1,40 @@
 # DevWork 💼👩‍💻
 
-DevWork היא פלטפורמה חדשנית שמחברת בין מעסיקים לבין מפתחים ומפתחות בעולם ההייטק.  
-באמצעות סינון חכם לפי שפות תכנות, ניסיון, תנאים והעדפות – כל אחד מוצא בדיוק את מה שמתאים לו.
+**DevWork** is an innovative platform that connects employers with developers in the tech industry.  
+With smart filtering based on programming languages, experience, conditions, and preferences — everyone finds exactly what fits them.
 
-## ✨ פיצ'רים עיקריים
+## ✨ Key Features
 
-- 👔 שני סוגי משתמשים: מעסיקים ומחפשי עבודה
-- 📄 המעסיקים מעלים קבצים עם תיאורי פרויקטים
-- 🧑‍💻 מחפשי עבודה רואים את ההצעות ויכולים לסנן אותן לפי קריטריונים
-- 🔍 סינון לפי שפת תכנות, ניסיון, תנאים ועוד
-- 🛠️ תפריט תזכורות אישי לכל משתמש (🔔)
-- 📤 מערכת העלאת קבצים וניהול (הורדה, עריכה, מחיקה)
+- 👔 Two user types: employers and job seekers
+- 📄 Employers upload project description files
+- 🧑‍💻 Job seekers browse available projects and filter them by custom criteria
+- 🔍 Advanced filtering by language, experience level, benefits, and more
+- 🔔 Personalized reminders panel for each user
+- 📤 Full file management system (upload, download, edit, delete)
 
-## 🧱 טכנולוגיות
+## 🧱 Technologies
 
 - **Frontend**  
-  - Angular 17+ (standalone components)
-  - React (עבור מערכת המעסיקים)
+  - Angular 17+ (standalone components)  
+  - React (used for the employer interface)  
   - MUI  
 - **Backend**  
   - .NET Minimal API  
   - Entity Framework  
 - **Database**  
-  - MSQL (מתארח ב-Clever Cloud)
+  - MSQL (hosted on Clever Cloud)  
 - **Deployment**  
-  - Front: Render  
+  - Frontend: Render  
   - API: Render  
-  - DB: Clever Cloud  
+  - Database: Clever Cloud  
 
-## 📦 מבנה המערכת
+## 📦 Project Structure
 
-- `Angular/` – אפליקציית המשתמשים (מחפשי עבודה)
-- `React/` – ממשק המעסיקים
-- `API/` – ה-API ב- .NET
+- `Angular/` – Job seekers' application  
+- `React/` – Employer interface  
+- `API/` – .NET backend  
 
-
-## 🚀 איך להפעיל לוקאלית
+## 🚀 Run Locally
 
 ```bash
 # API
@@ -51,12 +50,8 @@ ng serve
 cd React/Employers
 npm install
 npm run dev
-
 ```
 
-## 🙋 עליי
-
-נבנה על ידי אביטל פרג'י – מפתחת פולסטאק עם תשוקה למערכות חכמות ונקיות.
-אשמח לפידבק או שיתופי פעולה ✨
-
-📫 AvitalFaraji@gmail.com 
+## 🙋 About Me
+Created by Avital Faraji – a fullstack developer passionate about building clean and intelligent systems.
+Happy to receive feedback or collaborate! ✨
