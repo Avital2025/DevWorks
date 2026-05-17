@@ -21,7 +21,7 @@ export default function ChatBot() {
         {
           role: "bot",
           content:
-            "היי! אני העוזר החכם שלך 🤖\nאני כאן כדי לעזור לך עם שאלות על קבצים, ניתוחים או כל דבר אחר במערכת. במה תרצה להתחיל?",
+            "Hi! I'm your smart assistant 🤖\nI'm here to help you with questions about files, analytics, or anything else in the system. Where would you like to start?",
         },
       ]);
     }
@@ -73,7 +73,7 @@ export default function ChatBot() {
             px: 2,
           }}
         >
-          AI דבר עם
+          Chat with AI
         </Button>
       )}
 
@@ -107,7 +107,7 @@ export default function ChatBot() {
               borderTopRightRadius: 12,
             }}
           >
-            <Typography fontWeight="bold">🧠 עוזר AI</Typography>
+            <Typography fontWeight="bold"> AI Assistant 🧠</Typography>
             <IconButton size="small" onClick={() => setChatOpen(false)}>
               <CloseIcon sx={{ color: "white" }} />
             </IconButton>
@@ -166,14 +166,14 @@ export default function ChatBot() {
                   variant="subtitle2"
                   sx={{ color: "text.secondary", mb: 1 }}
                 >
-                 :הצעות לדוגמה
+                Sample suggestions:
                 </Typography>
 
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
                   {[
-                    "?DevWork מה זה ",
-                    '?מי רואה את המשרות שאני מעלה',
-                    "?איך אני מעלה קובץ",
+                    "What is DevWork?",
+                    'Who can see the jobs I upload?',
+                    "How do I upload a file?",
                   ].map((suggestion) => (
                     <Paper
                       key={suggestion}
@@ -213,7 +213,7 @@ export default function ChatBot() {
 
           <Box sx={{ display: "flex", p: 1, borderTop: "1px solid #ccc" }}>
             <TextField
-              placeholder="כתוב שאלה..."
+              placeholder="Ask a question..."
               variant="outlined"
               size="small"
               fullWidth
