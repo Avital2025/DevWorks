@@ -113,26 +113,6 @@ namespace DevWork.Endpoints
             });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         }
 
 

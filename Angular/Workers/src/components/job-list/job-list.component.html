@@ -29,13 +29,16 @@
 
   @if (isLoggedIn) {
     <button (click)="downloadJob(job.employerID + job.title)">הורד משרה</button>
-  <button (click)="saveJob(job.projectID)">שמור משרה</button>
+   
+  <!-- <button (click)="saveJob(job.projectID)">שמור משרה</button> -->
+ 
   }
   @else{
 
   <div class="text-[11px] text-gray-500 flex items-center gap-[4px]">
     <mat-icon class="text-xs" style="vertical-align: middle; color: #6b7280;">error_outline</mat-icon>
-    <span>התחבר על מנת לשמור או להוריד את המשרה</span>
+    <!-- <span>התחבר על מנת לשמור או להוריד את המשרה</span> -->
+    <span>התחבר על מנת להוריד את המשרה</span>
   </div>
 
   }
